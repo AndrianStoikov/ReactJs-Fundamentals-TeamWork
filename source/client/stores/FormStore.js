@@ -10,7 +10,8 @@ class FormStore {
       onRegisterUserFail: UserActions.registerUserFail,
       onRegisterUserSuccess: UserActions.registerUserSuccess,
       onLoginUserSuccess: UserActions.loginUserSuccess,
-      onLoginUserFail: UserActions.loginUserFail
+      onLoginUserFail: UserActions.loginUserFail,
+      onLogoutUserSuccess: UserActions.logoutUserSuccess
     })
 
     this.username = ''
@@ -109,6 +110,13 @@ class FormStore {
     this.usernameValidationState = ''
     this.passwordValidationState = ''
     this.message = 'Please login'
+  }
+
+  onLogoutUserSuccess () {
+    this.formSubmitState = ''
+    this.usernameValidationState = ''
+    this.passwordValidationState = ''
+    this.message = ''
   }
 }
 

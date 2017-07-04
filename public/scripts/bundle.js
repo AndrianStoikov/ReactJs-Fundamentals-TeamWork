@@ -6050,7 +6050,8 @@ var FormStore = function () {
       onRegisterUserFail: _UserActions2.default.registerUserFail,
       onRegisterUserSuccess: _UserActions2.default.registerUserSuccess,
       onLoginUserSuccess: _UserActions2.default.loginUserSuccess,
-      onLoginUserFail: _UserActions2.default.loginUserFail
+      onLoginUserFail: _UserActions2.default.loginUserFail,
+      onLogoutUserSuccess: _UserActions2.default.logoutUserSuccess
     });
 
     this.username = '';
@@ -6164,6 +6165,14 @@ var FormStore = function () {
       this.usernameValidationState = '';
       this.passwordValidationState = '';
       this.message = 'Please login';
+    }
+  }, {
+    key: 'onLogoutUserSuccess',
+    value: function onLogoutUserSuccess() {
+      this.formSubmitState = '';
+      this.usernameValidationState = '';
+      this.passwordValidationState = '';
+      this.message = '';
     }
   }]);
 
