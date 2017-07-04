@@ -4375,7 +4375,30 @@ var FooterActions = function FooterActions() {
 
 exports.default = _alt2.default.createActions(FooterActions);
 
-},{"../alt":51}],48:[function(require,module,exports){
+},{"../alt":52}],48:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var FormActions = function FormActions() {
+  _classCallCheck(this, FormActions);
+
+  this.generateActions('handleUsernameChange', 'handlePasswordChange', 'handleConfirmedPasswordChange', 'handleFirstNameChange', 'handleLastNameChange', 'handleAgeChange', 'handleGenderChange', 'usernameValidationFail', 'passwordValidationFail', 'unauthorizedAccessAttempt', 'handleCommentChange', 'commentValidationFail', 'handleScoreChange', 'scoreValidationFail');
+};
+
+exports.default = _alt2.default.createActions(FormActions);
+
+},{"../alt":52}],49:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4398,7 +4421,7 @@ var HomeActions = function HomeActions() {
 
 exports.default = _alt2.default.createActions(HomeActions);
 
-},{"../alt":51}],49:[function(require,module,exports){
+},{"../alt":52}],50:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4421,7 +4444,7 @@ var NavbarActions = function NavbarActions() {
 
 exports.default = _alt2.default.createActions(NavbarActions);
 
-},{"../alt":51}],50:[function(require,module,exports){
+},{"../alt":52}],51:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4442,24 +4465,46 @@ var UserActions = function () {
   function UserActions() {
     _classCallCheck(this, UserActions);
 
-    this.generateActions('loginUserSuccess', 'loginUserFail', 'logoutUserSuccess');
+    this.generateActions('registerUserSuccess', 'registerUserFail', 'loginUserSuccess', 'loginUserFail', 'logoutUserSuccess');
   }
 
   _createClass(UserActions, [{
-    key: 'loginUser',
-    value: function loginUser() {
+    key: 'registerUser',
+    value: function registerUser(data) {
       var _this = this;
+
+      var request = {
+        url: '/user/register',
+        method: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json'
+      };
+
+      $.ajax(request).done(function () {
+        return _this.registerUserSuccess();
+      }).fail(function (err) {
+        console.log('Error', err);
+        _this.registerUserFail(err.responseJSON.message);
+      });
+
+      return true;
+    }
+  }, {
+    key: 'loginUser',
+    value: function loginUser(data) {
+      var _this2 = this;
 
       var request = {
         url: '/user/login',
         method: 'post',
-        data: JSON.stringify({ username: 'admin', password: 'admin' }),
+        data: JSON.stringify(data),
         contentType: 'application/json'
       };
+
       $.ajax(request).done(function (data) {
-        return _this.loginUserSuccess(data);
+        return _this2.loginUserSuccess(data);
       }).fail(function (err) {
-        return _this.loginUserFail(err);
+        return _this2.loginUserFail(err.responseJSON);
       });
 
       return true;
@@ -4467,14 +4512,15 @@ var UserActions = function () {
   }, {
     key: 'logoutUser',
     value: function logoutUser() {
-      var _this2 = this;
+      var _this3 = this;
 
       var request = {
         url: '/user/logout',
         method: 'post'
       };
+
       $.ajax(request).done(function () {
-        return _this2.logoutUserSuccess();
+        return _this3.logoutUserSuccess();
       });
 
       return true;
@@ -4486,7 +4532,7 @@ var UserActions = function () {
 
 exports.default = _alt2.default.createActions(UserActions);
 
-},{"../alt":51}],51:[function(require,module,exports){
+},{"../alt":52}],52:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4501,7 +4547,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = new _alt2.default();
 
-},{"alt":3}],52:[function(require,module,exports){
+},{"alt":3}],53:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4565,7 +4611,6 @@ var App = function (_React$Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       _UserStore2.default.listen(this.onChange);
-      _UserActions2.default.loginUser();
     }
   }, {
     key: 'componentWillUnmount',
@@ -4590,7 +4635,7 @@ var App = function (_React$Component) {
 
 exports.default = App;
 
-},{"../actions/UserActions":50,"../routes":60,"../stores/UserStore":64,"./Footer":53,"./Navbar":55,"react":"react"}],53:[function(require,module,exports){
+},{"../actions/UserActions":51,"../routes":68,"../stores/UserStore":73,"./Footer":54,"./Navbar":56,"react":"react"}],54:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4733,7 +4778,7 @@ var Footer = function (_Component) {
 
 exports.default = Footer;
 
-},{"../stores/FooterStore":61,"react":"react","react-router-dom":34}],54:[function(require,module,exports){
+},{"../stores/FooterStore":69,"react":"react","react-router-dom":34}],55:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4790,7 +4835,6 @@ var Home = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      console.log('Here');
       return _react2.default.createElement(
         'div',
         { className: 'container' },
@@ -4813,7 +4857,7 @@ var Home = function (_React$Component) {
 
 exports.default = Home;
 
-},{"../stores/HomeStore":62,"react":"react"}],55:[function(require,module,exports){
+},{"../stores/HomeStore":71,"react":"react"}],56:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4957,7 +5001,134 @@ var Navbar = function (_React$Component) {
 
 exports.default = Navbar;
 
-},{"../actions/NavbarActions":49,"../stores/NavbarStore":63,"./sub-components/NavbarUserMenu":57,"react":"react","react-router-dom":34}],56:[function(require,module,exports){
+},{"../actions/NavbarActions":50,"../stores/NavbarStore":72,"./sub-components/NavbarUserMenu":65,"react":"react","react-router-dom":34}],57:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _FormStore = require('../stores/FormStore');
+
+var _FormStore2 = _interopRequireDefault(_FormStore);
+
+var _FormActions = require('../actions/FormActions');
+
+var _FormActions2 = _interopRequireDefault(_FormActions);
+
+var _UserActions = require('../actions/UserActions');
+
+var _UserActions2 = _interopRequireDefault(_UserActions);
+
+var _Form = require('./form/Form');
+
+var _Form2 = _interopRequireDefault(_Form);
+
+var _TextGroup = require('./form/TextGroup');
+
+var _TextGroup2 = _interopRequireDefault(_TextGroup);
+
+var _Submit = require('./form/Submit');
+
+var _Submit2 = _interopRequireDefault(_Submit);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var UserLogin = function (_Component) {
+  _inherits(UserLogin, _Component);
+
+  function UserLogin(props) {
+    _classCallCheck(this, UserLogin);
+
+    var _this = _possibleConstructorReturn(this, (UserLogin.__proto__ || Object.getPrototypeOf(UserLogin)).call(this, props));
+
+    _this.state = _FormStore2.default.getState();
+    _this.onChange = _this.onChange.bind(_this);
+    return _this;
+  }
+
+  _createClass(UserLogin, [{
+    key: 'onChange',
+    value: function onChange(state) {
+      this.setState(state);
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      _FormStore2.default.listen(this.onChange);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      _FormStore2.default.unlisten(this.onChange);
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+
+      var username = this.state.username;
+      var password = this.state.password;
+      if (!username) {
+        _FormActions2.default.usernameValidationFail();
+        return;
+      }
+
+      if (!password) {
+        _FormActions2.default.passwordValidationFail();
+        return;
+      }
+
+      _UserActions2.default.loginUser({ username: username, password: password });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        _Form2.default,
+        {
+          title: 'Login',
+          handleSubmit: this.handleSubmit.bind(this),
+          submitState: this.state.formSubmitState,
+          message: this.state.message },
+        _react2.default.createElement(_TextGroup2.default, {
+          type: 'text',
+          value: this.state.username,
+          label: 'Username',
+          handleChange: _FormActions2.default.handleUsernameChange,
+          validationState: this.state.usernameValidationState }),
+        _react2.default.createElement(_TextGroup2.default, {
+          type: 'password',
+          value: this.state.password,
+          label: 'Password',
+          handleChange: _FormActions2.default.handlePasswordChange,
+          validationState: this.state.passwordValidationState,
+          message: this.state.message }),
+        _react2.default.createElement(_Submit2.default, {
+          type: 'btn-primary',
+          value: 'Login' })
+      );
+    }
+  }]);
+
+  return UserLogin;
+}(_react.Component);
+
+exports.default = UserLogin;
+
+},{"../actions/FormActions":48,"../actions/UserActions":51,"../stores/FormStore":70,"./form/Form":60,"./form/Submit":63,"./form/TextGroup":64,"react":"react"}],58:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5046,7 +5217,476 @@ var UserProfile = function (_React$Component) {
 
 exports.default = UserProfile;
 
-},{"../components/sub-components/UserInfo":58,"../stores/UserStore":64,"react":"react"}],57:[function(require,module,exports){
+},{"../components/sub-components/UserInfo":66,"../stores/UserStore":73,"react":"react"}],59:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _FormActions = require('../actions/FormActions');
+
+var _FormActions2 = _interopRequireDefault(_FormActions);
+
+var _UserActions = require('../actions/UserActions');
+
+var _UserActions2 = _interopRequireDefault(_UserActions);
+
+var _FormStore = require('../stores/FormStore');
+
+var _FormStore2 = _interopRequireDefault(_FormStore);
+
+var _Form = require('./form/Form');
+
+var _Form2 = _interopRequireDefault(_Form);
+
+var _TextGroup = require('./form/TextGroup');
+
+var _TextGroup2 = _interopRequireDefault(_TextGroup);
+
+var _RadioGroup = require('./form/RadioGroup');
+
+var _RadioGroup2 = _interopRequireDefault(_RadioGroup);
+
+var _RadioElement = require('./form/RadioElement');
+
+var _RadioElement2 = _interopRequireDefault(_RadioElement);
+
+var _Submit = require('./form/Submit');
+
+var _Submit2 = _interopRequireDefault(_Submit);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var UserRegister = function (_Component) {
+  _inherits(UserRegister, _Component);
+
+  function UserRegister(props) {
+    _classCallCheck(this, UserRegister);
+
+    var _this = _possibleConstructorReturn(this, (UserRegister.__proto__ || Object.getPrototypeOf(UserRegister)).call(this, props));
+
+    _this.state = _FormStore2.default.getState();
+
+    _this.onChange = _this.onChange.bind(_this);
+    return _this;
+  }
+
+  _createClass(UserRegister, [{
+    key: 'onChange',
+    value: function onChange(state) {
+      this.setState(state);
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      _FormStore2.default.listen(this.onChange);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      _FormStore2.default.unlisten(this.onChange);
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+
+      var data = {
+        username: this.state.username,
+        password: this.state.password,
+        confirmedPassword: this.state.confirmedPassword,
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        age: this.state.age,
+        gender: this.state.gender
+      };
+
+      if (!data.username) {
+        return _FormActions2.default.usernameValidationFail();
+      }
+
+      if (!data.password || !data.confirmedPassword || data.password !== data.confirmedPassword) {
+        return _FormActions2.default.passwordValidationFail();
+      }
+
+      _UserActions2.default.registerUser(data);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        _Form2.default,
+        {
+          title: 'Register',
+          handleSubmit: this.handleSubmit.bind(this),
+          submitState: this.state.formSubmitState,
+          message: this.state.message },
+        _react2.default.createElement(_TextGroup2.default, {
+          type: 'text',
+          label: 'Username',
+          value: this.state.username,
+          autoFocus: 'true',
+          handleChange: _FormActions2.default.handleUsernameChange,
+          validationState: this.state.usernameValidationState,
+          message: this.state.message }),
+        _react2.default.createElement(_TextGroup2.default, {
+          type: 'password',
+          label: 'Password',
+          value: this.state.Password,
+          handleChange: _FormActions2.default.handlePasswordChange,
+          validationState: this.state.passwordValidationState,
+          message: this.state.message }),
+        _react2.default.createElement(_TextGroup2.default, {
+          type: 'password',
+          label: 'Confirm Password',
+          value: this.state.confirmPassword,
+          handleChange: _FormActions2.default.handleConfirmedPasswordChange,
+          validationState: this.state.passwordValidationState,
+          message: this.state.message }),
+        _react2.default.createElement(_TextGroup2.default, {
+          type: 'text',
+          label: 'First Name',
+          handleChange: _FormActions2.default.handleFirstNameChange,
+          value: this.state.firstName }),
+        _react2.default.createElement(_TextGroup2.default, {
+          type: 'text',
+          label: 'Last Name',
+          handleChange: _FormActions2.default.handleLastNameChange,
+          value: this.state.lastName }),
+        _react2.default.createElement(_TextGroup2.default, {
+          type: 'number',
+          label: 'Age',
+          handleChange: _FormActions2.default.handleAgeChange,
+          value: this.state.age }),
+        _react2.default.createElement(
+          _RadioGroup2.default,
+          {
+            validationState: this.state.genderValidationState,
+            message: this.state.message },
+          _react2.default.createElement(_RadioElement2.default, {
+            groupName: 'gender',
+            value: 'Male',
+            selectedValue: this.state.gender,
+            handleChange: _FormActions2.default.handleGenderChange }),
+          _react2.default.createElement(_RadioElement2.default, {
+            groupName: 'gender',
+            value: 'Female',
+            selectedValue: this.state.gender,
+            handleChange: _FormActions2.default.handleGenderChange })
+        ),
+        _react2.default.createElement(_Submit2.default, { type: 'btn-primary', value: 'Register' })
+      );
+    }
+  }]);
+
+  return UserRegister;
+}(_react.Component);
+
+exports.default = UserRegister;
+
+},{"../actions/FormActions":48,"../actions/UserActions":51,"../stores/FormStore":70,"./form/Form":60,"./form/RadioElement":61,"./form/RadioGroup":62,"./form/Submit":63,"./form/TextGroup":64,"react":"react"}],60:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Form = function (_Component) {
+  _inherits(Form, _Component);
+
+  function Form() {
+    _classCallCheck(this, Form);
+
+    return _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).apply(this, arguments));
+  }
+
+  _createClass(Form, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'container' },
+        _react2.default.createElement(
+          'div',
+          { className: 'row flipInX animated' },
+          _react2.default.createElement(
+            'div',
+            { className: 'col-sm-8' },
+            _react2.default.createElement(
+              'div',
+              { className: 'panel panel-default' },
+              _react2.default.createElement(
+                'div',
+                { className: 'panel-heading' },
+                this.props.title
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'panel-body' },
+                _react2.default.createElement(
+                  'form',
+                  { onSubmit: this.props.handleSubmit },
+                  _react2.default.createElement(
+                    'div',
+                    { className: 'form-group ' + this.props.submitState },
+                    _react2.default.createElement(
+                      'span',
+                      { className: 'help-block' },
+                      this.props.message
+                    )
+                  ),
+                  this.props.children
+                )
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return Form;
+}(_react.Component);
+
+exports.default = Form;
+
+},{"react":"react"}],61:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RadioElement = function (_Component) {
+  _inherits(RadioElement, _Component);
+
+  function RadioElement() {
+    _classCallCheck(this, RadioElement);
+
+    return _possibleConstructorReturn(this, (RadioElement.__proto__ || Object.getPrototypeOf(RadioElement)).apply(this, arguments));
+  }
+
+  _createClass(RadioElement, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'radio radio-inline' },
+        _react2.default.createElement('input', {
+          type: 'radio',
+          name: this.props.groupName,
+          id: this.props.value.toLowerCase(),
+          value: this.props.value,
+          checked: this.props.selectedValue === this.props.value,
+          onChange: this.props.handleChange }),
+        _react2.default.createElement(
+          'label',
+          { htmlFor: this.props.value.toLowerCase() },
+          this.props.value
+        )
+      );
+    }
+  }]);
+
+  return RadioElement;
+}(_react.Component);
+
+exports.default = RadioElement;
+
+},{"react":"react"}],62:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RadioGroup = function (_Component) {
+  _inherits(RadioGroup, _Component);
+
+  function RadioGroup() {
+    _classCallCheck(this, RadioGroup);
+
+    return _possibleConstructorReturn(this, (RadioGroup.__proto__ || Object.getPrototypeOf(RadioGroup)).apply(this, arguments));
+  }
+
+  _createClass(RadioGroup, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'form-group ' + this.props.validationState },
+        _react2.default.createElement(
+          'span',
+          { className: 'help-block' },
+          this.props.message
+        ),
+        this.props.children
+      );
+    }
+  }]);
+
+  return RadioGroup;
+}(_react.Component);
+
+exports.default = RadioGroup;
+
+},{"react":"react"}],63:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Submit = function (_Component) {
+  _inherits(Submit, _Component);
+
+  function Submit() {
+    _classCallCheck(this, Submit);
+
+    return _possibleConstructorReturn(this, (Submit.__proto__ || Object.getPrototypeOf(Submit)).apply(this, arguments));
+  }
+
+  _createClass(Submit, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement('input', { type: 'submit', className: 'btn ' + this.props.type, value: this.props.value });
+    }
+  }]);
+
+  return Submit;
+}(_react.Component);
+
+exports.default = Submit;
+
+},{"react":"react"}],64:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var TextGroup = function (_Component) {
+  _inherits(TextGroup, _Component);
+
+  function TextGroup() {
+    _classCallCheck(this, TextGroup);
+
+    return _possibleConstructorReturn(this, (TextGroup.__proto__ || Object.getPrototypeOf(TextGroup)).apply(this, arguments));
+  }
+
+  _createClass(TextGroup, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'form-group ' + this.props.validationState },
+        _react2.default.createElement(
+          'label',
+          { className: 'control-label' },
+          this.props.label
+        ),
+        _react2.default.createElement('input', {
+          type: this.props.type, className: 'form-control',
+          value: this.props.value,
+          onChange: this.props.handleChange, autoFocus: this.props.autoFocus }),
+        _react2.default.createElement(
+          'span',
+          { className: 'help-block' },
+          this.props.message
+        )
+      );
+    }
+  }]);
+
+  return TextGroup;
+}(_react.Component);
+
+exports.default = TextGroup;
+
+},{"react":"react"}],65:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5110,6 +5750,7 @@ var NavbarUserMenu = function (_React$Component) {
     key: 'render',
     value: function render() {
       var userMenu = void 0;
+
       if (!this.state.loggedInUserId) {
         userMenu = _react2.default.createElement(
           'ul',
@@ -5118,8 +5759,8 @@ var NavbarUserMenu = function (_React$Component) {
             'li',
             null,
             _react2.default.createElement(
-              'a',
-              { href: '#', onClick: _UserActions2.default.loginUser },
+              _reactRouterDom.Link,
+              { to: '/user/login' },
               'Login'
             )
           ),
@@ -5171,7 +5812,7 @@ var NavbarUserMenu = function (_React$Component) {
 
 exports.default = NavbarUserMenu;
 
-},{"../../actions/UserActions":50,"../../stores/UserStore":64,"react":"react","react-router-dom":34}],58:[function(require,module,exports){
+},{"../../actions/UserActions":51,"../../stores/UserStore":73,"react":"react","react-router-dom":34}],66:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5259,7 +5900,7 @@ var UserProfileInfo = function (_React$Component) {
 
 exports.default = UserProfileInfo;
 
-},{"react":"react"}],59:[function(require,module,exports){
+},{"react":"react"}],67:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -5284,7 +5925,7 @@ _reactDom2.default.render(_react2.default.createElement(
   _react2.default.createElement(_App2.default, null)
 ), document.getElementById('app'));
 
-},{"./components/App":52,"react":"react","react-dom":"react-dom","react-router-dom":34}],60:[function(require,module,exports){
+},{"./components/App":53,"react":"react","react-dom":"react-dom","react-router-dom":34}],68:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5305,6 +5946,14 @@ var _UserProfile = require('./components/UserProfile');
 
 var _UserProfile2 = _interopRequireDefault(_UserProfile);
 
+var _UserLogin = require('./components/UserLogin');
+
+var _UserLogin2 = _interopRequireDefault(_UserLogin);
+
+var _UserRegister = require('./components/UserRegister');
+
+var _UserRegister2 = _interopRequireDefault(_UserRegister);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Routes = function Routes() {
@@ -5312,13 +5961,15 @@ var Routes = function Routes() {
     _reactRouterDom.Switch,
     null,
     _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _Home2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { path: '/user/profile/:userId', component: _UserProfile2.default })
+    _react2.default.createElement(_reactRouterDom.Route, { path: '/user/profile/:userId', component: _UserProfile2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/login', component: _UserLogin2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/register', component: _UserRegister2.default })
   );
 };
 
 exports.default = Routes;
 
-},{"./components/Home":54,"./components/UserProfile":56,"react":"react","react-router-dom":34}],61:[function(require,module,exports){
+},{"./components/Home":55,"./components/UserLogin":57,"./components/UserProfile":58,"./components/UserRegister":59,"react":"react","react-router-dom":34}],69:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5345,7 +5996,164 @@ var FooterStore = function FooterStore() {
 
 exports.default = _alt2.default.createStore(FooterStore);
 
-},{"../actions/FooterActions":47,"../alt":51}],62:[function(require,module,exports){
+},{"../actions/FooterActions":47,"../alt":52}],70:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+var _FormActions = require('../actions/FormActions');
+
+var _FormActions2 = _interopRequireDefault(_FormActions);
+
+var _UserActions = require('../actions/UserActions');
+
+var _UserActions2 = _interopRequireDefault(_UserActions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var FormStore = function () {
+  function FormStore() {
+    _classCallCheck(this, FormStore);
+
+    this.bindActions(_FormActions2.default);
+    this.bindListeners({
+      onRegisterUserFail: _UserActions2.default.registerUserFail,
+      onRegisterUserSuccess: _UserActions2.default.registerUserSuccess,
+      onLoginUserSuccess: _UserActions2.default.loginUserSuccess,
+      onLoginUserFail: _UserActions2.default.loginUserFail
+    });
+
+    this.username = '';
+    this.password = '';
+    this.confirmedPassword = '';
+    this.firstName = '';
+    this.lastName = '';
+    this.age = '';
+    this.gender = '';
+    this.formSubmitState = '';
+    this.usernameValidationState = '';
+    this.passwordValidationState = '';
+    this.message = '';
+    this.score = '';
+    this.scoreValidationState = '';
+  }
+
+  _createClass(FormStore, [{
+    key: 'onRegisterUserSuccess',
+    value: function onRegisterUserSuccess() {
+      console.log('FormStore register success');
+
+      this.formSubmitState = 'has-success';
+      this.usernameValidationState = '';
+      this.passwordValidationState = '';
+      this.message = 'User register success';
+    }
+  }, {
+    key: 'onRegisterUserFail',
+    value: function onRegisterUserFail(err) {
+      console.log('FormStore register fail', err);
+      if (err.code === 11000) {
+        this.usernameValidationState = 'has-error';
+        this.message = 'Username already in use';
+        return;
+      }
+
+      this.formSubmitState = 'has-error';
+      this.message = err.errmsg;
+    }
+  }, {
+    key: 'onUsernameValidatonFail',
+    value: function onUsernameValidatonFail() {
+      this.usernameValidationState = 'has-error';
+      this.passwordValidationState = '';
+      this.formSubmitState = '';
+      this.message = 'Enter username';
+    }
+  }, {
+    key: 'onPasswordValidationFail',
+    value: function onPasswordValidationFail() {
+      this.passwordValidationState = 'has-error';
+      this.usernameValidationState = '';
+      this.formSubmitState = '';
+      this.message = 'Invalid password, or password doest not match';
+    }
+  }, {
+    key: 'onHandleUsernameChange',
+    value: function onHandleUsernameChange(e) {
+      this.username = e.target.value;
+    }
+  }, {
+    key: 'onHandlePasswordChange',
+    value: function onHandlePasswordChange(e) {
+      this.password = e.target.value;
+    }
+  }, {
+    key: 'onHandleConfirmedPasswordChange',
+    value: function onHandleConfirmedPasswordChange(e) {
+      this.confirmedPassword = e.target.value;
+    }
+  }, {
+    key: 'onHandleFirstNameChange',
+    value: function onHandleFirstNameChange(e) {
+      this.firstName = e.target.value;
+    }
+  }, {
+    key: 'onHandleLastNameChange',
+    value: function onHandleLastNameChange(e) {
+      this.lastName = e.target.value;
+    }
+  }, {
+    key: 'onHandleAgeChange',
+    value: function onHandleAgeChange(e) {
+      this.age = e.target.value;
+    }
+  }, {
+    key: 'onHandleGenderChange',
+    value: function onHandleGenderChange(e) {
+      this.gender = e.target.value;
+    }
+  }, {
+    key: 'onLoginUserSuccess',
+    value: function onLoginUserSuccess() {
+      this.formSubmitState = 'has-success';
+      this.usernameValidationState = '';
+      this.passwordValidationState = '';
+      this.message = 'User login successful';
+    }
+  }, {
+    key: 'onLoginUserFail',
+    value: function onLoginUserFail(err) {
+      this.formSubmitState = 'has-error';
+      this.usernameValidationState = 'has-error';
+      this.passwordValidationState = 'has-error';
+      this.message = err.message;
+    }
+  }, {
+    key: 'onUnauthorizedAccessAttempt',
+    value: function onUnauthorizedAccessAttempt() {
+      this.formSubmitState = 'has-error';
+      this.usernameValidationState = '';
+      this.passwordValidationState = '';
+      this.message = 'Please login';
+    }
+  }]);
+
+  return FormStore;
+}();
+
+exports.default = _alt2.default.createStore(FormStore);
+
+},{"../actions/FormActions":48,"../actions/UserActions":51,"../alt":52}],71:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5372,7 +6180,7 @@ var HomeStore = function HomeStore() {
 
 exports.default = _alt2.default.createStore(HomeStore);
 
-},{"../actions/HomeActions":48,"../alt":51}],63:[function(require,module,exports){
+},{"../actions/HomeActions":49,"../alt":52}],72:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5414,7 +6222,7 @@ var NavbarStore = function () {
 
 exports.default = _alt2.default.createStore(NavbarStore);
 
-},{"../actions/NavbarActions":49,"../alt":51}],64:[function(require,module,exports){
+},{"../actions/NavbarActions":50,"../alt":52}],73:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5423,13 +6231,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _alt = require('../alt');
-
-var _alt2 = _interopRequireDefault(_alt);
-
 var _UserActions = require('../actions/UserActions');
 
 var _UserActions2 = _interopRequireDefault(_UserActions);
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5444,6 +6252,7 @@ var UserStore = function () {
     this.loggedInUserId = '';
     this.username = '';
     this.roles = [];
+    this.userIsLoggedIn = false;
   }
 
   _createClass(UserStore, [{
@@ -5452,18 +6261,18 @@ var UserStore = function () {
       this.loggedInUserId = user._id;
       this.username = user.username;
       this.roles = user.roles;
+      this.userIsLoggedIn = true;
     }
   }, {
     key: 'onLoginUserFail',
     value: function onLoginUserFail() {
-      console.log('Login attempt failed!');
+      console.log('Failed loggin attempt');
     }
   }, {
     key: 'onLogoutUserSuccess',
     value: function onLogoutUserSuccess() {
       this.loggedInUserId = '';
-      this.username = '';
-      this.roles = [];
+      this.userIsLoggedIn = false;
     }
   }]);
 
@@ -5472,6 +6281,6 @@ var UserStore = function () {
 
 exports.default = _alt2.default.createStore(UserStore);
 
-},{"../actions/UserActions":50,"../alt":51}]},{},[59])
+},{"../actions/UserActions":51,"../alt":52}]},{},[67])
 
 //# sourceMappingURL=bundle.js.map

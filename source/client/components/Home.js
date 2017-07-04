@@ -22,7 +22,6 @@ export default class Home extends React.Component {
   }
 
   render () {
-    console.log('Here')
     return (
       <div className='container' >
         <h3 className='text-center' >Welcome to

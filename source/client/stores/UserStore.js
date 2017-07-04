@@ -1,5 +1,5 @@
-import alt from '../alt'
 import UserActions from '../actions/UserActions'
+import alt from '../alt'
 
 class UserStore {
   constructor () {
@@ -8,22 +8,23 @@ class UserStore {
     this.loggedInUserId = ''
     this.username = ''
     this.roles = []
+    this.userIsLoggedIn = false
   }
 
   onLoginUserSuccess (user) {
     this.loggedInUserId = user._id
     this.username = user.username
     this.roles = user.roles
+    this.userIsLoggedIn = true
   }
 
   onLoginUserFail () {
-    console.log('Login attempt failed!')
+    console.log('Failed loggin attempt')
   }
 
   onLogoutUserSuccess () {
     this.loggedInUserId = ''
-    this.username = ''
-    this.roles = []
+    this.userIsLoggedIn = false
   }
 }
 

@@ -3,22 +3,43 @@ import alt from '../alt'
 class UserActions {
   constructor () {
     this.generateActions(
+      'registerUserSuccess',
+      'registerUserFail',
       'loginUserSuccess',
       'loginUserFail',
       'logoutUserSuccess'
     )
   }
 
-  loginUser () {
+  registerUser (data) {
+    let request = {
+      url: '/user/register',
+      method: 'POST',
+      data: JSON.stringify(data),
+      contentType: 'application/json'
+    }
+
+    $.ajax(request)
+      .done(() => this.registerUserSuccess())
+      .fail(err => {
+        console.log('Error', err)
+        this.registerUserFail(err.responseJSON.message)
+      })
+
+    return true
+  }
+
+  loginUser (data) {
     let request = {
       url: '/user/login',
       method: 'post',
-      data: JSON.stringify({ username: 'admin', password: 'admin' }),
+      data: JSON.stringify(data),
       contentType: 'application/json'
     }
+
     $.ajax(request)
       .done(data => this.loginUserSuccess(data))
-      .fail(err => this.loginUserFail(err))
+      .fail(err => this.loginUserFail(err.responseJSON))
 
     return true
   }
@@ -28,6 +49,7 @@ class UserActions {
       url: '/user/logout',
       method: 'post'
     }
+
     $.ajax(request)
       .done(() => this.logoutUserSuccess())
 
