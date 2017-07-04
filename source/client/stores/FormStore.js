@@ -24,14 +24,13 @@ class FormStore {
     this.usernameValidationState = ''
     this.passwordValidationState = ''
     this.message = ''
-    this.score = ''
-    this.scoreValidationState = ''
   }
 
   onRegisterUserSuccess () {
     console.log('FormStore register success')
 
     this.formSubmitState = 'has-success'
+    this.username = ''
     this.usernameValidationState = ''
     this.passwordValidationState = ''
     this.message = 'User register success'

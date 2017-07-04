@@ -12,11 +12,7 @@ class FormActions {
       'handleGenderChange',
       'usernameValidationFail',
       'passwordValidationFail',
-      'unauthorizedAccessAttempt',
-      'handleCommentChange',
-      'commentValidationFail',
-      'handleScoreChange',
-      'scoreValidationFail'
+      'unauthorizedAccessAttempt'
     )
   }
 }

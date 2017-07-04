@@ -4393,7 +4393,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var FormActions = function FormActions() {
   _classCallCheck(this, FormActions);
 
-  this.generateActions('handleUsernameChange', 'handlePasswordChange', 'handleConfirmedPasswordChange', 'handleFirstNameChange', 'handleLastNameChange', 'handleAgeChange', 'handleGenderChange', 'usernameValidationFail', 'passwordValidationFail', 'unauthorizedAccessAttempt', 'handleCommentChange', 'commentValidationFail', 'handleScoreChange', 'scoreValidationFail');
+  this.generateActions('handleUsernameChange', 'handlePasswordChange', 'handleConfirmedPasswordChange', 'handleFirstNameChange', 'handleLastNameChange', 'handleAgeChange', 'handleGenderChange', 'usernameValidationFail', 'passwordValidationFail', 'unauthorizedAccessAttempt');
 };
 
 exports.default = _alt2.default.createActions(FormActions);
@@ -6064,8 +6064,6 @@ var FormStore = function () {
     this.usernameValidationState = '';
     this.passwordValidationState = '';
     this.message = '';
-    this.score = '';
-    this.scoreValidationState = '';
   }
 
   _createClass(FormStore, [{
@@ -6074,6 +6072,7 @@ var FormStore = function () {
       console.log('FormStore register success');
 
       this.formSubmitState = 'has-success';
+      this.username = '';
       this.usernameValidationState = '';
       this.passwordValidationState = '';
       this.message = 'User register success';
@@ -6272,7 +6271,6 @@ var UserStore = function () {
     this.loggedInUserId = '';
     this.username = '';
     this.roles = [];
-    this.userIsLoggedIn = false;
   }
 
   _createClass(UserStore, [{
@@ -6281,7 +6279,6 @@ var UserStore = function () {
       this.loggedInUserId = user._id;
       this.username = user.username;
       this.roles = user.roles;
-      this.userIsLoggedIn = true;
     }
   }, {
     key: 'onLoginUserSuccess',
@@ -6289,7 +6286,6 @@ var UserStore = function () {
       this.loggedInUserId = user._id;
       this.username = user.username;
       this.roles = user.roles;
-      this.userIsLoggedIn = true;
     }
   }, {
     key: 'onLoginUserFail',
@@ -6300,7 +6296,6 @@ var UserStore = function () {
     key: 'onLogoutUserSuccess',
     value: function onLogoutUserSuccess() {
       this.loggedInUserId = '';
-      this.userIsLoggedIn = false;
     }
   }]);
 
