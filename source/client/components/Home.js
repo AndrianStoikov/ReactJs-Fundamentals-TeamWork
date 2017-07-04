@@ -1,5 +1,4 @@
 import React from 'react'
-import HomeActions from '../actions/HomeActions'
 import HomeStore from '../stores/HomeStore'
 
 export default class Home extends React.Component {
@@ -23,12 +22,13 @@ export default class Home extends React.Component {
   }
 
   render () {
+    console.log('Here')
     return (
-        <div className="container">
-            <h3 className="text-center">Welcome to
-              <strong> Simple Social Network</strong>
-            </h3>
-        </div>
+      <div className='container' >
+        <h3 className='text-center' >Welcome to
+          <strong> Simple Social Network</strong>
+        </h3>
+      </div>
     )
   }
 }

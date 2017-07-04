@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import FooterStore from '../stores/FooterStore'
-import FooterActions from '../actions/FooterActions'
 
 export default class Footer extends Component {
   constructor (props) {
@@ -27,10 +26,10 @@ export default class Footer extends Component {
   render () {
     return (
       <footer>
-        <div className="container">
-          <div className="row">
-            <div className="col-sm-5">
-              <h3 className="lead">
+        <div className='container' >
+          <div className='row' >
+            <div className='col-sm-5' >
+              <h3 className='lead' >
                 <strong>Information</strong> and
                 <strong> Copyright</strong>
               </h3>
@@ -42,9 +41,9 @@ export default class Footer extends Component {
               </p>
               <p>@2017 SoftUni.</p>
             </div>
-            <div className="col-sm-3">
-              <h3 className="lead">Author</h3>
-              <a href="https://github.com/AndrianStoikov/ReactJs-Fundamentals-TeamWork">
+            <div className='col-sm-3' >
+              <h3 className='lead' >Author</h3>
+              <a href='https://github.com/AndrianStoikov/ReactJs-Fundamentals-TeamWork' >
                 <strong> Team Unknown </strong>
               </a>
             </div>

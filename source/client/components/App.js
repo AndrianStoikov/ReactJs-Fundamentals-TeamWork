@@ -1,4 +1,5 @@
 import React from 'react'
+import Routes from '../routes'
 
 import Navbar from './Navbar'
 import Footer from './Footer'
@@ -29,11 +30,11 @@ export default class App extends React.Component {
 
   render () {
     return (
-        <div>
-            <Navbar/>
-            { this.props.children }
-            <Footer />
-        </div>
+      <div>
+        <Navbar />
+        <Routes />
+        <Footer />
+      </div>
     )
   }
 }
