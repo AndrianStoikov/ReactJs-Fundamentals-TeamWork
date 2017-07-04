@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 
 import FormStore from '../stores/FormStore'
+import UserStore from '../stores/UserStore'
+
 import FormActions from '../actions/FormActions'
 import UserActions from '../actions/UserActions'
 import Form from './form/Form'
@@ -45,6 +48,10 @@ export default class UserLogin extends Component {
   }
 
   render () {
+    if (UserStore.getState().loggedInUserId !== '') {
+      return <Redirect to='/' />
+    }
+
     return (
       <Form
         title='Login'

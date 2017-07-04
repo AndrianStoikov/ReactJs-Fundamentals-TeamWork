@@ -20,7 +20,9 @@ class UserActions {
     }
 
     $.ajax(request)
-      .done(() => this.registerUserSuccess())
+      .done((data) => {
+        this.registerUserSuccess(data)
+      })
       .fail(err => {
         console.log('Error', err)
         this.registerUserFail(err.responseJSON.message)
@@ -38,7 +40,9 @@ class UserActions {
     }
 
     $.ajax(request)
-      .done(data => this.loginUserSuccess(data))
+      .done(data => {
+        this.loginUserSuccess(data)
+      })
       .fail(err => this.loginUserFail(err.responseJSON))
 
     return true

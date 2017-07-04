@@ -7,7 +7,7 @@ module.exports = {
       let userData = req.body
 
       if (userData.password && userData.password !== userData.confirmedPassword) {
-        return res.status(400).send({ message: 'Passwords do not match' })
+        return res.status(400).send({message: 'Passwords do not match'})
       }
 
       let salt = encryption.generateSalt()
@@ -19,16 +19,16 @@ module.exports = {
 
       User.create(userData)
         .then(user => {
-          req.logIn(user, (err, user) => {
+          req.logIn(user, (err) => {
             if (err) {
-              return res.status(200).send({ message: 'Wrong credentials!' })
+              return res.status(200).send({message: 'Wrong credentials!'})
             }
 
-            res.status(200)
+            res.status(200).send({user: user})
           })
         })
         .catch(error => {
-          res.status(500).send({ message: error })
+          res.status(500).send({message: error})
         })
     }
   },
@@ -38,12 +38,12 @@ module.exports = {
 
       User.findOne({username: userData.username}).then(user => {
         if (!user || !user.authenticate(userData.password)) {
-          return res.status(401).send({ message: 'Wrong credentials!' })
+          return res.status(401).send({message: 'Wrong credentials!'})
         }
 
         req.logIn(user, (err, user) => {
           if (err) {
-            return res.status(401).send({ message: err })
+            return res.status(401).send({message: err})
           }
 
           res.status(200).send(req.user)
@@ -60,7 +60,7 @@ module.exports = {
       let userId = req.params.userId
 
       User.findById(userId).then(user => {
-        if (!user) { return res.status(404).send({ message: 'User no longer exists' }) }
+        if (!user) { return res.status(404).send({message: 'User no longer exists'}) }
 
         res.status(200).send(user)
       })

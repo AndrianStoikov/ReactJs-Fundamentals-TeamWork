@@ -11,6 +11,13 @@ class UserStore {
     this.userIsLoggedIn = false
   }
 
+  onRegisterUserSuccess (user) {
+    this.loggedInUserId = user._id
+    this.username = user.username
+    this.roles = user.roles
+    this.userIsLoggedIn = true
+  }
+
   onLoginUserSuccess (user) {
     this.loggedInUserId = user._id
     this.username = user.username

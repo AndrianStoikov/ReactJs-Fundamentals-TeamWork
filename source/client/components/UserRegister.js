@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
+import {Redirect} from 'react-router-dom'
 
 import FormActions from '../actions/FormActions'
 import UserActions from '../actions/UserActions'
+
 import FormStore from '../stores/FormStore'
+import UserStore from '../stores/UserStore'
 
 import Form from './form/Form'
 import TextGroup from './form/TextGroup'
@@ -55,6 +58,10 @@ export default class UserRegister extends Component {
   }
 
   render () {
+    if (UserStore.getState().loggedInUserId !== '') {
+      return <Redirect to='/' />
+    }
+
     return (
       <Form
         title='Register'

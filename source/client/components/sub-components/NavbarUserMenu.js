@@ -32,7 +32,7 @@ export default class NavbarUserMenu extends React.Component {
       userMenu = (
         <ul className='nav navbar-nav pull-right' >
           <li>
-            <Link to='/user/login'>Login</Link>
+            <Link to='/user/login' >Login</Link>
           </li>
           <li>
             <Link to='/user/register' >Register</Link>

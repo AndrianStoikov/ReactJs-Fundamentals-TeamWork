@@ -4480,8 +4480,8 @@ var UserActions = function () {
         contentType: 'application/json'
       };
 
-      $.ajax(request).done(function () {
-        return _this.registerUserSuccess();
+      $.ajax(request).done(function (data) {
+        _this.registerUserSuccess(data);
       }).fail(function (err) {
         console.log('Error', err);
         _this.registerUserFail(err.responseJSON.message);
@@ -4502,7 +4502,7 @@ var UserActions = function () {
       };
 
       $.ajax(request).done(function (data) {
-        return _this2.loginUserSuccess(data);
+        _this2.loginUserSuccess(data);
       }).fail(function (err) {
         return _this2.loginUserFail(err.responseJSON);
       });
@@ -4930,7 +4930,7 @@ var Navbar = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var navbarUserMenu = _react2.default.createElement(_NavbarUserMenu2.default, { userData: this.props.userData });
+      var navbarUserMenu = _react2.default.createElement(_NavbarUserMenu2.default, null);
       return _react2.default.createElement(
         'nav',
         { className: 'navbar navbar-default navbar-static-top' },
@@ -5014,9 +5014,15 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = require('react-router-dom');
+
 var _FormStore = require('../stores/FormStore');
 
 var _FormStore2 = _interopRequireDefault(_FormStore);
+
+var _UserStore = require('../stores/UserStore');
+
+var _UserStore2 = _interopRequireDefault(_UserStore);
 
 var _FormActions = require('../actions/FormActions');
 
@@ -5096,6 +5102,10 @@ var UserLogin = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
+      if (_UserStore2.default.getState().loggedInUserId !== '') {
+        return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
+      }
+
       return _react2.default.createElement(
         _Form2.default,
         {
@@ -5128,7 +5138,7 @@ var UserLogin = function (_Component) {
 
 exports.default = UserLogin;
 
-},{"../actions/FormActions":48,"../actions/UserActions":51,"../stores/FormStore":70,"./form/Form":60,"./form/Submit":63,"./form/TextGroup":64,"react":"react"}],58:[function(require,module,exports){
+},{"../actions/FormActions":48,"../actions/UserActions":51,"../stores/FormStore":70,"../stores/UserStore":73,"./form/Form":60,"./form/Submit":63,"./form/TextGroup":64,"react":"react","react-router-dom":34}],58:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5230,6 +5240,8 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = require('react-router-dom');
+
 var _FormActions = require('../actions/FormActions');
 
 var _FormActions2 = _interopRequireDefault(_FormActions);
@@ -5241,6 +5253,10 @@ var _UserActions2 = _interopRequireDefault(_UserActions);
 var _FormStore = require('../stores/FormStore');
 
 var _FormStore2 = _interopRequireDefault(_FormStore);
+
+var _UserStore = require('../stores/UserStore');
+
+var _UserStore2 = _interopRequireDefault(_UserStore);
 
 var _Form = require('./form/Form');
 
@@ -5327,6 +5343,10 @@ var UserRegister = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
+      if (_UserStore2.default.getState().loggedInUserId !== '') {
+        return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
+      }
+
       return _react2.default.createElement(
         _Form2.default,
         {
@@ -5397,7 +5417,7 @@ var UserRegister = function (_Component) {
 
 exports.default = UserRegister;
 
-},{"../actions/FormActions":48,"../actions/UserActions":51,"../stores/FormStore":70,"./form/Form":60,"./form/RadioElement":61,"./form/RadioGroup":62,"./form/Submit":63,"./form/TextGroup":64,"react":"react"}],60:[function(require,module,exports){
+},{"../actions/FormActions":48,"../actions/UserActions":51,"../stores/FormStore":70,"../stores/UserStore":73,"./form/Form":60,"./form/RadioElement":61,"./form/RadioGroup":62,"./form/Submit":63,"./form/TextGroup":64,"react":"react","react-router-dom":34}],60:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6256,6 +6276,14 @@ var UserStore = function () {
   }
 
   _createClass(UserStore, [{
+    key: 'onRegisterUserSuccess',
+    value: function onRegisterUserSuccess(user) {
+      this.loggedInUserId = user._id;
+      this.username = user.username;
+      this.roles = user.roles;
+      this.userIsLoggedIn = true;
+    }
+  }, {
     key: 'onLoginUserSuccess',
     value: function onLoginUserSuccess(user) {
       this.loggedInUserId = user._id;
