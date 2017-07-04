@@ -21,7 +21,6 @@ export default class App extends React.Component {
 
   componentDidMount () {
     UserStore.listen(this.onChange)
-    UserActions.loginUser()
   }
 
   componentWillUnmount () {
