@@ -16,5 +16,21 @@ module.exports = {
           res.status(200).send({message: `Post was successfully added!`})
         })
     }
+  },
+  all: {
+    get: (req, res) => {
+      // if(req.user) {
+      //   res.status(200).send({message: 'Not authorized.'})
+      //   return
+      // }
+
+      // SHOULD BE FIXED!!!!!!!!
+      let userId = '595bf6f9a8a7b9134c1f1bb5'
+      Post
+        .find({author: userId})
+        .then((posts) => {
+          res.status(200).send(posts)
+        })
+    }
   }
 }

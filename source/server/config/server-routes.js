@@ -1,11 +1,11 @@
 const controllers = require('../controllers')
-const auth = require('../utilities/auth')
 
 module.exports = (app) => {
   // User routes
   app.get('/', controllers.home.getHome)
 
-  app.post('/posts/add', auth.isAuthenticated, controllers.post.add.post)
+  app.post('/api/posts/add', controllers.post.add.post)
+  app.get('/api/posts/all', controllers.post.all.get)
 
   app.post('/user/register', controllers.user.register.post)
   app.post('/user/login', controllers.user.login.post)

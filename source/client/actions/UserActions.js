@@ -1,5 +1,7 @@
 import alt from '../alt'
 
+import HomeActions from './HomeActions'
+
 class UserActions {
   constructor () {
     this.generateActions(
@@ -55,7 +57,10 @@ class UserActions {
     }
 
     $.ajax(request)
-      .done(() => this.logoutUserSuccess())
+      .done(() => {
+        this.logoutUserSuccess()
+        HomeActions.removePostsSuccess()
+      })
 
     return true
   }
