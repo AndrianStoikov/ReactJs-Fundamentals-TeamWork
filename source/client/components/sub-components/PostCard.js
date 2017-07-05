@@ -44,7 +44,7 @@ export default class PostCard extends React.Component {
         </div>
         {this.state.showVotePanel ? <PostVotePanel movieId={this.props.post._id} /> : null}
         {this.state.showCommentsPanel
-          ? <PostCommentsPanel comments={this.props.movie.comments} movieId={this.props.post._id} /> : null}
+          ? <PostCommentsPanel comments={this.props.post.comments} postId={this.props.post._id} /> : null}
         <div id='clear' />
       </div>
     )

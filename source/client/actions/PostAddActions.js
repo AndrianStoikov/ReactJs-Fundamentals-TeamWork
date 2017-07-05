@@ -17,6 +17,7 @@ class PostAddActions {
       data: JSON.stringify(data),
       contentType: 'application/json'
     }
+
     $.ajax(request)
       .done(() => this.addPostSuccess())
       .fail((err) => this.addPostFail(err))
