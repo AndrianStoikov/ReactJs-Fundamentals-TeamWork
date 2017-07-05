@@ -4479,6 +4479,7 @@ var PostAddActions = function () {
         data: JSON.stringify(data),
         contentType: 'application/json'
       };
+
       $.ajax(request).done(function () {
         return _this.addPostSuccess();
       }).fail(function (err) {
@@ -4587,7 +4588,7 @@ var UserActions = function () {
 
 exports.default = _alt2.default.createActions(UserActions);
 
-
+},{"../alt":53,"./HomeActions":49}],53:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4690,6 +4691,7 @@ var App = function (_React$Component) {
 
 exports.default = App;
 
+},{"../actions/UserActions":52,"../routes":76,"../stores/UserStore":82,"./Footer":55,"./Navbar":57,"react":"react"}],55:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4832,6 +4834,7 @@ var Footer = function (_Component) {
 
 exports.default = Footer;
 
+},{"../stores/FooterStore":77,"react":"react","react-router-dom":34}],56:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4949,6 +4952,7 @@ var Home = function (_React$Component) {
 
 exports.default = Home;
 
+},{"../actions/HomeActions":49,"../stores/HomeStore":79,"../stores/UserStore":82,"./sub-components/PostCard":69,"react":"react"}],57:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5101,6 +5105,7 @@ var Navbar = function (_React$Component) {
 
 exports.default = Navbar;
 
+},{"../actions/NavbarActions":50,"../stores/NavbarStore":80,"./sub-components/NavbarUserMenu":68,"react":"react","react-router-dom":34}],58:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5237,6 +5242,7 @@ var UserLogin = function (_Component) {
 
 exports.default = UserLogin;
 
+},{"../actions/FormActions":48,"../actions/UserActions":52,"../stores/FormStore":78,"../stores/UserStore":82,"./form/Form":61,"./form/Submit":64,"./form/TextGroup":65,"react":"react","react-router-dom":34}],59:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5325,6 +5331,7 @@ var UserProfile = function (_React$Component) {
 
 exports.default = UserProfile;
 
+},{"../components/sub-components/UserInfo":74,"../stores/UserStore":82,"react":"react"}],60:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5514,6 +5521,7 @@ var UserRegister = function (_Component) {
 
 exports.default = UserRegister;
 
+},{"../actions/FormActions":48,"../actions/UserActions":52,"../stores/FormStore":78,"../stores/UserStore":82,"./form/Form":61,"./form/RadioElement":62,"./form/RadioGroup":63,"./form/Submit":64,"./form/TextGroup":65,"react":"react","react-router-dom":34}],61:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5922,7 +5930,7 @@ var PostAdd = function (_Component) {
 
 exports.default = PostAdd;
 
-},{"../../actions/PostAddActions":51,"../../stores/PostAddStore":75,"../../stores/UserStore":76,"../form/Form":61,"../form/Submit":64,"../form/TextGroup":65,"react":"react","react-router-dom":34}],67:[function(require,module,exports){
+},{"../../actions/PostAddActions":51,"../../stores/PostAddStore":81,"../../stores/UserStore":82,"../form/Form":61,"../form/Submit":64,"../form/TextGroup":65,"react":"react","react-router-dom":34}],67:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6033,7 +6041,7 @@ var CommentsForm = function (_Component) {
 
 exports.default = CommentsForm;
 
-},{"../../actions/FormActions":48,"../../stores/FormStore":76,"react":"react"}],66:[function(require,module,exports){
+},{"../../actions/FormActions":48,"../../stores/FormStore":78,"react":"react"}],68:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6159,6 +6167,7 @@ var NavbarUserMenu = function (_React$Component) {
 
 exports.default = NavbarUserMenu;
 
+},{"../../actions/UserActions":52,"../../stores/UserStore":82,"react":"react","react-router-dom":34}],69:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6253,7 +6262,7 @@ var PostCard = function (_React$Component) {
             movieId: this.props.post._id })
         ),
         this.state.showVotePanel ? _react2.default.createElement(_PostVotePanel2.default, { movieId: this.props.post._id }) : null,
-        this.state.showCommentsPanel ? _react2.default.createElement(_PostCommentsPanel2.default, { comments: this.props.movie.comments, movieId: this.props.post._id }) : null,
+        this.state.showCommentsPanel ? _react2.default.createElement(_PostCommentsPanel2.default, { comments: this.props.post.comments, postId: this.props.post._id }) : null,
         _react2.default.createElement('div', { id: 'clear' })
       );
     }
@@ -6264,6 +6273,7 @@ var PostCard = function (_React$Component) {
 
 exports.default = PostCard;
 
+},{"./PostCommentsPanel":70,"./PostInfo":71,"./PostPanelsToggle":72,"./PostVotePanel":73,"react":"react"}],70:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6335,14 +6345,19 @@ var PostCommentsPanel = function (_React$Component) {
           _react2.default.createElement(
             'div',
             { className: 'media' },
-            _react2.default.createElement(_CommentsForm2.default, { movieId: this.props.movieId })
+            _react2.default.createElement(_CommentsForm2.default, { movieId: this.props.post })
           )
         )
       );
     }
   }]);
 
+  return PostCommentsPanel;
+}(_react2.default.Component);
 
+exports.default = PostCommentsPanel;
+
+},{"./CommentsForm":67,"react":"react"}],71:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6371,7 +6386,8 @@ var PostInfo = function (_React$Component) {
   function PostInfo() {
     _classCallCheck(this, PostInfo);
 
-
+    return _possibleConstructorReturn(this, (PostInfo.__proto__ || Object.getPrototypeOf(PostInfo)).apply(this, arguments));
+  }
 
   _createClass(PostInfo, [{
     key: 'render',
@@ -6392,17 +6408,17 @@ var PostInfo = function (_React$Component) {
         _react2.default.createElement(
           'p',
           null,
-          this.props.post.description
+          this.props.post.content
         ),
         _react2.default.createElement(
           'span',
           { className: 'votes' },
-          'Votes:',
+          'Likes:',
           _react2.default.createElement(
             'strong',
             null,
             ' ',
-            this.props.post.votes
+            this.props.post.likes
           )
         )
       );
@@ -6414,7 +6430,7 @@ var PostInfo = function (_React$Component) {
 
 exports.default = PostInfo;
 
-},{"react":"react","react-router-dom":34}],70:[function(require,module,exports){
+},{"react":"react","react-router-dom":34}],72:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6504,7 +6520,7 @@ var PostPanelToggles = function (_React$Component2) {
 
 exports.default = PostPanelToggles;
 
-},{"../../utilities/Authorize":80,"react":"react","react-router-dom":34}],71:[function(require,module,exports){
+},{"../../utilities/Authorize":83,"react":"react","react-router-dom":34}],73:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6627,7 +6643,7 @@ var PostVotePanel = function (_Component) {
 
 exports.default = PostVotePanel;
 
-},{"../../actions/FormActions":48,"../../stores/FormStore":76,"react":"react"}],72:[function(require,module,exports){
+},{"../../actions/FormActions":48,"../../stores/FormStore":78,"react":"react"}],74:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6715,7 +6731,7 @@ var UserProfileInfo = function (_React$Component) {
 
 exports.default = UserProfileInfo;
 
-},{"react":"react"}],73:[function(require,module,exports){
+},{"react":"react"}],75:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -6740,7 +6756,7 @@ _reactDom2.default.render(_react2.default.createElement(
   _react2.default.createElement(_App2.default, null)
 ), document.getElementById('app'));
 
-},{"./components/App":53,"react":"react","react-dom":"react-dom","react-router-dom":34}],74:[function(require,module,exports){
+},{"./components/App":54,"react":"react","react-dom":"react-dom","react-router-dom":34}],76:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6769,6 +6785,10 @@ var _UserRegister = require('./components/UserRegister');
 
 var _UserRegister2 = _interopRequireDefault(_UserRegister);
 
+var _PostAdd = require('./components/post/PostAdd');
+
+var _PostAdd2 = _interopRequireDefault(_PostAdd);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Routes = function Routes() {
@@ -6785,6 +6805,7 @@ var Routes = function Routes() {
 
 exports.default = Routes;
 
+},{"./components/Home":56,"./components/UserLogin":58,"./components/UserProfile":59,"./components/UserRegister":60,"./components/post/PostAdd":66,"react":"react","react-router-dom":34}],77:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6811,6 +6832,7 @@ var FooterStore = function FooterStore() {
 
 exports.default = _alt2.default.createStore(FooterStore);
 
+},{"../actions/FooterActions":47,"../alt":53}],78:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6975,6 +6997,7 @@ var FormStore = function () {
 
 exports.default = _alt2.default.createStore(FormStore);
 
+},{"../actions/FormActions":48,"../actions/UserActions":52,"../alt":53}],79:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7021,6 +7044,7 @@ var HomeStore = function () {
 
 exports.default = _alt2.default.createStore(HomeStore);
 
+},{"../actions/HomeActions":49,"../alt":53}],80:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7062,7 +7086,75 @@ var NavbarStore = function () {
 
 exports.default = _alt2.default.createStore(NavbarStore);
 
+},{"../actions/NavbarActions":50,"../alt":53}],81:[function(require,module,exports){
+'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _PostAddActions = require('../actions/PostAddActions');
+
+var _PostAddActions2 = _interopRequireDefault(_PostAddActions);
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PostAddStore = function () {
+  function PostAddStore() {
+    _classCallCheck(this, PostAddStore);
+
+    this.bindActions(_PostAddActions2.default);
+
+    this.author = '';
+    this.content = '';
+    this.contentValidationState = '';
+    this.message = '';
+    this.formSubmitState = '';
+  }
+
+  _createClass(PostAddStore, [{
+    key: 'onAddPostSuccesss',
+    value: function onAddPostSuccesss(post) {
+      console.log('Added post');
+      this.content = '';
+      this.contentValidationState = '';
+      this.message = '';
+      this.formSubmitState = '';
+    }
+  }, {
+    key: 'onAddPostFail',
+    value: function onAddPostFail(err) {
+      console.log('Failed to add post', err);
+    }
+  }, {
+    key: 'onHandleContentChange',
+    value: function onHandleContentChange(e) {
+      this.content = e.target.value;
+      this.helpBlock = '';
+    }
+  }, {
+    key: 'onContentValidationFail',
+    value: function onContentValidationFail() {
+      this.contentValidationState = 'has-error';
+      this.message = 'Enter post content';
+      this.formSubmitState = '';
+    }
+  }]);
+
+  return PostAddStore;
+}();
+
+exports.default = _alt2.default.createStore(PostAddStore);
+
+},{"../actions/PostAddActions":51,"../alt":53}],82:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7131,6 +7223,125 @@ var UserStore = function () {
 
 exports.default = _alt2.default.createStore(UserStore);
 
+},{"../actions/HomeActions":49,"../actions/UserActions":52,"../alt":53}],83:[function(require,module,exports){
+'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Concealer = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+exports.default = authorize;
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _UserStore = require('../stores/UserStore');
+
+var _UserStore2 = _interopRequireDefault(_UserStore);
+
+var _FormActions = require('../actions/FormActions');
+
+var _FormActions2 = _interopRequireDefault(_FormActions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function authorize(ChildComponent) {
+  return function (_Component) {
+    _inherits(Authorization, _Component);
+
+    function Authorization(props) {
+      _classCallCheck(this, Authorization);
+
+      var _this = _possibleConstructorReturn(this, (Authorization.__proto__ || Object.getPrototypeOf(Authorization)).call(this, props));
+
+      _this.state = _UserStore2.default.getState();
+      _this.onChange = _this.onChange.bind(_this);
+      return _this;
+    }
+
+    _createClass(Authorization, [{
+      key: 'onChange',
+      value: function onChange(state) {
+        this.setState(state);
+      }
+    }, {
+      key: 'componentWillMount',
+      value: function componentWillMount() {
+        if (!this.state.userIsLoggedIn) {
+          this.props.history.pushState(null, '/user/login');
+          _FormActions2.default.unauthorizedAccessAttempt();
+        }
+      }
+    }, {
+      key: 'componentDidMount',
+      value: function componentDidMount() {
+        _UserStore2.default.listen(this.onChange);
+      }
+    }, {
+      key: 'componentWillUnmount',
+      value: function componentWillUnmount() {
+        _UserStore2.default.unlisten(this.onChange);
+      }
+    }, {
+      key: 'render',
+      value: function render() {
+        return _react2.default.createElement(ChildComponent, this.props);
+      }
+    }]);
+
+    return Authorization;
+  }(_react.Component);
+}
+
+var Concealer = exports.Concealer = function (_Component2) {
+  _inherits(Concealer, _Component2);
+
+  function Concealer(props) {
+    _classCallCheck(this, Concealer);
+
+    var _this2 = _possibleConstructorReturn(this, (Concealer.__proto__ || Object.getPrototypeOf(Concealer)).call(this, props));
+
+    _this2.state = _UserStore2.default.getState();
+    _this2.onChange = _this2.onChange.bind(_this2);
+    return _this2;
+  }
+
+  _createClass(Concealer, [{
+    key: 'onChange',
+    value: function onChange(state) {
+      this.setState(state);
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      _UserStore2.default.listen(this.onChange);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      _UserStore2.default.unlisten(this.onChange);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var ChildComponent = this.props.ChildComponent;
+      return this.state.loggedInUserId ? _react2.default.createElement(ChildComponent, this.props) : null;
+    }
+  }]);
+
+  return Concealer;
+}(_react.Component);
+
+},{"../actions/FormActions":48,"../stores/UserStore":82,"react":"react"}]},{},[75])
 
 //# sourceMappingURL=bundle.js.map

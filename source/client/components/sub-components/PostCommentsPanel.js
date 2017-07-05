@@ -21,7 +21,7 @@ export default class PostCommentsPanel extends React.Component {
         { comments }
         <div className='col-sm-6 col-xs-offset-6 list-group-item animated fadeIn' >
           <div className='media' >
-            <CommentForm movieId={this.props.movieId} />
+            <CommentForm movieId={this.props.post} />
           </div>
         </div>
       </div>

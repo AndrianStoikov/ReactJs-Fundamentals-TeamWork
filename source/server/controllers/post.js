@@ -5,7 +5,7 @@ module.exports = {
     post: (req, res) => {
       let inputData = req.body
       let postData = {
-        author: req.authorId,
+        author: inputData.authorId,
         content: inputData.content
       }
 
