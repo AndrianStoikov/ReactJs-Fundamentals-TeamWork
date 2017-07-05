@@ -1,5 +1,7 @@
-import UserActions from '../actions/UserActions'
 import alt from '../alt'
+
+import HomeActions from '../actions/HomeActions'
+import UserActions from '../actions/UserActions'
 
 class UserStore {
   constructor () {
@@ -28,6 +30,8 @@ class UserStore {
 
   onLogoutUserSuccess () {
     this.loggedInUserId = ''
+    this.username = ''
+    this.roles = []
   }
 }
 
