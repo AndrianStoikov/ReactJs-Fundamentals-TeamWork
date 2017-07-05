@@ -1,4 +1,6 @@
 import alt from '../alt'
+
+import HomeActions from '../actions/HomeActions'
 import UserActions from '../actions/UserActions'
 
 class UserStore {
@@ -10,6 +12,12 @@ class UserStore {
     this.roles = []
   }
 
+  onRegisterUserSuccess (user) {
+    this.loggedInUserId = user._id
+    this.username = user.username
+    this.roles = user.roles
+  }
+
   onLoginUserSuccess (user) {
     this.loggedInUserId = user._id
     this.username = user.username
@@ -17,7 +25,7 @@ class UserStore {
   }
 
   onLoginUserFail () {
-    console.log('Login attempt failed!')
+    console.log('Failed loggin attempt')
   }
 
   onLogoutUserSuccess () {

@@ -4,7 +4,7 @@ import UserInfo from '../components/sub-components/UserInfo'
 
 export default class UserProfile extends React.Component {
   constructor (props) {
-    super (props)
+    super(props)
 
     this.state = UserStore.getState()
 
@@ -27,16 +27,17 @@ export default class UserProfile extends React.Component {
     let nodes = {}
     nodes.roles = this.state.roles.map((role, index) => {
       return (
-        <h4 key={index} className="lead">
+        <h4 key={index} className='lead' >
           <strong>{role}</strong>
         </h4>
       )
     })
     return (
       <div>
-        <UserInfo name={ this.state.name }
-                  roles={ this.state.roles }
-                  information={ this.state.information } />
+        <UserInfo
+          name={this.state.name}
+          roles={this.state.roles}
+          information={this.state.information} />
       </div>
     )
   }

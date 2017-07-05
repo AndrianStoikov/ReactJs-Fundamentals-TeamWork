@@ -1,5 +1,5 @@
 import React from 'react'
-
+import Routes from '../routes'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import UserStore from '../stores/UserStore'
@@ -20,7 +20,6 @@ export default class App extends React.Component {
 
   componentDidMount () {
     UserStore.listen(this.onChange)
-    UserActions.loginUser()
   }
 
   componentWillUnmount () {
@@ -29,11 +28,11 @@ export default class App extends React.Component {
 
   render () {
     return (
-        <div>
-            <Navbar/>
-            { this.props.children }
-            <Footer />
-        </div>
+      <div>
+        <Navbar />
+        <Routes />
+        <Footer />
+      </div>
     )
   }
 }
