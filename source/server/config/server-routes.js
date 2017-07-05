@@ -4,6 +4,9 @@ module.exports = (app) => {
   // User routes
   app.get('/', controllers.home.getHome)
 
+  app.post('/api/posts/add', controllers.post.add.post)
+  app.get('/api/posts/all', controllers.post.all.get)
+
   app.post('/user/register', controllers.user.register.post)
   app.post('/user/login', controllers.user.login.post)
   app.post('/user/logout', controllers.user.logout)
