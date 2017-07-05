@@ -8,4 +8,6 @@ module.exports = (app) => {
   app.post('/user/login', controllers.user.login.post)
   app.post('/user/logout', controllers.user.logout)
   app.get('/api/user/:userId', controllers.user.profile.get)
+
+  app.post('/api/post/add', controllers.post.add.post)
 }

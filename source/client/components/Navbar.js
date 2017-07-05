@@ -63,6 +63,9 @@ export default class Navbar extends React.Component {
             <li>
               <Link to='/' >Home</Link>
             </li>
+            <li>
+              <Link to='/post/add' >AddPost</Link>
+            </li>
           </ul>
           {navbarUserMenu}
         </div>
