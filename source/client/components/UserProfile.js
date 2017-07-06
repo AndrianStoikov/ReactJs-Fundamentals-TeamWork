@@ -1,10 +1,8 @@
 import React from 'react'
-
-import UserActions from '../actions/UserActions'
 import UserStore from '../stores/UserStore'
+import UserInfo from '../components/sub-components/UserInfo'
+import { Link } from 'react-router-dom'
 
-import UserInfo from './sub-components/user-profile/UserInfo'
-import UserPosts from './sub-components/user-profile/UserPosts'
 
 export default class UserProfile extends React.Component {
   constructor (props) {
@@ -60,7 +58,6 @@ export default class UserProfile extends React.Component {
         </h4>
       )
     })
-
     return (
       <div>
         <UserInfo
