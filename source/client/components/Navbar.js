@@ -66,6 +66,9 @@ export default class Navbar extends React.Component {
             <li>
               <Link to='/post/add' >AddPost</Link>
             </li>
+            <li>
+              <Link to='/post/edit/595dee886b217e0e34a4862d' >EditPost(testing)</Link>
+            </li>
           </ul>
           {navbarUserMenu}
         </div>

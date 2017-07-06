@@ -6,6 +6,7 @@ import UserProfile from './components/UserProfile'
 import UserLogin from './components/UserLogin'
 import UserRegister from './components/UserRegister'
 import PostAdd from './components/post/PostAdd'
+import PostEdit from './components/post/PostEdit'
 
 const Routes = () => (
   <Switch>
@@ -14,6 +15,7 @@ const Routes = () => (
     <Route exact path='/user/login' component={UserLogin} />
     <Route exact path='/user/register' component={UserRegister} />
     <Route exact path='/post/add' component={PostAdd} />
+    <Route exact path='/post/edit/:postId' component={PostEdit} />
     <Route component={Home} />
   </Switch>
 )

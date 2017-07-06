@@ -32,5 +32,47 @@ module.exports = {
           res.status(200).send(posts)
         })
     }
+  },
+  editGet: (req, res) => {
+    let postId = req.params.postId
+    Post.findById(postId).then((post) => {
+      if (!post) {
+        res.sendStatus(404)
+        return
+      }
+      let canEdit = checkIfUserCanEdit(req.user, post.author)
+      if (canEdit) {
+        res.status(200).send(post)
+      } else {
+        res.sendStatus(404)
+      }
+    })
+  },
+  editPost: (req, res) => {
+    let postId = req.params.postId
+    let editedPost = req.body
+    Post.findById(postId).then(post => {
+      if (!post) {
+        res.sendStatus(404)
+        return
+      }
+      if (checkIfUserCanEdit(req.user, post.author)) {
+        post.content = editedPost.content
+        post.save()
+          .then(() => {
+            res.status(200).send({message: `Post was successfully edited!`})
+          })
+      }
+    })
   }
+}
+
+function checkIfUserCanEdit (currUser, authorId) {
+  if (currUser._id.toString() === authorId.toString()) {
+    return true
+  }
+  if (currUser.roles.indexOf('Admin') >= 0) {
+    return true
+  }
+  return false
 }

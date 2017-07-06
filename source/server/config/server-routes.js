@@ -13,6 +13,8 @@ module.exports = (app) => {
   app.get('/api/user/:userId', controllers.user.profile.get)
 
   app.post('/api/post/add', controllers.post.add.post)
+  app.get('/api/post/edit/:postId', controllers.post.editGet)
+  app.post('/api/post/edit/:postId', controllers.post.editPost)
 
   app.all('*', controllers.home.redirectToHome)
 }
