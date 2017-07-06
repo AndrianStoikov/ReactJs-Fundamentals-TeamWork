@@ -1,5 +1,5 @@
 import alt from '../alt'
-
+import Auth from '../components/Auth'
 import HomeActions from '../actions/HomeActions'
 import UserActions from '../actions/UserActions'
 
@@ -13,15 +13,18 @@ class UserStore {
   }
 
   onRegisterUserSuccess (user) {
-    this.loggedInUserId = user._id
-    this.username = user.username
-    this.roles = user.roles
+    this.loggedInUserId = ''
+    this.username = ''
+    this.roles = []
   }
 
-  onLoginUserSuccess (user) {
+  onLoginUserSuccess (responseData) {
+    const user = responseData.user
     this.loggedInUserId = user._id
     this.username = user.username
     this.roles = user.roles
+    Auth.authenticateUser(responseData.token)
+    Auth.saveUser(user)
   }
 
   onLoginUserFail () {
@@ -32,6 +35,8 @@ class UserStore {
     this.loggedInUserId = ''
     this.username = ''
     this.roles = []
+    Auth.deauthenticateUser()
+    Auth.removeUser()
   }
 }
 
