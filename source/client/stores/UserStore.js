@@ -9,6 +9,13 @@ class UserStore {
     this.username = ''
     this.roles = []
     this.userPosts = []
+    this.profile = {
+      userUsername: '',
+      userAge: '',
+      userFirstName: '',
+      userLastName: '',
+      userGender: ''
+    }
   }
 
   onRegisterUserSuccess (user) {
@@ -40,6 +47,14 @@ class UserStore {
 
   onGetUserOwnPostsFail () {
     console.log('Couldn\'t get user own posts. Problem with the DB')
+  }
+
+  onGetProfileInfoSuccess (user) {
+    this.profile.userUsername = user.username
+    this.profile.userAge = user.age
+    this.profile.userFirstName = user.firstName
+    this.profile.userLastName = user.lastName
+    this.profile.gender = user.gender
   }
 }
 

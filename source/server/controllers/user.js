@@ -62,7 +62,15 @@ module.exports = {
       User.findById(userId).then(user => {
         if (!user) { return res.status(404).send({message: 'User no longer exists'}) }
 
-        res.status(200).send(user)
+        let userObj = {
+          username: user.username,
+          age: user.age,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          gender: user.gender
+        }
+
+        res.status(200).send(userObj)
       })
     }
   }

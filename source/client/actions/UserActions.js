@@ -11,7 +11,8 @@ class UserActions {
       'loginUserFail',
       'logoutUserSuccess',
       'getUserOwnPostsSuccess',
-      'getUserOwnPostsFail'
+      'getUserOwnPostsFail',
+      'getProfileInfoSuccess'
     )
   }
 
