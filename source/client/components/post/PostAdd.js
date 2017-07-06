@@ -35,7 +35,7 @@ export default class PostAdd extends Component {
       return
     }
 
-    PostAddActions.addMovie({ 'authorId': UserStore.getState().loggedInUserId, 'content': content })
+    PostAddActions.addPost({ 'authorId': UserStore.getState().loggedInUserId, 'content': content })
   }
 
   render () {
