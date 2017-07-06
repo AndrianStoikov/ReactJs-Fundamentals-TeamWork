@@ -58,7 +58,7 @@ export default class UserRegister extends Component {
   }
 
   render () {
-    if (UserStore.getState().loggedInUserId !== '') {
+    if (FormStore.getState().username === '') {
       return <Redirect to='/' />
     }
 

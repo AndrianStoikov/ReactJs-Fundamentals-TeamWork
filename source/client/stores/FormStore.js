@@ -32,6 +32,12 @@ class FormStore {
 
     this.formSubmitState = 'has-success'
     this.username = ''
+    this.password = ''
+    this.confirmedPassword = ''
+    this.firstName = ''
+    this.lastName = ''
+    this.age = ''
+    this.gender = ''
     this.usernameValidationState = ''
     this.passwordValidationState = ''
     this.message = 'User register success'
@@ -95,6 +101,8 @@ class FormStore {
     this.formSubmitState = 'has-success'
     this.usernameValidationState = ''
     this.passwordValidationState = ''
+    this.username = ''
+    this.password = ''
     this.message = 'User login successful'
   }
 
