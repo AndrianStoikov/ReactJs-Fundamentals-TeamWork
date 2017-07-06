@@ -11,9 +11,9 @@ export default class PostInfo extends React.Component {
           </Link>
         </h4>
         <br />
-        <p>{ this.props.post.description }</p>
-        <span className='votes' >Votes:
-                    <strong> { this.props.post.votes }</strong>
+        <p>{ this.props.post.content }</p>
+        <span className='votes' >Likes:
+                    <strong> { this.props.post.likes }</strong>
         </span>
       </div>
     )

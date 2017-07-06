@@ -13,4 +13,6 @@ module.exports = (app) => {
   app.get('/api/user/:userId', controllers.user.profile.get)
 
   app.post('/api/post/add', controllers.post.add.post)
+
+  app.all('*', controllers.home.redirectToHome)
 }
