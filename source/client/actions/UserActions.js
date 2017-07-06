@@ -9,7 +9,9 @@ class UserActions {
       'registerUserFail',
       'loginUserSuccess',
       'loginUserFail',
-      'logoutUserSuccess'
+      'logoutUserSuccess',
+      'getUserOwnPostsSuccess',
+      'getUserOwnPostsFail'
     )
   }
 
