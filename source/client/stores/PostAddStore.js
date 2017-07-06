@@ -12,11 +12,11 @@ class PostAddStore {
     this.formSubmitState = ''
   }
 
-  onAddPostSuccesss (post) {
+  onAddPostSuccess (post) {
     console.log('Added post')
     this.content = ''
     this.contentValidationState = ''
-    this.message = ''
+    this.message = 'Post added'
     this.formSubmitState = ''
   }
 
