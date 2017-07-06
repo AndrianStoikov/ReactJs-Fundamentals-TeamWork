@@ -48,7 +48,8 @@ export default class Home extends React.Component {
         <PostCard
           key={post._id}
           post={post}
-          index={index} />
+          index={index}
+          getUserPosts={this.getUserPosts.bind(this)}/>
       )
     })
 

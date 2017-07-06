@@ -10,6 +10,14 @@ class UserStore {
     this.loggedInUserId = ''
     this.username = ''
     this.roles = []
+    this.userPosts = []
+    this.profile = {
+      userUsername: '',
+      userAge: '',
+      userFirstName: '',
+      userLastName: '',
+      userGender: ''
+    }
   }
 
   onRegisterUserSuccess (user) {
@@ -32,6 +40,14 @@ class UserStore {
     this.loggedInUserId = ''
     this.username = ''
     this.roles = []
+  }
+
+  onGetProfileInfoSuccess (user) {
+    this.profile.userUsername = user.username
+    this.profile.userAge = user.age
+    this.profile.userFirstName = user.firstName
+    this.profile.userLastName = user.lastName
+    this.profile.gender = user.gender
   }
 }
 

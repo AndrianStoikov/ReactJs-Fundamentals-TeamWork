@@ -5,11 +5,14 @@ export default class UserInfo extends React.Component {
     return (
       <div className='container profile-container'>
         <div className='profile-img'>
-          <img src='/images/user-default.png'/>
+          <img src='/images/user-default.png' />
         </div>
         <div className='profile-info clearfix'>
-          <h2><strong>{ this.props.name }</strong></h2>
-          <p>{ this.props.information }</p>
+          <h2><strong>First Name: { this.props.profile.userFirstName }</strong></h2>
+          <h2><strong>Last Name: { this.props.profile.userLastName }</strong></h2>
+          <h2><strong>Gender: { this.props.profile.gender }</strong></h2>
+          <h2><strong>Username: { this.props.profile.userUsername }</strong></h2>
+          <h2><strong>Age: { this.props.profile.userAge }</strong></h2>
         </div>
       </div>
     )

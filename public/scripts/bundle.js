@@ -4520,7 +4520,7 @@ var UserActions = function () {
   function UserActions() {
     _classCallCheck(this, UserActions);
 
-    this.generateActions('registerUserSuccess', 'registerUserFail', 'loginUserSuccess', 'loginUserFail', 'logoutUserSuccess', 'getUserOwnPostsSuccess', 'getUserOwnPostsFail');
+    this.generateActions('registerUserSuccess', 'registerUserFail', 'loginUserSuccess', 'loginUserFail', 'logoutUserSuccess', 'getUserOwnPostsSuccess', 'getUserOwnPostsFail', 'getProfileInfoSuccess');
   }
 
   _createClass(UserActions, [{
@@ -4922,11 +4922,14 @@ var Home = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var posts = this.state.posts.map(function (post, index) {
         return _react2.default.createElement(_PostCard2.default, {
           key: post._id,
           post: post,
-          index: index });
+          index: index,
+          getUserPosts: _this2.getUserPosts.bind(_this2) });
       });
 
       return _react2.default.createElement(
@@ -5313,10 +5316,24 @@ var UserProfile = function (_React$Component) {
       });
     }
   }, {
+    key: 'getUserInformation',
+    value: function getUserInformation() {
+      var userId = this.props.match.params.userId;
+      var request = {
+        url: '/api/user/' + userId,
+        method: 'get'
+      };
+
+      $.ajax(request).done(function (userInfo) {
+        return _UserActions2.default.getProfileInfoSuccess(userInfo);
+      });
+    }
+  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
       _UserStore2.default.listen(this.onChange);
       this.getUserOwnPosts();
+      this.getUserInformation();
     }
   }, {
     key: 'componentWillUnmount',
@@ -5345,7 +5362,7 @@ var UserProfile = function (_React$Component) {
         _react2.default.createElement(_UserInfo2.default, {
           name: this.state.name,
           roles: this.state.roles,
-          information: this.state.information }),
+          profile: this.state.profile }),
         _react2.default.createElement(_UserPosts2.default, { posts: this.state.userPosts })
       );
     }
@@ -6205,6 +6222,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _UserStore = require('../../stores/UserStore');
+
+var _UserStore2 = _interopRequireDefault(_UserStore);
+
 var _PostInfo = require('./PostInfo');
 
 var _PostInfo2 = _interopRequireDefault(_PostInfo);
@@ -6238,29 +6259,48 @@ var PostCard = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (PostCard.__proto__ || Object.getPrototypeOf(PostCard)).call(this, props));
 
     _this.state = {
-      showVotePanel: false,
       showCommentsPanel: false
     };
     return _this;
   }
 
   _createClass(PostCard, [{
+    key: 'likePost',
+    value: function likePost() {
+      var _this2 = this;
+
+      var postId = this.props.post._id;
+      var request = {
+        url: '/api/post/like/' + postId,
+        method: 'post'
+      };
+
+      $.ajax(request).done(function () {
+        return _this2.props.getUserPosts();
+      });
+    }
+  }, {
+    key: 'unlikePost',
+    value: function unlikePost() {
+      var _this3 = this;
+
+      var postId = this.props.post._id;
+      var request = {
+        url: '/api/post/unlike/' + postId,
+        method: 'post'
+      };
+
+      $.ajax(request).done(function () {
+        return _this3.props.getUserPosts();
+      });
+    }
+  }, {
     key: 'toggleCommentsPanel',
     value: function toggleCommentsPanel() {
       this.setState(function (prevState) {
         return {
           showCommentsPanel: !prevState.showCommentsPanel,
           showVotePanel: false
-        };
-      });
-    }
-  }, {
-    key: 'toggleVotePanel',
-    value: function toggleVotePanel() {
-      this.setState(function (prevState) {
-        return {
-          showVotePanel: !prevState.showVotePanel,
-          showCommentsPanel: false
         };
       });
     }
@@ -6280,10 +6320,12 @@ var PostCard = function (_React$Component) {
           ),
           _react2.default.createElement(_PostInfo2.default, { post: this.props.post }),
           _react2.default.createElement(_PostPanelsToggle2.default, {
+            userId: _UserStore2.default.getState().loggedInUserId,
             toggleCommentsPanel: this.toggleCommentsPanel.bind(this),
-            toggleVotePanel: this.toggleVotePanel.bind(this),
             showCommentsPanel: this.state.showCommentsPanel,
-            showVotePanel: this.state.showVotePanel,
+            likePost: this.likePost.bind(this),
+            unlikePost: this.unlikePost.bind(this),
+            postLikes: this.props.post.likes,
             movieId: this.props.post._id })
         ),
         this.state.showVotePanel ? _react2.default.createElement(_PostVotePanel2.default, { movieId: this.props.post._id }) : null,
@@ -6298,7 +6340,7 @@ var PostCard = function (_React$Component) {
 
 exports.default = PostCard;
 
-},{"./PostCommentsPanel":70,"./PostInfo":71,"./PostPanelsToggle":72,"./PostVotePanel":73,"react":"react"}],70:[function(require,module,exports){
+},{"../../stores/UserStore":84,"./PostCommentsPanel":70,"./PostInfo":71,"./PostPanelsToggle":72,"./PostVotePanel":73,"react":"react"}],70:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6443,7 +6485,7 @@ var PostInfo = function (_React$Component) {
             'strong',
             null,
             ' ',
-            this.props.post.likes
+            this.props.post.likes.length
           )
         )
       );
@@ -6470,8 +6512,6 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = require('react-router-dom');
 
-var _Authorize = require('../../utilities/Authorize');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -6480,33 +6520,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var VoteToggle = function (_React$Component) {
-  _inherits(VoteToggle, _React$Component);
-
-  function VoteToggle() {
-    _classCallCheck(this, VoteToggle);
-
-    return _possibleConstructorReturn(this, (VoteToggle.__proto__ || Object.getPrototypeOf(VoteToggle)).apply(this, arguments));
-  }
-
-  _createClass(VoteToggle, [{
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'a',
-        {
-          className: 'btn btn-primary',
-          onClick: this.props.toggleVotePanel },
-        this.props.showVotePanel ? 'Hide' : 'Vote'
-      );
-    }
-  }]);
-
-  return VoteToggle;
-}(_react2.default.Component);
-
-var PostPanelToggles = function (_React$Component2) {
-  _inherits(PostPanelToggles, _React$Component2);
+var PostPanelToggles = function (_React$Component) {
+  _inherits(PostPanelToggles, _React$Component);
 
   function PostPanelToggles() {
     _classCallCheck(this, PostPanelToggles);
@@ -6515,8 +6530,59 @@ var PostPanelToggles = function (_React$Component2) {
   }
 
   _createClass(PostPanelToggles, [{
+    key: 'isLiked',
+    value: function isLiked() {
+      var likes = this.props.postLikes;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = likes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var like = _step.value;
+
+          if (this.props.userId === like.toString()) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return false;
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var likeButton = void 0;
+      if (this.isLiked()) {
+        likeButton = _react2.default.createElement(
+          'a',
+          {
+            className: 'btn btn-primary',
+            onClick: this.props.unlikePost },
+          'Unlike'
+        );
+      } else {
+        likeButton = _react2.default.createElement(
+          'a',
+          {
+            className: 'btn btn-primary',
+            onClick: this.props.likePost },
+          'Like'
+        );
+      }
       return _react2.default.createElement(
         'div',
         { className: 'pull-right btn-group' },
@@ -6527,10 +6593,7 @@ var PostPanelToggles = function (_React$Component2) {
             onClick: this.props.toggleCommentsPanel },
           this.props.showCommentsPanel ? 'Hide' : 'Comments'
         ),
-        _react2.default.createElement(_Authorize.Concealer, {
-          ChildComponent: VoteToggle,
-          toggleVotePanel: this.props.toggleVotePanel,
-          showVotePanel: this.props.showVotePanel }),
+        likeButton,
         _react2.default.createElement(
           _reactRouterDom.Link,
           { to: '/movie/' + this.props.movieId + '/review/add', className: 'btn btn-warning' },
@@ -6545,7 +6608,7 @@ var PostPanelToggles = function (_React$Component2) {
 
 exports.default = PostPanelToggles;
 
-},{"../../utilities/Authorize":85,"react":"react","react-router-dom":34}],73:[function(require,module,exports){
+},{"react":"react","react-router-dom":34}],73:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6718,13 +6781,49 @@ var UserInfo = function (_React$Component) {
             _react2.default.createElement(
               'strong',
               null,
-              this.props.name
+              'First Name: ',
+              this.props.profile.userFirstName
             )
           ),
           _react2.default.createElement(
-            'p',
+            'h2',
             null,
-            this.props.information
+            _react2.default.createElement(
+              'strong',
+              null,
+              'Last Name: ',
+              this.props.profile.userLastName
+            )
+          ),
+          _react2.default.createElement(
+            'h2',
+            null,
+            _react2.default.createElement(
+              'strong',
+              null,
+              'Gender: ',
+              this.props.profile.gender
+            )
+          ),
+          _react2.default.createElement(
+            'h2',
+            null,
+            _react2.default.createElement(
+              'strong',
+              null,
+              'Username: ',
+              this.props.profile.userUsername
+            )
+          ),
+          _react2.default.createElement(
+            'h2',
+            null,
+            _react2.default.createElement(
+              'strong',
+              null,
+              'Age: ',
+              this.props.profile.userAge
+            )
           )
         )
       );
@@ -6814,7 +6913,7 @@ var UserPosts = function (_React$Component) {
           _react2.default.createElement(
             'a',
             { className: 'btn btn-primary', onClick: this.togglePosts.bind(this) },
-            this.state.showPostsPanel ? 'Hide' : 'Rated Movies'
+            this.state.showPostsPanel ? 'Hide' : 'Show User Posts'
           )
         ),
         _react2.default.createElement(
@@ -7342,6 +7441,13 @@ var UserStore = function () {
     this.username = '';
     this.roles = [];
     this.userPosts = [];
+    this.profile = {
+      userUsername: '',
+      userAge: '',
+      userFirstName: '',
+      userLastName: '',
+      userGender: ''
+    };
   }
 
   _createClass(UserStore, [{
@@ -7381,6 +7487,15 @@ var UserStore = function () {
     value: function onGetUserOwnPostsFail() {
       console.log('Couldn\'t get user own posts. Problem with the DB');
     }
+  }, {
+    key: 'onGetProfileInfoSuccess',
+    value: function onGetProfileInfoSuccess(user) {
+      this.profile.userUsername = user.username;
+      this.profile.userAge = user.age;
+      this.profile.userFirstName = user.firstName;
+      this.profile.userLastName = user.lastName;
+      this.profile.gender = user.gender;
+    }
   }]);
 
   return UserStore;
@@ -7388,125 +7503,6 @@ var UserStore = function () {
 
 exports.default = _alt2.default.createStore(UserStore);
 
-},{"../actions/UserActions":52,"../alt":53}],85:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Concealer = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-exports.default = authorize;
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _UserStore = require('../stores/UserStore');
-
-var _UserStore2 = _interopRequireDefault(_UserStore);
-
-var _FormActions = require('../actions/FormActions');
-
-var _FormActions2 = _interopRequireDefault(_FormActions);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function authorize(ChildComponent) {
-  return function (_Component) {
-    _inherits(Authorization, _Component);
-
-    function Authorization(props) {
-      _classCallCheck(this, Authorization);
-
-      var _this = _possibleConstructorReturn(this, (Authorization.__proto__ || Object.getPrototypeOf(Authorization)).call(this, props));
-
-      _this.state = _UserStore2.default.getState();
-      _this.onChange = _this.onChange.bind(_this);
-      return _this;
-    }
-
-    _createClass(Authorization, [{
-      key: 'onChange',
-      value: function onChange(state) {
-        this.setState(state);
-      }
-    }, {
-      key: 'componentWillMount',
-      value: function componentWillMount() {
-        if (!this.state.userIsLoggedIn) {
-          this.props.history.pushState(null, '/user/login');
-          _FormActions2.default.unauthorizedAccessAttempt();
-        }
-      }
-    }, {
-      key: 'componentDidMount',
-      value: function componentDidMount() {
-        _UserStore2.default.listen(this.onChange);
-      }
-    }, {
-      key: 'componentWillUnmount',
-      value: function componentWillUnmount() {
-        _UserStore2.default.unlisten(this.onChange);
-      }
-    }, {
-      key: 'render',
-      value: function render() {
-        return _react2.default.createElement(ChildComponent, this.props);
-      }
-    }]);
-
-    return Authorization;
-  }(_react.Component);
-}
-
-var Concealer = exports.Concealer = function (_Component2) {
-  _inherits(Concealer, _Component2);
-
-  function Concealer(props) {
-    _classCallCheck(this, Concealer);
-
-    var _this2 = _possibleConstructorReturn(this, (Concealer.__proto__ || Object.getPrototypeOf(Concealer)).call(this, props));
-
-    _this2.state = _UserStore2.default.getState();
-    _this2.onChange = _this2.onChange.bind(_this2);
-    return _this2;
-  }
-
-  _createClass(Concealer, [{
-    key: 'onChange',
-    value: function onChange(state) {
-      this.setState(state);
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      _UserStore2.default.listen(this.onChange);
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      _UserStore2.default.unlisten(this.onChange);
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var ChildComponent = this.props.ChildComponent;
-      return this.state.loggedInUserId ? _react2.default.createElement(ChildComponent, this.props) : null;
-    }
-  }]);
-
-  return Concealer;
-}(_react.Component);
-
-},{"../actions/FormActions":48,"../stores/UserStore":84,"react":"react"}]},{},[77])
+},{"../actions/UserActions":52,"../alt":53}]},{},[77])
 
 //# sourceMappingURL=bundle.js.map
