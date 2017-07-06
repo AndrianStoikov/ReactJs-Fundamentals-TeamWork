@@ -19,7 +19,9 @@ class PostAddActions {
     }
 
     $.ajax(request)
-      .done(() => this.addPostSuccess())
+      .done(() => {
+        this.addPostSuccess()
+      })
       .fail((err) => this.addPostFail(err))
 
     return true
