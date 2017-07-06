@@ -14,6 +14,7 @@ const Routes = () => (
     <Route exact path='/user/login' component={UserLogin} />
     <Route exact path='/user/register' component={UserRegister} />
     <Route exact path='/post/add' component={PostAdd} />
+    <Route component={Home} />
   </Switch>
 )
 

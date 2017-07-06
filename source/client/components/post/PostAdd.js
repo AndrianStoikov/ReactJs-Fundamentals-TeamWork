@@ -45,7 +45,7 @@ export default class PostAdd extends Component {
 
     return (
       <Form
-        title='Login'
+        title='New Post'
         handleSubmit={this.handleSubmit.bind(this)}
         submitState={this.state.formSubmitState}
         message={this.state.message} >
