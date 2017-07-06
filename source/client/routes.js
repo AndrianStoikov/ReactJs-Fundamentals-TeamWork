@@ -15,10 +15,6 @@ const Routes = () => (
         <Route exact path='/user/login' component={UserLogin}/>
         <Route exact path='/user/register' component={UserRegister}/>
         <Route exact path='/post/add' component={PostAdd}/>
-        <Route exact path="/user/block" component={BlockUser}/>
-            <Route path="/render" render={props => (
-                <h1>MAIKA TI DA EBA UMRQLA</h1>
-        )}/>
         <Route component={Home}/>
     </Switch>
 )
