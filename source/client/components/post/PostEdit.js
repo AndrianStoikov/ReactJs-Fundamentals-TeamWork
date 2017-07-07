@@ -21,7 +21,7 @@ export default class PostEdit extends Component {
 
   componentDidMount () {
     PostEditStore.listen(this.onChange)
-    if (Auth.getUser()._id) {
+    if (UserStore.getState().loggedInUserId !== '') {
       let postId = this.props.match.params.postId
       PostEditActions.getEditPostInfo(postId)
     }
