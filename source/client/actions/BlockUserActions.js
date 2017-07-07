@@ -30,13 +30,6 @@ class BlockUserActions {
                     return true
                 }
 
-<<<<<<< HEAD
-        let request = DadaRequests.post('/api/user/block/', dataForRequest, true)
-=======
-                let userForBlockId = data[0]._id
->>>>>>> refs/remotes/origin/master
-
-
                 let dataForRequest = {
                     userForBlockId: data[0]._id,
                     currentUserId: cureentUserId
