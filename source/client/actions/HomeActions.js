@@ -14,8 +14,10 @@ class HomeActions {
     let request = Data.get('/api/posts/all', true)
 
     $.ajax(request)
-      .done(data => HomeActions.getUserPostsSuccess(data))
-      .fail(err => HomeActions.getUserPostsFail(err))
+      .done(data => this.getUserPostsSuccess(data))
+      .fail(err => this.getUserPostsFail(err))
+
+    return true
   }
 }
 

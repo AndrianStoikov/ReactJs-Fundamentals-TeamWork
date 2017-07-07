@@ -12,6 +12,7 @@ module.exports = {
   add: {
     post: (req, res) => {
       let inputData = req.body
+      console.log(inputData)
       let postData = {
         author: inputData.authorId,
         content: inputData.content
@@ -26,13 +27,12 @@ module.exports = {
   },
   all: {
     get: (req, res) => {
-      // if(req.user) {
-      //   res.status(200).send({message: 'Not authorized.'})
-      //   return
-      // }
+      if (!req.user) {
+        res.status(200).send({message: 'Not authorized.'})
+        return
+      }
 
-      // SHOULD BE FIXED!!!!!!!!
-      let userId = '595bf6f9a8a7b9134c1f1bb5'
+      let userId = req.user._id
       Post
         .find({author: userId})
         .sort('-dateCreated')
@@ -88,11 +88,17 @@ module.exports = {
   },
   like: {
     post: (req, res) => {
-      // METHOD SHOULD BE FIXED SO THE RIGHT USER CAN LIKE THE POST
       let postId = req.params.id
-      let userid = '595bf6f9a8a7b9134c1f1bb5'
+
+      if (!req.user) {
+        res.status(200).send({message: 'Not authorized.'})
+        return
+      }
+
+      let userId = req.user._id
+
       Post
-        .findByIdAndUpdate(postId, {$push: {likes: userid}})
+        .findByIdAndUpdate(postId, {$addToSet: {likes: userId}})
         .then((post) => {
           res.status(200).send(post)
         })
@@ -100,11 +106,17 @@ module.exports = {
   },
   unlike: {
     post: (req, res) => {
-      // METHOD SHOULD BE FIXED SO THE RIGHT USER CAN LIKE THE POST
       let postId = req.params.id
-      let userid = '595bf6f9a8a7b9134c1f1bb5'
+
+      if (!req.user) {
+        res.status(200).send({message: 'Not authorized.'})
+        return
+      }
+
+      let userId = req.user._id
+
       Post
-        .findByIdAndUpdate(postId, {$pull: {likes: userid}})
+        .findByIdAndUpdate(postId, {$pull: {likes: userId}})
         .then((post) => {
           res.status(200).send(post)
         })
