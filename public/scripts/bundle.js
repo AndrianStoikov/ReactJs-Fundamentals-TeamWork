@@ -4377,7 +4377,7 @@ var DataRequests = function () {
   _createClass(DataRequests, null, [{
     key: 'post',
     value: function post(url, data, authenticated) {
-      var headers = { contentType: 'application/json' };
+      var headers = { 'Content-Type': 'application/json' };
 
       if (authenticated) {
         headers.Authorization = 'bearer ' + _Auth2.default.getToken();
@@ -4644,7 +4644,6 @@ var PostAddActions = function () {
       var _this = this;
 
       var request = _DataRequests2.default.post('/api/post/add', data, true);
-
       $.ajax(request).done(function () {
         _this.addPostSuccess();
       }).fail(function (err) {
@@ -4760,9 +4759,33 @@ var UserActions = function () {
   }
 
   _createClass(UserActions, [{
+    key: 'getUserOwnPosts',
+    value: function getUserOwnPosts(currentUserId) {
+      var _this = this;
+
+      var request = _DataRequests2.default.get('/api/post/own/' + currentUserId, true);
+
+      $.ajax(request).done(function (posts) {
+        return _this.getUserOwnPostsSuccess(posts);
+      }).fail(function () {
+        return _this.getUserOwnPostsFail();
+      });
+    }
+  }, {
+    key: 'getUserInformation',
+    value: function getUserInformation(userId) {
+      var _this2 = this;
+
+      var request = _DataRequests2.default.get('/api/user/' + userId, true);
+
+      $.ajax(request).done(function (userInfo) {
+        return _this2.getProfileInfoSuccess(userInfo);
+      });
+    }
+  }, {
     key: 'registerUser',
     value: function registerUser(data) {
-      var _this = this;
+      var _this3 = this;
 
       var request = {
         url: '/user/register',
@@ -4772,10 +4795,10 @@ var UserActions = function () {
       };
 
       $.ajax(request).done(function (data) {
-        _this.registerUserSuccess(data);
+        _this3.registerUserSuccess(data);
       }).fail(function (err) {
         console.log('Error', err);
-        _this.registerUserFail(err.responseJSON.message);
+        _this3.registerUserFail(err.responseJSON.message);
       });
 
       return true;
@@ -4783,7 +4806,7 @@ var UserActions = function () {
   }, {
     key: 'loginUser',
     value: function loginUser(data) {
-      var _this2 = this;
+      var _this4 = this;
 
       var request = {
         url: '/user/login',
@@ -4793,9 +4816,9 @@ var UserActions = function () {
       };
 
       $.ajax(request).done(function (data) {
-        _this2.loginUserSuccess(data);
+        _this4.loginUserSuccess(data);
       }).fail(function (err) {
-        return _this2.loginUserFail(err.responseJSON);
+        return _this4.loginUserFail(err.responseJSON);
       });
 
       return true;
@@ -4803,7 +4826,7 @@ var UserActions = function () {
   }, {
     key: 'logoutUser',
     value: function logoutUser() {
-      var _this3 = this;
+      var _this5 = this;
 
       var request = {
         url: '/user/logout',
@@ -4811,7 +4834,7 @@ var UserActions = function () {
       };
 
       $.ajax(request).done(function () {
-        _this3.logoutUserSuccess();
+        _this5.logoutUserSuccess();
         _HomeActions2.default.removePostsSuccess();
       });
 
@@ -4820,14 +4843,14 @@ var UserActions = function () {
   }, {
     key: 'getUserOwnPosts',
     value: function getUserOwnPosts(userId) {
-      var _this4 = this;
+      var _this6 = this;
 
       var req = _DataRequests2.default.get('/api/post/own/' + userId, true);
 
       $.ajax(req).done(function (posts) {
-        return _this4.getUserOwnPostsSuccess(posts);
+        return _this6.getUserOwnPostsSuccess(posts);
       }).fail(function () {
-        return _this4.getUserOwnPostsFail();
+        return _this6.getUserOwnPostsFail();
       });
 
       return true;
@@ -4835,12 +4858,12 @@ var UserActions = function () {
   }, {
     key: 'getUserInformation',
     value: function getUserInformation(userId) {
-      var _this5 = this;
+      var _this7 = this;
 
       var request = _DataRequests2.default.get('/api/user/' + userId, true);
 
       $.ajax(request).done(function (userInfo) {
-        return _this5.getProfileInfoSuccess(userInfo);
+        return _this7.getProfileInfoSuccess(userInfo);
       });
 
       return true;

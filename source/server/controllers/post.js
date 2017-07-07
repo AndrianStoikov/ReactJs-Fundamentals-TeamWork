@@ -12,6 +12,7 @@ module.exports = {
   add: {
     post: (req, res) => {
       let inputData = req.body
+      console.log(inputData)
       let postData = {
         author: inputData.authorId,
         content: inputData.content

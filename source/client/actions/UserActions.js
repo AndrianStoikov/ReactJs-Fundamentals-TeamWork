@@ -18,6 +18,21 @@ class UserActions {
     )
   }
 
+  getUserOwnPosts (currentUserId) {
+    let request = Data.get(`/api/post/own/${currentUserId}`, true)
+
+    $.ajax(request)
+      .done(posts => this.getUserOwnPostsSuccess(posts))
+      .fail(() => this.getUserOwnPostsFail())
+  }
+
+  getUserInformation (userId) {
+    let request = Data.get(`/api/user/${userId}`, true)
+
+    $.ajax(request)
+      .done(userInfo => this.getProfileInfoSuccess(userInfo))
+  }
+
   registerUser (data) {
     let request = {
       url: '/user/register',
