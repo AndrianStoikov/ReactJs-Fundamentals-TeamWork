@@ -1,5 +1,7 @@
 import React from 'react'
 
+import {Link} from 'react-router-dom'
+
 export default class UserInfo extends React.Component {
   render () {
     return (
@@ -13,6 +15,7 @@ export default class UserInfo extends React.Component {
           <h2><strong>Gender: { this.props.profile.gender }</strong></h2>
           <h2><strong>Username: { this.props.profile.userUsername }</strong></h2>
           <h2><strong>Age: { this.props.profile.userAge }</strong></h2>
+          <h4 className='lead'><Link className='label' to='/user/block'>Block user</Link></h4>
         </div>
       </div>
     )

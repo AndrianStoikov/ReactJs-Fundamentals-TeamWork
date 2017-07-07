@@ -8,60 +8,60 @@ import TextGroup from './form/TextGroup'
 import Submit from './form/Submit'
 
 export default class BlockUser extends Component {
-    constructor(props) {
-        super(props)
-        this.state = BlockUserStore.getState()
-        this.onChange = this.onChange.bind(this)
+  constructor (props) {
+    super(props)
+    this.state = BlockUserStore.getState()
+    this.onChange = this.onChange.bind(this)
+  }
+
+  onChange (state) {
+    this.setState(state)
+  }
+
+  componentDidMount () {
+    BlockUserStore.listen(this.onChange)
+  }
+
+  componentWillUnmount () {
+    BlockUserStore.unlisten(this.onChange)
+  }
+
+  handleSubmit (e) {
+    e.preventDefault()
+
+    let content = this.state.content
+    if (content === '') {
+      BlockUserAction.contentValidationFail()
+      return
     }
 
-    onChange(state) {
-        this.setState(state)
+    BlockUserAction.getUserForBlock({'currentUserID': UserStore.getState().loggedInUserId, 'usernameForBlock': content})
+  }
+
+  render () {
+    if (UserStore.getState().loggedInUserId === '') {
+      return <Redirect to='/user/login' />
     }
 
-    componentDidMount() {
-        BlockUserStore.listen(this.onChange)
-    }
+    return (
+      <Form
+        title='Block user'
+        handleSubmit={this.handleSubmit.bind(this)}
+        submitState={this.state.formSubmitState}
+        message={this.state.message} >
 
-    componentWillUnmount() {
-        BlockUserStore.unlisten(this.onChange)
-    }
+        <TextGroup
+          type='text'
+          value={this.state.content}
+          label='Block user'
+          handleChange={BlockUserAction.handleContentChange}
+          validationState={this.state.contentValidationState} />
 
-    handleSubmit(e) {
-        e.preventDefault()
+        <Submit
+          type='btn-primary'
+          value='Block' />
 
-        let content = this.state.content
-        if (content === '') {
-            BlockUserAction.contentValidationFail()
-            return
-        }
-
-        BlockUserAction.getUserForBlock({ 'currentUserID': UserStore.getState().loggedInUserId, 'usernameForBlock': content })
-    }
-
-    render() {
-        if (UserStore.getState().loggedInUserId === '') {
-            return <Redirect to='/user/login'/>
-        }
-
-        return (
-            <Form
-                title='Block user'
-                handleSubmit={this.handleSubmit.bind(this)}
-                submitState={this.state.formSubmitState}
-                message={this.state.message}>
-
-                <TextGroup
-                    type='text'
-                    value={this.state.content}
-                    label='Block user'
-                    handleChange={BlockUserAction.handleContentChange}
-                    validationState={this.state.contentValidationState}/>
-
-                <Submit
-                    type='btn-primary'
-                    value='Block'/>
-
-            </Form>
-        )
-    }
+      </Form>
+    )
+  }
 }

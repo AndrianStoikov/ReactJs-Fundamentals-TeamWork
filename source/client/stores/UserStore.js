@@ -1,6 +1,4 @@
 import alt from '../alt'
-
-import HomeActions from '../actions/HomeActions'
 import UserActions from '../actions/UserActions'
 
 class UserStore {
@@ -40,6 +38,15 @@ class UserStore {
     this.loggedInUserId = ''
     this.username = ''
     this.roles = []
+    this.userPosts = []
+  }
+
+  onGetUserOwnPostsSuccess (posts) {
+    this.userPosts = posts
+  }
+
+  onGetUserOwnPostsFail () {
+    console.log('Couldn\'t get user own posts. Problem with the DB')
   }
 
   onGetProfileInfoSuccess (user) {
