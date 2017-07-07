@@ -4599,7 +4599,7 @@ var UserActions = function () {
   function UserActions() {
     _classCallCheck(this, UserActions);
 
-    this.generateActions('registerUserSuccess', 'registerUserFail', 'loginUserSuccess', 'loginUserFail', 'logoutUserSuccess', 'getUserOwnPostsSuccess', 'getUserOwnPostsFail', 'getProfileInfoSuccess');
+    this.generateActions('registerUserSuccess', 'registerUserFail', 'loginUserSuccess', 'loginUserFail', 'logoutUserSuccess', 'getUserOwnPostsSuccess', 'getUserOwnPostsFail', 'getProfileInfoSuccess', 'logoutUserSuccess');
   }
 
   _createClass(UserActions, [{
@@ -6943,6 +6943,8 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = require('react-router-dom');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -7023,6 +7025,15 @@ var UserInfo = function (_React$Component) {
               'Age: ',
               this.props.profile.userAge
             )
+          ),
+          _react2.default.createElement(
+            'h4',
+            { className: 'lead' },
+            _react2.default.createElement(
+              _reactRouterDom.Link,
+              { className: 'label', to: '/user/block' },
+              'Block user'
+            )
           )
         )
       );
@@ -7034,7 +7045,7 @@ var UserInfo = function (_React$Component) {
 
 exports.default = UserInfo;
 
-},{"react":"react"}],77:[function(require,module,exports){
+},{"react":"react","react-router-dom":34}],77:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7214,7 +7225,7 @@ _reactDom2.default.render(_react2.default.createElement(
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _react = require('react');
@@ -7250,16 +7261,17 @@ var _BlockUser2 = _interopRequireDefault(_BlockUser);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Routes = function Routes() {
-    return _react2.default.createElement(
-        _reactRouterDom.Switch,
-        null,
-        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _Home2.default }),
-        _react2.default.createElement(_reactRouterDom.Route, { path: '/user/profile/:userId', component: _UserProfile2.default }),
-        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/login', component: _UserLogin2.default }),
-        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/register', component: _UserRegister2.default }),
-        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/post/add', component: _PostAdd2.default }),
-        _react2.default.createElement(_reactRouterDom.Route, { component: _Home2.default })
-    );
+  return _react2.default.createElement(
+    _reactRouterDom.Switch,
+    null,
+    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _Home2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { path: '/user/profile/:userId', component: _UserProfile2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/login', component: _UserLogin2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/register', component: _UserRegister2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/post/add', component: _PostAdd2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/block', component: _BlockUser2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { component: _Home2.default })
+  );
 };
 
 exports.default = Routes;
@@ -7268,7 +7280,7 @@ exports.default = Routes;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7286,45 +7298,45 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var BlockUserStore = function () {
-    function BlockUserStore() {
-        _classCallCheck(this, BlockUserStore);
+  function BlockUserStore() {
+    _classCallCheck(this, BlockUserStore);
 
-        this.bindActions(_BlockUserActions2.default);
+    this.bindActions(_BlockUserActions2.default);
 
-        this.content = '';
-        this.contentValidationState = '';
-        this.message = '';
-        this.formSubmitState = '';
+    this.content = '';
+    this.contentValidationState = '';
+    this.message = '';
+    this.formSubmitState = '';
+  }
+
+  _createClass(BlockUserStore, [{
+    key: 'onBlockUserFail',
+    value: function onBlockUserFail(err) {
+      console.log('Failed to block user', err);
     }
+  }, {
+    key: 'onBlockUserSuccess',
+    value: function onBlockUserSuccess() {
+      this.content = '';
+      this.contentValidationState = '';
+      this.message = 'User blocked';
+      this.formSubmitState = '';
+    }
+  }, {
+    key: 'onHandleContentChange',
+    value: function onHandleContentChange(e) {
+      this.content = e.target.value;
+    }
+  }, {
+    key: 'onContentValidationFail',
+    value: function onContentValidationFail() {
+      this.contentValidationState = 'has-error';
+      this.message = 'Enter username of user who want to block';
+      this.formSubmitState = '';
+    }
+  }]);
 
-    _createClass(BlockUserStore, [{
-        key: 'onBlockUserFail',
-        value: function onBlockUserFail(err) {
-            console.log('Failed to block user', err);
-        }
-    }, {
-        key: 'onBlockUserSuccess',
-        value: function onBlockUserSuccess() {
-            this.content = '';
-            this.contentValidationState = '';
-            this.message = 'User blocked';
-            this.formSubmitState = '';
-        }
-    }, {
-        key: 'onHandleContentChange',
-        value: function onHandleContentChange(e) {
-            this.content = e.target.value;
-        }
-    }, {
-        key: 'onContentValidationFail',
-        value: function onContentValidationFail() {
-            this.contentValidationState = 'has-error';
-            this.message = 'Enter username of user who want to block';
-            this.formSubmitState = '';
-        }
-    }]);
-
-    return BlockUserStore;
+  return BlockUserStore;
 }();
 
 exports.default = _alt2.default.createStore(BlockUserStore);
