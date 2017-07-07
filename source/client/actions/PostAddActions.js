@@ -6,7 +6,8 @@ class PostAddActions {
       'handleContentChange',
       'contentValidationFail',
       'addPostSuccess',
-      'addPostFail'
+      'addPostFail',
+      'loadPostAddForm'
     )
   }
 
