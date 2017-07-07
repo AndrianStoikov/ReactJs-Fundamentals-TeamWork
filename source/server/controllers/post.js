@@ -81,6 +81,8 @@ module.exports = {
           .then(() => {
             res.status(200).send({message: `Post was successfully edited!`})
           })
+      } else {
+        res.sendStatus(401)
       }
     })
   },
