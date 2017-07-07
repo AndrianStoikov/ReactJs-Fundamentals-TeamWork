@@ -1,4 +1,5 @@
 import alt from '../alt'
+import Data from '../DataRequests'
 
 class PostEditActions {
   constructor () {
@@ -13,11 +14,8 @@ class PostEditActions {
   }
 
   getEditPostInfo (postId) {
-    let request = {
-      url: `/api/post/edit/${postId}`,
-      method: 'GET',
-      contentType: 'application/json'
-    }
+    let request = Data.get(`/api/post/edit/${postId}`, true)
+
     $.ajax(request)
       .done((data) => {
         this.getEditPostInfoSuccess(data)
@@ -31,12 +29,8 @@ class PostEditActions {
   }
 
   editPost (data) {
-    let request = {
-      url: `/api/post/edit/${data.postId}`,
-      method: 'POST',
-      data: JSON.stringify(data),
-      contentType: 'application/json'
-    }
+    let request = Data.post(`/api/post/edit/${data.postId}`, data, true)
+
     $.ajax(request)
       .done((data) => {
         this.editPostSuccess(data)

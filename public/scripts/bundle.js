@@ -4356,7 +4356,7 @@ module.exports = warning;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -4370,63 +4370,63 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var BlockUserActions = function () {
-  function BlockUserActions() {
-    _classCallCheck(this, BlockUserActions);
+    function BlockUserActions() {
+        _classCallCheck(this, BlockUserActions);
 
-    this.generateActions('handleContentChange', 'contentValidationFail', 'blockUserSuccess', 'blockUserFail');
-  }
-
-  _createClass(BlockUserActions, [{
-    key: 'getUserForBlock',
-    value: function getUserForBlock(data) {
-      var _this = this;
-
-      var request = {
-        url: '/api/user/getByUsername/' + data.usernameForBlock,
-        method: 'get',
-        data: JSON.stringify(data),
-        contentType: 'application/json'
-      };
-
-      var cureentUserId = data.currentUserID;
-
-      $.ajax(request).done(function (data) {
-        if (data.length <= 0) {
-          return true;
-        }
-
-        var userForBlockId = data[0]._id;
-
-        var dataForRequest = {
-          userForBlockId: data[0]._id,
-          currentUserId: cureentUserId
-        };
-
-        var request = {
-          url: '/api/user/block/',
-          method: 'post',
-          data: JSON.stringify(dataForRequest),
-          contentType: 'application/json'
-        };
-
-        if (userForBlockId !== cureentUserId) {
-          $.ajax(request).done(function () {
-            return _this.blockUserSuccess();
-          }).fail(function (err) {
-            return _this.blockUserFail(err);
-          });
-        } else {
-          _this.blockUserFail();
-        }
-      }).fail(function (err) {
-        return _this.blockUserFail(err);
-      });
-
-      return true;
+        this.generateActions('handleContentChange', 'contentValidationFail', 'blockUserSuccess', 'blockUserFail', 'blockUserWhoIsBlockedError', 'userNotExist', 'blockYourProfileError');
     }
-  }]);
 
-  return BlockUserActions;
+    _createClass(BlockUserActions, [{
+        key: 'getUserForBlock',
+        value: function getUserForBlock(data) {
+            var _this = this;
+
+            var request = {
+                url: '/api/user/getByUsername/' + data.usernameForBlock,
+                method: 'get',
+                data: JSON.stringify(data),
+                contentType: 'application/json'
+            };
+
+            var cureentUserId = data.currentUserID;
+
+            $.ajax(request).done(function (data) {
+                if (data.length <= 0) {
+                    return true;
+                }
+
+                var userForBlockId = data[0]._id;
+
+                var dataForRequest = {
+                    userForBlockId: data[0]._id,
+                    currentUserId: cureentUserId
+                };
+
+                var request = {
+                    url: '/api/user/block/',
+                    method: 'post',
+                    data: JSON.stringify(dataForRequest),
+                    contentType: 'application/json'
+                };
+
+                if (userForBlockId !== cureentUserId) {
+                    $.ajax(request).done(function () {
+                        return _this.blockUserSuccess();
+                    }).fail(function (err) {
+                        _this.blockUserWhoIsBlockedError();
+                    });
+                } else {
+                    _this.blockYourProfileError();
+                }
+            }).fail(function (err) {
+                return _this.userNotExist();
+            });
+
+            return true;
+        }
+    }]);
+
+    return BlockUserActions;
 }();
 
 exports.default = _alt2.default.createActions(BlockUserActions);
@@ -5436,7 +5436,7 @@ var Navbar = function (_React$Component) {
               null,
               _react2.default.createElement(
                 _reactRouterDom.Link,
-                { to: '/post/edit/595dee886b217e0e34a4862d' },
+                { to: '/post/edit/595f8e7127790e383403ccf4' },
                 'EditPost(testing)'
               )
             )
@@ -6223,6 +6223,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = require('react-router-dom');
 
+var _Auth = require('../../components/Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
+
 var _UserStore = require('../../stores/UserStore');
 
 var _UserStore2 = _interopRequireDefault(_UserStore);
@@ -6295,7 +6299,7 @@ var PostAdd = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      if (_UserStore2.default.getState().loggedInUserId === '') {
+      if (!_Auth2.default.isUserAuthenticated()) {
         return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/user/login' });
       }
 
@@ -6324,7 +6328,7 @@ var PostAdd = function (_Component) {
 
 exports.default = PostAdd;
 
-},{"../../actions/PostAddActions":52,"../../stores/PostAddStore":89,"../../stores/UserStore":91,"../form/Form":65,"../form/Submit":68,"../form/TextGroup":69,"react":"react","react-router-dom":34}],71:[function(require,module,exports){
+},{"../../actions/PostAddActions":52,"../../components/Auth":57,"../../stores/PostAddStore":89,"../../stores/UserStore":91,"../form/Form":65,"../form/Submit":68,"../form/TextGroup":69,"react":"react","react-router-dom":34}],71:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6336,6 +6340,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _Auth = require('../../components/Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
 
 var _reactRouterDom = require('react-router-dom');
 
@@ -6393,7 +6401,7 @@ var PostEdit = function (_Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       _PostEditStore2.default.listen(this.onChange);
-      if (_UserStore2.default.getState().loggedInUserId !== '') {
+      if (_Auth2.default.getUser()._id) {
         var postId = this.props.match.params.postId;
         _PostEditActions2.default.getEditPostInfo(postId);
       }
@@ -6419,7 +6427,7 @@ var PostEdit = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      if (_UserStore2.default.getState().loggedInUserId === '') {
+      if (!_Auth2.default.isUserAuthenticated()) {
         return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/user/login' });
       }
 
@@ -6448,7 +6456,7 @@ var PostEdit = function (_Component) {
 
 exports.default = PostEdit;
 
-},{"../../actions/PostEditActions":53,"../../stores/PostEditStore":90,"../../stores/UserStore":91,"../form/Form":65,"../form/Submit":68,"../form/TextGroup":69,"react":"react","react-router-dom":34}],72:[function(require,module,exports){
+},{"../../actions/PostEditActions":53,"../../components/Auth":57,"../../stores/PostEditStore":90,"../../stores/UserStore":91,"../form/Form":65,"../form/Submit":68,"../form/TextGroup":69,"react":"react","react-router-dom":34}],72:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6604,11 +6612,6 @@ var NavbarUserMenu = function (_React$Component) {
 
     _this.state = _UserStore2.default.getState();
 
-    if (_Auth2.default.isUserAuthenticated()) {
-      var user = _Auth2.default.getUser();
-      _this.state.username = user.username;
-    }
-
     _this.onChange = _this.onChange.bind(_this);
     return _this;
   }
@@ -6631,6 +6634,10 @@ var NavbarUserMenu = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      // if (Auth.isUserAuthenticated()) {
+      //   let user = Auth.getUser()
+      //   this.setState({loggedInUserId: user._id})
+      // }
       return _react2.default.createElement(
         'div',
         null,
@@ -6652,7 +6659,7 @@ var NavbarUserMenu = function (_React$Component) {
             null,
             _react2.default.createElement(
               _reactRouterDom.Link,
-              { to: '/user/profile/' + this.state.loggedInUserId },
+              { to: '/user/profile/' + _Auth2.default.getUser()._id },
               'Profile'
             )
           ),
@@ -7603,9 +7610,11 @@ var BlockUserStore = function () {
   }
 
   _createClass(BlockUserStore, [{
-    key: 'onBlockUserFail',
-    value: function onBlockUserFail(err) {
-      console.log('Failed to block user', err);
+    key: 'onBlockYourProfileError',
+    value: function onBlockYourProfileError() {
+      this.contentValidationState = 'has-error';
+      this.message = "You cannot block your profile";
+      this.formSubmitState = '';
     }
   }, {
     key: 'onBlockUserSuccess',
@@ -7619,6 +7628,20 @@ var BlockUserStore = function () {
     key: 'onHandleContentChange',
     value: function onHandleContentChange(e) {
       this.content = e.target.value;
+    }
+  }, {
+    key: 'onUserNotExist',
+    value: function onUserNotExist() {
+      this.contentValidationState = 'has-error';
+      this.message = "This user doesn't exist";
+      this.formSubmitState = '';
+    }
+  }, {
+    key: 'onBlockUserWhoIsBlockedError',
+    value: function onBlockUserWhoIsBlockedError() {
+      this.contentValidationState = 'has-error';
+      this.message = 'This user is blocked';
+      this.formSubmitState = '';
     }
   }, {
     key: 'onContentValidationFail',

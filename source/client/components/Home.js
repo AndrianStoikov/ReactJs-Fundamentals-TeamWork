@@ -18,24 +18,11 @@ export default class Home extends React.Component {
     this.setState(state)
   }
 
-  getUserPosts () {
-    if (UserStore.getState().loggedInUserId === '') {
-      return
-    }
-
-    let request = {
-      url: '/api/posts/all',
-      method: 'get'
-    }
-
-    $.ajax(request)
-      .done(data => HomeActions.getUserPostsSuccess(data))
-      .fail(err => HomeActions.getUserPostsFail(err))
-  }
-
   componentDidMount () {
     HomeStore.listen(this.onChange)
-    this.getUserPosts()
+    if (UserStore.getState().loggedInUserId !== '') {
+      HomeActions.getUserPosts()
+    }
   }
 
   componentWillUnmount () {

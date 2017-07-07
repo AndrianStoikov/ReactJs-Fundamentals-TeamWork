@@ -27,17 +27,13 @@ export default class NavbarUserMenu extends React.Component {
   }
 
   render () {
-    // if (Auth.isUserAuthenticated()) {
-    //   let user = Auth.getUser()
-    //   this.setState({loggedInUserId: user._id})
-    // }
     return (
       <div>
         { Auth.isUserAuthenticated() ? (
           <ul className='nav navbar-nav pull-right' >
             <li>
               <div className='navbar-text'>
-                Hello, {this.state.username}
+                Hello, {Auth.getUser().username}
               </div>
             </li>
             <li>

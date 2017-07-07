@@ -134,11 +134,13 @@ module.exports = {
     let userForBlockId = req.body.userForBlockId
 
     User.findById(currentUserId).then(user => {
-      if (!user.blockedUsersId.includes(userForBlockId) && currentUserId !== userForBlockId) {
+      if (!user.blockedUsersId.map((id) => id.toString()).includes(userForBlockId)) {
         user.blockedUsersId.push(userForBlockId)
         user.save()
+        res.status(200).send()
+      } else {
+        res.status(404).send()
       }
     })
-    res.status(200).send()
   }
 }
