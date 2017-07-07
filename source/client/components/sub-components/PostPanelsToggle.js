@@ -1,22 +1,34 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { Concealer } from '../../utilities/Authorize'
-
-class VoteToggle extends React.Component {
-  render () {
-    return (
-      <a
-        className='btn btn-primary'
-        onClick={this.props.toggleVotePanel} >
-        { this.props.showVotePanel ? 'Hide' : 'Vote' }
-      </a>
-    )
-  }
-}
-
 export default class PostPanelToggles extends React.Component {
+
+  isLiked () {
+    let likes = this.props.postLikes
+    for (let like of likes) {
+      if (this.props.userId === like.toString()) {
+        return true
+      }
+    }
+
+    return false
+  }
+
   render () {
+    let likeButton
+    if (this.isLiked()) {
+      likeButton = <a
+        className='btn btn-primary'
+        onClick={this.props.unlikePost} >
+        Unlike
+      </a>
+    } else {
+      likeButton = <a
+        className='btn btn-primary'
+        onClick={this.props.likePost} >
+        Like
+      </a>
+    }
     return (
       <div className='pull-right btn-group' >
         <a
@@ -24,10 +36,7 @@ export default class PostPanelToggles extends React.Component {
           onClick={this.props.toggleCommentsPanel} >
           {this.props.showCommentsPanel ? 'Hide' : 'Comments'}
         </a>
-        <Concealer
-          ChildComponent={VoteToggle}
-          toggleVotePanel={this.props.toggleVotePanel}
-          showVotePanel={this.props.showVotePanel} />
+        {likeButton}
         <Link to={`/movie/${this.props.movieId}/review/add`} className='btn btn-warning' >
           Write review
         </Link>

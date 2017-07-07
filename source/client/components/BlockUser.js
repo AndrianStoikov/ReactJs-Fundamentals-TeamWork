@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
-import UserStore from '../../stores/UserStore'
-import PostAddStore from '../../stores/PostAddStore'
-import PostAddActions from '../../actions/PostAddActions'
-import Form from '../form/Form'
-import TextGroup from '../form/TextGroup'
-import Submit from '../form/Submit'
+import UserStore from '../stores/UserStore'
+import BlockUserStore from '../stores/BlockUserStore'
+import BlockUserAction from '../actions/BlockUserActions'
+import Form from './form/Form'
+import TextGroup from './form/TextGroup'
+import Submit from './form/Submit'
 
-export default class PostAdd extends Component {
+export default class BlockUser extends Component {
     constructor(props) {
         super(props)
-        this.state = PostAddStore.getState()
+        this.state = BlockUserStore.getState()
         this.onChange = this.onChange.bind(this)
     }
 
@@ -19,11 +19,11 @@ export default class PostAdd extends Component {
     }
 
     componentDidMount() {
-        PostAddStore.listen(this.onChange)
+        BlockUserStore.listen(this.onChange)
     }
 
     componentWillUnmount() {
-        PostAddStore.unlisten(this.onChange)
+        BlockUserStore.unlisten(this.onChange)
     }
 
     handleSubmit(e) {
@@ -31,11 +31,11 @@ export default class PostAdd extends Component {
 
         let content = this.state.content
         if (content === '') {
-            PostAddActions.contentValidationFail()
+            BlockUserAction.contentValidationFail()
             return
         }
 
-        PostAddActions.addPost({'authorId': UserStore.getState().loggedInUserId, 'content': content})
+        BlockUserAction.getUserForBlock({ 'currentUserID': UserStore.getState().loggedInUserId, 'usernameForBlock': content })
     }
 
     render() {
@@ -45,7 +45,7 @@ export default class PostAdd extends Component {
 
         return (
             <Form
-                title='New Post'
+                title='Block user'
                 handleSubmit={this.handleSubmit.bind(this)}
                 submitState={this.state.formSubmitState}
                 message={this.state.message}>
@@ -53,13 +53,13 @@ export default class PostAdd extends Component {
                 <TextGroup
                     type='text'
                     value={this.state.content}
-                    label='Your Post'
-                    handleChange={PostAddActions.handleContentChange}
+                    label='Block user'
+                    handleChange={BlockUserAction.handleContentChange}
                     validationState={this.state.contentValidationState}/>
 
                 <Submit
                     type='btn-primary'
-                    value='Post'/>
+                    value='Block'/>
 
             </Form>
         )

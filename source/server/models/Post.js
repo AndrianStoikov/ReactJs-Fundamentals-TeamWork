@@ -4,7 +4,7 @@ let postSchema = mongoose.Schema({
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   content: { type: mongoose.Schema.Types.String },
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
-  likes: { type: mongoose.Schema.Types.Number, default: 0 },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   dateCreated: { type: mongoose.Schema.Types.Date, default: Date.now }
 })
 
