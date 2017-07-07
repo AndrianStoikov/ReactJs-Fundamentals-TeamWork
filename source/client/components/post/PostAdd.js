@@ -33,7 +33,7 @@ export default class PostAdd extends Component {
       return
     }
 
-    PostAddActions.addPost({'authorId': UserStore.getState().loggedInUserId, 'content': content})
+    PostAddActions.addPost({'authorId': Auth.getUser()._id, 'content': content})
   }
 
   render () {

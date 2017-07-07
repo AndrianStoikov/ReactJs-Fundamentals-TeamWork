@@ -14,7 +14,6 @@ class PostAddActions {
 
   addPost (data) {
     let request = Data.post('/api/post/add', data, true)
-
     $.ajax(request)
       .done(() => {
         this.addPostSuccess()
