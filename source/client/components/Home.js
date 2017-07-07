@@ -1,6 +1,4 @@
 import React from 'react'
-
-import UserStore from '../stores/UserStore'
 import HomeStore from '../stores/HomeStore'
 import HomeActions from '../actions/HomeActions'
 
@@ -36,14 +34,8 @@ export default class Home extends React.Component {
     let posts = this.state.posts.map((post, index) => {
       let postId = post._id
 
-      let likeRequest = {
-        url: `/api/post/like/${postId}`,
-        method: 'post'
-      }
-      let unlikeRequest = {
-        url: `/api/post/unlike/${postId}`,
-        method: 'post'
-      }
+      let likeRequest = `/api/post/like/${postId}`
+      let unlikeRequest = `/api/post/unlike/${postId}`
 
       return (
         <PostCard

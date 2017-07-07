@@ -88,7 +88,6 @@ module.exports = {
   },
   like: {
     post: (req, res) => {
-      // METHOD SHOULD BE FIXED SO THE RIGHT USER CAN LIKE THE POST
       let postId = req.params.id
 
       if (!req.user) {

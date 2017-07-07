@@ -5316,10 +5316,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _UserStore = require('../stores/UserStore');
-
-var _UserStore2 = _interopRequireDefault(_UserStore);
-
 var _HomeStore = require('../stores/HomeStore');
 
 var _HomeStore2 = _interopRequireDefault(_HomeStore);
@@ -5388,14 +5384,8 @@ var Home = function (_React$Component) {
       var posts = this.state.posts.map(function (post, index) {
         var postId = post._id;
 
-        var likeRequest = {
-          url: '/api/post/like/' + postId,
-          method: 'post'
-        };
-        var unlikeRequest = {
-          url: '/api/post/unlike/' + postId,
-          method: 'post'
-        };
+        var likeRequest = '/api/post/like/' + postId;
+        var unlikeRequest = '/api/post/unlike/' + postId;
 
         return _react2.default.createElement(_PostCard2.default, {
           key: post._id,
@@ -5429,7 +5419,7 @@ var Home = function (_React$Component) {
 
 exports.default = Home;
 
-},{"../actions/HomeActions":51,"../stores/HomeStore":87,"../stores/UserStore":91,"../utilities/Helpers":92,"./Auth":58,"./sub-components/PostCard":75,"react":"react"}],62:[function(require,module,exports){
+},{"../actions/HomeActions":51,"../stores/HomeStore":87,"../utilities/Helpers":92,"./Auth":58,"./sub-components/PostCard":75,"react":"react"}],62:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8248,7 +8238,7 @@ var Helpers = function () {
   }, {
     key: 'likePost',
     value: function likePost(request, updateFunction) {
-      request = _DataRequests2.default.post(request.url, null, true);
+      request = _DataRequests2.default.post(request, {}, true);
       $.ajax(request).done(function () {
         return updateFunction();
       }).fail(function (err) {
@@ -8258,7 +8248,7 @@ var Helpers = function () {
   }, {
     key: 'unlikePost',
     value: function unlikePost(request, updateFunction) {
-      request = _DataRequests2.default.post(request.url, null, true);
+      request = _DataRequests2.default.post(request, {}, true);
       $.ajax(request).done(function () {
         return updateFunction();
       }).fail(function (err) {

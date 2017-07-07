@@ -20,14 +20,14 @@ export default class Helpers {
   }
 
   static likePost (request, updateFunction) {
-    request = Data.post(request.url, null, true)
+    request = Data.post(request, {}, true)
     $.ajax(request)
       .done(() => updateFunction())
       .fail((err) => console.log(err))
   }
 
   static unlikePost (request, updateFunction) {
-    request = Data.post(request.url, null, true)
+    request = Data.post(request, {}, true)
     $.ajax(request)
       .done(() => updateFunction())
       .fail((err) => console.log(err))
