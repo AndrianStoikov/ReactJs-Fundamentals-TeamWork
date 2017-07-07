@@ -1,4 +1,5 @@
 import alt from '../alt'
+import DadaRequests from '../DataRequests'
 
 class BlockUserActions {
     constructor() {
@@ -28,9 +29,6 @@ class BlockUserActions {
                 if (data.length <= 0) {
                     return true
                 }
-
-                let userForBlockId = data[0]._id
-
 
                 let dataForRequest = {
                     userForBlockId: data[0]._id,
