@@ -1,4 +1,5 @@
 import alt from '../alt'
+import Data from '../DataRequests'
 
 import HomeActions from './HomeActions'
 
@@ -15,6 +16,21 @@ class UserActions {
       'getProfileInfoSuccess',
       'logoutUserSuccess'
     )
+  }
+
+  getUserOwnPosts (currentUserId) {
+    let request = Data.get(`/api/post/own/${currentUserId}`, true)
+
+    $.ajax(request)
+      .done(posts => this.getUserOwnPostsSuccess(posts))
+      .fail(() => this.getUserOwnPostsFail())
+  }
+
+  getUserInformation (userId) {
+    let request = Data.get(`/api/user/${userId}`, true)
+
+    $.ajax(request)
+      .done(userInfo => this.getProfileInfoSuccess(userInfo))
   }
 
   registerUser (data) {
