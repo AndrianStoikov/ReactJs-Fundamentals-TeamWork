@@ -4356,7 +4356,7 @@ module.exports = warning;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -4370,63 +4370,63 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var BlockUserActions = function () {
-  function BlockUserActions() {
-    _classCallCheck(this, BlockUserActions);
+    function BlockUserActions() {
+        _classCallCheck(this, BlockUserActions);
 
-    this.generateActions('handleContentChange', 'contentValidationFail', 'blockUserSuccess', 'blockUserFail');
-  }
-
-  _createClass(BlockUserActions, [{
-    key: 'getUserForBlock',
-    value: function getUserForBlock(data) {
-      var _this = this;
-
-      var request = {
-        url: '/api/user/getByUsername/' + data.usernameForBlock,
-        method: 'get',
-        data: JSON.stringify(data),
-        contentType: 'application/json'
-      };
-
-      var cureentUserId = data.currentUserID;
-
-      $.ajax(request).done(function (data) {
-        if (data.length <= 0) {
-          return true;
-        }
-
-        var userForBlockId = data[0]._id;
-
-        var dataForRequest = {
-          userForBlockId: data[0]._id,
-          currentUserId: cureentUserId
-        };
-
-        var request = {
-          url: '/api/user/block/',
-          method: 'post',
-          data: JSON.stringify(dataForRequest),
-          contentType: 'application/json'
-        };
-
-        if (userForBlockId !== cureentUserId) {
-          $.ajax(request).done(function () {
-            return _this.blockUserSuccess();
-          }).fail(function (err) {
-            return _this.blockUserFail(err);
-          });
-        } else {
-          _this.blockUserFail();
-        }
-      }).fail(function (err) {
-        return _this.blockUserFail(err);
-      });
-
-      return true;
+        this.generateActions('handleContentChange', "contentValidationFail", "blockUserSuccess", "blockUserFail");
     }
-  }]);
 
-  return BlockUserActions;
+    _createClass(BlockUserActions, [{
+        key: 'getUserForBlock',
+        value: function getUserForBlock(data) {
+            var _this = this;
+
+            var request = {
+                url: '/api/user/getByUsername/' + data.usernameForBlock,
+                method: 'get',
+                data: JSON.stringify(data),
+                contentType: 'application/json'
+            };
+
+            var cureentUserId = data.currentUserID;
+
+            $.ajax(request).done(function (data) {
+                if (data.length <= 0) {
+                    return true;
+                }
+
+                var userForBlockId = data[0]._id;
+
+                var dataForRequest = {
+                    userForBlockId: data[0]._id,
+                    currentUserId: cureentUserId
+                };
+
+                var request = {
+                    url: '/api/user/block/',
+                    method: 'post',
+                    data: JSON.stringify(dataForRequest),
+                    contentType: 'application/json'
+                };
+
+                if (userForBlockId !== cureentUserId) {
+                    $.ajax(request).done(function () {
+                        return _this.blockUserSuccess();
+                    }).fail(function (err) {
+                        return _this.blockUserFail(err);
+                    });
+                } else {
+                    _this.blockUserFail();
+                }
+            }).fail(function (err) {
+                return _this.blockUserFail(err);
+            });
+
+            return true;
+        }
+    }]);
+
+    return BlockUserActions;
 }();
 
 exports.default = _alt2.default.createActions(BlockUserActions);
@@ -4770,11 +4770,73 @@ var App = function (_React$Component) {
 
 exports.default = App;
 
-},{"../actions/UserActions":53,"../routes":80,"../stores/UserStore":87,"./Footer":57,"./Navbar":59,"react":"react"}],56:[function(require,module,exports){
+},{"../actions/UserActions":53,"../routes":78,"../stores/UserStore":85,"./Footer":58,"./Navbar":60,"react":"react"}],56:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Auth = function () {
+  function Auth() {
+    _classCallCheck(this, Auth);
+  }
+
+  _createClass(Auth, null, [{
+    key: 'saveUser',
+    value: function saveUser(user) {
+      window.localStorage.setItem('user', JSON.stringify(user));
+    }
+  }, {
+    key: 'getUser',
+    value: function getUser() {
+      var userJson = window.localStorage.getItem('user');
+      if (userJson) {
+        return JSON.parse(userJson);
+      }
+      return {};
+    }
+  }, {
+    key: 'removeUser',
+    value: function removeUser() {
+      window.localStorage.removeItem('user');
+    }
+  }, {
+    key: 'authenticateUser',
+    value: function authenticateUser(token) {
+      window.localStorage.setItem('token', token);
+    }
+  }, {
+    key: 'isUserAuthenticated',
+    value: function isUserAuthenticated() {
+      return window.localStorage.getItem('token') !== null;
+    }
+  }, {
+    key: 'deauthenticateUser',
+    value: function deauthenticateUser() {
+      window.localStorage.removeItem('token');
+    }
+  }, {
+    key: 'getToken',
+    value: function getToken() {
+      return window.localStorage.getItem('token');
+    }
+  }]);
+
+  return Auth;
+}();
+
+exports.default = Auth;
+
+},{}],57:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -4818,79 +4880,79 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var BlockUser = function (_Component) {
-  _inherits(BlockUser, _Component);
+    _inherits(BlockUser, _Component);
 
-  function BlockUser(props) {
-    _classCallCheck(this, BlockUser);
+    function BlockUser(props) {
+        _classCallCheck(this, BlockUser);
 
-    var _this = _possibleConstructorReturn(this, (BlockUser.__proto__ || Object.getPrototypeOf(BlockUser)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (BlockUser.__proto__ || Object.getPrototypeOf(BlockUser)).call(this, props));
 
-    _this.state = _BlockUserStore2.default.getState();
-    _this.onChange = _this.onChange.bind(_this);
-    return _this;
-  }
-
-  _createClass(BlockUser, [{
-    key: 'onChange',
-    value: function onChange(state) {
-      this.setState(state);
+        _this.state = _BlockUserStore2.default.getState();
+        _this.onChange = _this.onChange.bind(_this);
+        return _this;
     }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      _BlockUserStore2.default.listen(this.onChange);
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      _BlockUserStore2.default.unlisten(this.onChange);
-    }
-  }, {
-    key: 'handleSubmit',
-    value: function handleSubmit(e) {
-      e.preventDefault();
 
-      var content = this.state.content;
-      if (content === '') {
-        _BlockUserActions2.default.contentValidationFail();
-        return;
-      }
+    _createClass(BlockUser, [{
+        key: 'onChange',
+        value: function onChange(state) {
+            this.setState(state);
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            _BlockUserStore2.default.listen(this.onChange);
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            _BlockUserStore2.default.unlisten(this.onChange);
+        }
+    }, {
+        key: 'handleSubmit',
+        value: function handleSubmit(e) {
+            e.preventDefault();
 
-      _BlockUserActions2.default.getUserForBlock({ 'currentUserID': _UserStore2.default.getState().loggedInUserId, 'usernameForBlock': content });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      if (_UserStore2.default.getState().loggedInUserId === '') {
-        return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/user/login' });
-      }
+            var content = this.state.content;
+            if (content === '') {
+                _BlockUserActions2.default.contentValidationFail();
+                return;
+            }
 
-      return _react2.default.createElement(
-        _Form2.default,
-        {
-          title: 'Block user',
-          handleSubmit: this.handleSubmit.bind(this),
-          submitState: this.state.formSubmitState,
-          message: this.state.message },
-        _react2.default.createElement(_TextGroup2.default, {
-          type: 'text',
-          value: this.state.content,
-          label: 'Block user',
-          handleChange: _BlockUserActions2.default.handleContentChange,
-          validationState: this.state.contentValidationState }),
-        _react2.default.createElement(_Submit2.default, {
-          type: 'btn-primary',
-          value: 'Block' })
-      );
-    }
-  }]);
+            _BlockUserActions2.default.getUserForBlock({ 'currentUserID': _UserStore2.default.getState().loggedInUserId, 'usernameForBlock': content });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            if (_UserStore2.default.getState().loggedInUserId === '') {
+                return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/user/login' });
+            }
 
-  return BlockUser;
+            return _react2.default.createElement(
+                _Form2.default,
+                {
+                    title: 'Block user',
+                    handleSubmit: this.handleSubmit.bind(this),
+                    submitState: this.state.formSubmitState,
+                    message: this.state.message },
+                _react2.default.createElement(_TextGroup2.default, {
+                    type: 'text',
+                    value: this.state.content,
+                    label: 'Block user',
+                    handleChange: _BlockUserActions2.default.handleContentChange,
+                    validationState: this.state.contentValidationState }),
+                _react2.default.createElement(_Submit2.default, {
+                    type: 'btn-primary',
+                    value: 'Block' })
+            );
+        }
+    }]);
+
+    return BlockUser;
 }(_react.Component);
 
 exports.default = BlockUser;
 
-},{"../actions/BlockUserActions":47,"../stores/BlockUserStore":81,"../stores/UserStore":87,"./form/Form":63,"./form/Submit":66,"./form/TextGroup":67,"react":"react","react-router-dom":34}],57:[function(require,module,exports){
+},{"../actions/BlockUserActions":47,"../stores/BlockUserStore":79,"../stores/UserStore":85,"./form/Form":64,"./form/Submit":67,"./form/TextGroup":68,"react":"react","react-router-dom":34}],58:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5033,7 +5095,7 @@ var Footer = function (_Component) {
 
 exports.default = Footer;
 
-},{"../stores/FooterStore":82,"react":"react","react-router-dom":34}],58:[function(require,module,exports){
+},{"../stores/FooterStore":80,"react":"react","react-router-dom":34}],59:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5154,7 +5216,7 @@ var Home = function (_React$Component) {
 
 exports.default = Home;
 
-},{"../actions/HomeActions":50,"../stores/HomeStore":84,"../stores/UserStore":87,"./sub-components/PostCard":71,"react":"react"}],59:[function(require,module,exports){
+},{"../actions/HomeActions":50,"../stores/HomeStore":82,"../stores/UserStore":85,"./sub-components/PostCard":72,"react":"react"}],60:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5166,6 +5228,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _Auth = require('../components/Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
 
 var _reactRouterDom = require('react-router-dom');
 
@@ -5198,6 +5264,7 @@ var Navbar = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Navbar.__proto__ || Object.getPrototypeOf(Navbar)).call(this, props));
 
     _this.state = _NavbarStore2.default.getState();
+
     _this.onChange = _this.onChange.bind(_this);
     return _this;
   }
@@ -5274,7 +5341,7 @@ var Navbar = function (_React$Component) {
         _react2.default.createElement(
           'div',
           { id: 'navbar', className: 'navbar-collapse collapse' },
-          _react2.default.createElement(
+          _Auth2.default.isUserAuthenticated() ? _react2.default.createElement(
             'ul',
             { className: 'nav navbar-nav' },
             _react2.default.createElement(
@@ -5295,6 +5362,18 @@ var Navbar = function (_React$Component) {
                 'AddPost'
               )
             )
+          ) : _react2.default.createElement(
+            'ul',
+            { className: 'nav navbar-nav' },
+            _react2.default.createElement(
+              'li',
+              null,
+              _react2.default.createElement(
+                _reactRouterDom.Link,
+                { to: '/' },
+                'Home'
+              )
+            )
           ),
           navbarUserMenu
         )
@@ -5307,7 +5386,7 @@ var Navbar = function (_React$Component) {
 
 exports.default = Navbar;
 
-},{"../actions/NavbarActions":51,"../stores/NavbarStore":85,"./sub-components/NavbarUserMenu":70,"react":"react","react-router-dom":34}],60:[function(require,module,exports){
+},{"../actions/NavbarActions":51,"../components/Auth":56,"../stores/NavbarStore":83,"./sub-components/NavbarUserMenu":71,"react":"react","react-router-dom":34}],61:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5444,7 +5523,7 @@ var UserLogin = function (_Component) {
 
 exports.default = UserLogin;
 
-},{"../actions/FormActions":49,"../actions/UserActions":53,"../stores/FormStore":83,"../stores/UserStore":87,"./form/Form":63,"./form/Submit":66,"./form/TextGroup":67,"react":"react","react-router-dom":34}],61:[function(require,module,exports){
+},{"../actions/FormActions":49,"../actions/UserActions":53,"../stores/FormStore":81,"../stores/UserStore":85,"./form/Form":64,"./form/Submit":67,"./form/TextGroup":68,"react":"react","react-router-dom":34}],62:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5457,21 +5536,15 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _UserActions = require('../actions/UserActions');
-
-var _UserActions2 = _interopRequireDefault(_UserActions);
-
 var _UserStore = require('../stores/UserStore');
 
 var _UserStore2 = _interopRequireDefault(_UserStore);
 
-var _UserInfo = require('./sub-components/user-profile/UserInfo');
+var _UserActions = require('../actions/UserActions');
 
-var _UserInfo2 = _interopRequireDefault(_UserInfo);
+var _UserActions2 = _interopRequireDefault(_UserActions);
 
-var _UserPosts = require('./sub-components/user-profile/UserPosts');
-
-var _UserPosts2 = _interopRequireDefault(_UserPosts);
+var _reactRouterDom = require('react-router-dom');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5554,15 +5627,14 @@ var UserProfile = function (_React$Component) {
           )
         );
       });
-
       return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(_UserInfo2.default, {
+        _react2.default.createElement(UserInfo, {
           name: this.state.name,
           roles: this.state.roles,
           profile: this.state.profile }),
-        _react2.default.createElement(_UserPosts2.default, { posts: this.state.userPosts })
+        _react2.default.createElement(UserPosts, { posts: this.state.userPosts })
       );
     }
   }]);
@@ -5572,7 +5644,7 @@ var UserProfile = function (_React$Component) {
 
 exports.default = UserProfile;
 
-},{"../actions/UserActions":53,"../stores/UserStore":87,"./sub-components/user-profile/UserInfo":76,"./sub-components/user-profile/UserPosts":77,"react":"react"}],62:[function(require,module,exports){
+},{"../actions/UserActions":53,"../stores/UserStore":85,"react":"react","react-router-dom":34}],63:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5688,7 +5760,7 @@ var UserRegister = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      if (_UserStore2.default.getState().loggedInUserId !== '') {
+      if (_FormStore2.default.getState().username === '') {
         return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
       }
 
@@ -5762,7 +5834,7 @@ var UserRegister = function (_Component) {
 
 exports.default = UserRegister;
 
-},{"../actions/FormActions":49,"../actions/UserActions":53,"../stores/FormStore":83,"../stores/UserStore":87,"./form/Form":63,"./form/RadioElement":64,"./form/RadioGroup":65,"./form/Submit":66,"./form/TextGroup":67,"react":"react","react-router-dom":34}],63:[function(require,module,exports){
+},{"../actions/FormActions":49,"../actions/UserActions":53,"../stores/FormStore":81,"../stores/UserStore":85,"./form/Form":64,"./form/RadioElement":65,"./form/RadioGroup":66,"./form/Submit":67,"./form/TextGroup":68,"react":"react","react-router-dom":34}],64:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5842,7 +5914,7 @@ var Form = function (_Component) {
 
 exports.default = Form;
 
-},{"react":"react"}],64:[function(require,module,exports){
+},{"react":"react"}],65:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5899,7 +5971,7 @@ var RadioElement = function (_Component) {
 
 exports.default = RadioElement;
 
-},{"react":"react"}],65:[function(require,module,exports){
+},{"react":"react"}],66:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5950,7 +6022,7 @@ var RadioGroup = function (_Component) {
 
 exports.default = RadioGroup;
 
-},{"react":"react"}],66:[function(require,module,exports){
+},{"react":"react"}],67:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5992,7 +6064,7 @@ var Submit = function (_Component) {
 
 exports.default = Submit;
 
-},{"react":"react"}],67:[function(require,module,exports){
+},{"react":"react"}],68:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6051,7 +6123,7 @@ var TextGroup = function (_Component) {
 
 exports.default = TextGroup;
 
-},{"react":"react"}],68:[function(require,module,exports){
+},{"react":"react"}],69:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6171,7 +6243,7 @@ var PostAdd = function (_Component) {
 
 exports.default = PostAdd;
 
-},{"../../actions/PostAddActions":52,"../../stores/PostAddStore":86,"../../stores/UserStore":87,"../form/Form":63,"../form/Submit":66,"../form/TextGroup":67,"react":"react","react-router-dom":34}],69:[function(require,module,exports){
+},{"../../actions/PostAddActions":52,"../../stores/PostAddStore":84,"../../stores/UserStore":85,"../form/Form":64,"../form/Submit":67,"../form/TextGroup":68,"react":"react","react-router-dom":34}],70:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6282,7 +6354,7 @@ var CommentsForm = function (_Component) {
 
 exports.default = CommentsForm;
 
-},{"../../actions/FormActions":49,"../../stores/FormStore":83,"react":"react"}],70:[function(require,module,exports){
+},{"../../actions/FormActions":49,"../../stores/FormStore":81,"react":"react"}],71:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6296,6 +6368,10 @@ var _react = require('react');
 var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = require('react-router-dom');
+
+var _Auth = require('../../components/Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
 
 var _UserActions = require('../../actions/UserActions');
 
@@ -6323,6 +6399,11 @@ var NavbarUserMenu = function (_React$Component) {
 
     _this.state = _UserStore2.default.getState();
 
+    if (_Auth2.default.isUserAuthenticated()) {
+      var user = _Auth2.default.getUser();
+      _this.state.username = user.username;
+    }
+
     _this.onChange = _this.onChange.bind(_this);
     return _this;
   }
@@ -6345,10 +6426,41 @@ var NavbarUserMenu = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var userMenu = void 0;
-
-      if (!this.state.loggedInUserId) {
-        userMenu = _react2.default.createElement(
+      return _react2.default.createElement(
+        'div',
+        null,
+        _Auth2.default.isUserAuthenticated() ? _react2.default.createElement(
+          'ul',
+          { className: 'nav navbar-nav pull-right' },
+          _react2.default.createElement(
+            'li',
+            null,
+            _react2.default.createElement(
+              'div',
+              { className: 'navbar-text' },
+              'Hello, ',
+              this.state.username
+            )
+          ),
+          _react2.default.createElement(
+            'li',
+            null,
+            _react2.default.createElement(
+              _reactRouterDom.Link,
+              { to: '/user/profile/' + this.state.loggedInUserId },
+              'Profile'
+            )
+          ),
+          _react2.default.createElement(
+            'li',
+            null,
+            _react2.default.createElement(
+              'a',
+              { href: '#', onClick: _UserActions2.default.logoutUser },
+              'Logout'
+            )
+          )
+        ) : _react2.default.createElement(
           'ul',
           { className: 'nav navbar-nav pull-right' },
           _react2.default.createElement(
@@ -6369,36 +6481,7 @@ var NavbarUserMenu = function (_React$Component) {
               'Register'
             )
           )
-        );
-      } else {
-        userMenu = _react2.default.createElement(
-          'ul',
-          { className: 'nav navbar-nav pull-right' },
-          _react2.default.createElement(
-            'li',
-            null,
-            _react2.default.createElement(
-              _reactRouterDom.Link,
-              { to: '/user/profile/' + this.state.loggedInUserId },
-              'Profile'
-            )
-          ),
-          _react2.default.createElement(
-            'li',
-            null,
-            _react2.default.createElement(
-              'a',
-              { href: '#', onClick: _UserActions2.default.logoutUser },
-              'Logout'
-            )
-          )
-        );
-      }
-
-      return _react2.default.createElement(
-        'div',
-        null,
-        userMenu
+        )
       );
     }
   }]);
@@ -6408,7 +6491,7 @@ var NavbarUserMenu = function (_React$Component) {
 
 exports.default = NavbarUserMenu;
 
-},{"../../actions/UserActions":53,"../../stores/UserStore":87,"react":"react","react-router-dom":34}],71:[function(require,module,exports){
+},{"../../actions/UserActions":53,"../../components/Auth":56,"../../stores/UserStore":85,"react":"react","react-router-dom":34}],72:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6539,7 +6622,7 @@ var PostCard = function (_React$Component) {
 
 exports.default = PostCard;
 
-},{"../../stores/UserStore":87,"./PostCommentsPanel":72,"./PostInfo":73,"./PostPanelsToggle":74,"./PostVotePanel":75,"react":"react"}],72:[function(require,module,exports){
+},{"../../stores/UserStore":85,"./PostCommentsPanel":73,"./PostInfo":74,"./PostPanelsToggle":75,"./PostVotePanel":76,"react":"react"}],73:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6623,7 +6706,7 @@ var PostCommentsPanel = function (_React$Component) {
 
 exports.default = PostCommentsPanel;
 
-},{"./CommentsForm":69,"react":"react"}],73:[function(require,module,exports){
+},{"./CommentsForm":70,"react":"react"}],74:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6696,7 +6779,7 @@ var PostInfo = function (_React$Component) {
 
 exports.default = PostInfo;
 
-},{"react":"react","react-router-dom":34}],74:[function(require,module,exports){
+},{"react":"react","react-router-dom":34}],75:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6807,7 +6890,7 @@ var PostPanelToggles = function (_React$Component) {
 
 exports.default = PostPanelToggles;
 
-},{"react":"react","react-router-dom":34}],75:[function(require,module,exports){
+},{"react":"react","react-router-dom":34}],76:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6930,273 +7013,7 @@ var PostVotePanel = function (_Component) {
 
 exports.default = PostVotePanel;
 
-},{"../../actions/FormActions":49,"../../stores/FormStore":83,"react":"react"}],76:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRouterDom = require('react-router-dom');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var UserInfo = function (_React$Component) {
-  _inherits(UserInfo, _React$Component);
-
-  function UserInfo() {
-    _classCallCheck(this, UserInfo);
-
-    return _possibleConstructorReturn(this, (UserInfo.__proto__ || Object.getPrototypeOf(UserInfo)).apply(this, arguments));
-  }
-
-  _createClass(UserInfo, [{
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { className: 'container profile-container' },
-        _react2.default.createElement(
-          'div',
-          { className: 'profile-img' },
-          _react2.default.createElement('img', { src: '/images/user-default.png' })
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'profile-info clearfix' },
-          _react2.default.createElement(
-            'h2',
-            null,
-            _react2.default.createElement(
-              'strong',
-              null,
-              'First Name: ',
-              this.props.profile.userFirstName
-            )
-          ),
-          _react2.default.createElement(
-            'h2',
-            null,
-            _react2.default.createElement(
-              'strong',
-              null,
-              'Last Name: ',
-              this.props.profile.userLastName
-            )
-          ),
-          _react2.default.createElement(
-            'h2',
-            null,
-            _react2.default.createElement(
-              'strong',
-              null,
-              'Gender: ',
-              this.props.profile.gender
-            )
-          ),
-          _react2.default.createElement(
-            'h2',
-            null,
-            _react2.default.createElement(
-              'strong',
-              null,
-              'Username: ',
-              this.props.profile.userUsername
-            )
-          ),
-          _react2.default.createElement(
-            'h2',
-            null,
-            _react2.default.createElement(
-              'strong',
-              null,
-              'Age: ',
-              this.props.profile.userAge
-            )
-          ),
-          _react2.default.createElement(
-            'h4',
-            { className: 'lead' },
-            _react2.default.createElement(
-              _reactRouterDom.Link,
-              { className: 'label', to: '/user/block' },
-              'Block user'
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return UserInfo;
-}(_react2.default.Component);
-
-exports.default = UserInfo;
-
-},{"react":"react","react-router-dom":34}],77:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _UserPostsPanel = require('./UserPostsPanel');
-
-var _UserPostsPanel2 = _interopRequireDefault(_UserPostsPanel);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var UserPosts = function (_React$Component) {
-  _inherits(UserPosts, _React$Component);
-
-  function UserPosts(props) {
-    _classCallCheck(this, UserPosts);
-
-    var _this = _possibleConstructorReturn(this, (UserPosts.__proto__ || Object.getPrototypeOf(UserPosts)).call(this, props));
-
-    _this.state = {
-      showPostsPanel: false
-    };
-    return _this;
-  }
-
-  _createClass(UserPosts, [{
-    key: 'togglePosts',
-    value: function togglePosts() {
-      this.setState(function (prevState) {
-        return {
-          showPostsPanel: !prevState.showPostsPanel
-        };
-      });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { className: 'container profile-container' },
-        _react2.default.createElement(
-          'div',
-          { className: 'profile-stats clearfix' },
-          _react2.default.createElement(
-            'ul',
-            null,
-            _react2.default.createElement(
-              'li',
-              null,
-              _react2.default.createElement(
-                'span',
-                { className: 'stats-number' },
-                this.props.posts ? this.props.posts.length : 0
-              ),
-              'Posts'
-            )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'pull-right btn-group' },
-          _react2.default.createElement(
-            'a',
-            { className: 'btn btn-primary', onClick: this.togglePosts.bind(this) },
-            this.state.showPostsPanel ? 'Hide' : 'Show User Posts'
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'user-posts' },
-          this.state.showPostsPanel ? _react2.default.createElement(_UserPostsPanel2.default, { posts: this.props.posts }) : null
-        )
-      );
-    }
-  }]);
-
-  return UserPosts;
-}(_react2.default.Component);
-
-exports.default = UserPosts;
-
-},{"./UserPostsPanel":78,"react":"react"}],78:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _PostCard = require('../PostCard');
-
-var _PostCard2 = _interopRequireDefault(_PostCard);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var UserPostsPanel = function (_React$Component) {
-  _inherits(UserPostsPanel, _React$Component);
-
-  function UserPostsPanel() {
-    _classCallCheck(this, UserPostsPanel);
-
-    return _possibleConstructorReturn(this, (UserPostsPanel.__proto__ || Object.getPrototypeOf(UserPostsPanel)).apply(this, arguments));
-  }
-
-  _createClass(UserPostsPanel, [{
-    key: 'render',
-    value: function render() {
-      var posts = this.props.posts.map(function (post, index) {
-        return _react2.default.createElement(_PostCard2.default, {
-          key: post._id,
-          index: index,
-          post: post });
-      });
-      return _react2.default.createElement(
-        'div',
-        null,
-        posts
-      );
-    }
-  }]);
-
-  return UserPostsPanel;
-}(_react2.default.Component);
-
-exports.default = UserPostsPanel;
-
-},{"../PostCard":71,"react":"react"}],79:[function(require,module,exports){
+},{"../../actions/FormActions":49,"../../stores/FormStore":81,"react":"react"}],77:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -7221,11 +7038,11 @@ _reactDom2.default.render(_react2.default.createElement(
   _react2.default.createElement(_App2.default, null)
 ), document.getElementById('app'));
 
-},{"./components/App":55,"react":"react","react-dom":"react-dom","react-router-dom":34}],80:[function(require,module,exports){
+},{"./components/App":55,"react":"react","react-dom":"react-dom","react-router-dom":34}],78:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _react = require('react');
@@ -7261,26 +7078,25 @@ var _BlockUser2 = _interopRequireDefault(_BlockUser);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Routes = function Routes() {
-  return _react2.default.createElement(
-    _reactRouterDom.Switch,
-    null,
-    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _Home2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { path: '/user/profile/:userId', component: _UserProfile2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/login', component: _UserLogin2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/register', component: _UserRegister2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/post/add', component: _PostAdd2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/block', component: _BlockUser2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { component: _Home2.default })
-  );
+    return _react2.default.createElement(
+        _reactRouterDom.Switch,
+        null,
+        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _Home2.default }),
+        _react2.default.createElement(_reactRouterDom.Route, { path: '/user/profile/:userId', component: _UserProfile2.default }),
+        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/login', component: _UserLogin2.default }),
+        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/register', component: _UserRegister2.default }),
+        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/post/add', component: _PostAdd2.default }),
+        _react2.default.createElement(_reactRouterDom.Route, { component: _Home2.default })
+    );
 };
 
 exports.default = Routes;
 
-},{"./components/BlockUser":56,"./components/Home":58,"./components/UserLogin":60,"./components/UserProfile":61,"./components/UserRegister":62,"./components/post/PostAdd":68,"react":"react","react-router-dom":34}],81:[function(require,module,exports){
+},{"./components/BlockUser":57,"./components/Home":59,"./components/UserLogin":61,"./components/UserProfile":62,"./components/UserRegister":63,"./components/post/PostAdd":69,"react":"react","react-router-dom":34}],79:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7298,50 +7114,50 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var BlockUserStore = function () {
-  function BlockUserStore() {
-    _classCallCheck(this, BlockUserStore);
+    function BlockUserStore() {
+        _classCallCheck(this, BlockUserStore);
 
-    this.bindActions(_BlockUserActions2.default);
+        this.bindActions(_BlockUserActions2.default);
 
-    this.content = '';
-    this.contentValidationState = '';
-    this.message = '';
-    this.formSubmitState = '';
-  }
+        this.content = '';
+        this.contentValidationState = '';
+        this.message = '';
+        this.formSubmitState = '';
+    }
 
-  _createClass(BlockUserStore, [{
-    key: 'onBlockUserFail',
-    value: function onBlockUserFail(err) {
-      console.log('Failed to block user', err);
-    }
-  }, {
-    key: 'onBlockUserSuccess',
-    value: function onBlockUserSuccess() {
-      this.content = '';
-      this.contentValidationState = '';
-      this.message = 'User blocked';
-      this.formSubmitState = '';
-    }
-  }, {
-    key: 'onHandleContentChange',
-    value: function onHandleContentChange(e) {
-      this.content = e.target.value;
-    }
-  }, {
-    key: 'onContentValidationFail',
-    value: function onContentValidationFail() {
-      this.contentValidationState = 'has-error';
-      this.message = 'Enter username of user who want to block';
-      this.formSubmitState = '';
-    }
-  }]);
+    _createClass(BlockUserStore, [{
+        key: 'onBlockUserFail',
+        value: function onBlockUserFail(err) {
+            console.log('Failed to block user', err);
+        }
+    }, {
+        key: 'onBlockUserSuccess',
+        value: function onBlockUserSuccess() {
+            this.content = '';
+            this.contentValidationState = '';
+            this.message = 'User blocked';
+            this.formSubmitState = '';
+        }
+    }, {
+        key: 'onHandleContentChange',
+        value: function onHandleContentChange(e) {
+            this.content = e.target.value;
+        }
+    }, {
+        key: 'onContentValidationFail',
+        value: function onContentValidationFail() {
+            this.contentValidationState = 'has-error';
+            this.message = 'Enter username of user who want to block';
+            this.formSubmitState = '';
+        }
+    }]);
 
-  return BlockUserStore;
+    return BlockUserStore;
 }();
 
 exports.default = _alt2.default.createStore(BlockUserStore);
 
-},{"../actions/BlockUserActions":47,"../alt":54}],82:[function(require,module,exports){
+},{"../actions/BlockUserActions":47,"../alt":54}],80:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7368,7 +7184,7 @@ var FooterStore = function FooterStore() {
 
 exports.default = _alt2.default.createStore(FooterStore);
 
-},{"../actions/FooterActions":48,"../alt":54}],83:[function(require,module,exports){
+},{"../actions/FooterActions":48,"../alt":54}],81:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7426,6 +7242,12 @@ var FormStore = function () {
 
       this.formSubmitState = 'has-success';
       this.username = '';
+      this.password = '';
+      this.confirmedPassword = '';
+      this.firstName = '';
+      this.lastName = '';
+      this.age = '';
+      this.gender = '';
       this.usernameValidationState = '';
       this.passwordValidationState = '';
       this.message = 'User register success';
@@ -7500,6 +7322,8 @@ var FormStore = function () {
       this.formSubmitState = 'has-success';
       this.usernameValidationState = '';
       this.passwordValidationState = '';
+      this.username = '';
+      this.password = '';
       this.message = 'User login successful';
     }
   }, {
@@ -7533,7 +7357,7 @@ var FormStore = function () {
 
 exports.default = _alt2.default.createStore(FormStore);
 
-},{"../actions/FormActions":49,"../actions/UserActions":53,"../alt":54}],84:[function(require,module,exports){
+},{"../actions/FormActions":49,"../actions/UserActions":53,"../alt":54}],82:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7580,7 +7404,7 @@ var HomeStore = function () {
 
 exports.default = _alt2.default.createStore(HomeStore);
 
-},{"../actions/HomeActions":50,"../alt":54}],85:[function(require,module,exports){
+},{"../actions/HomeActions":50,"../alt":54}],83:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7592,6 +7416,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _alt = require('../alt');
 
 var _alt2 = _interopRequireDefault(_alt);
+
+var _Auth = require('../components/Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
 
 var _NavbarActions = require('../actions/NavbarActions');
 
@@ -7606,7 +7434,10 @@ var NavbarStore = function () {
     _classCallCheck(this, NavbarStore);
 
     this.bindActions(_NavbarActions2.default);
-
+    // this.state = {
+    //   username: Auth.getUser().username
+    // }
+    this.username = _Auth2.default.getUser().username;
     this.ajaxAnimationClass = '';
   }
 
@@ -7622,7 +7453,7 @@ var NavbarStore = function () {
 
 exports.default = _alt2.default.createStore(NavbarStore);
 
-},{"../actions/NavbarActions":51,"../alt":54}],86:[function(require,module,exports){
+},{"../actions/NavbarActions":51,"../alt":54,"../components/Auth":56}],84:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7690,7 +7521,7 @@ var PostAddStore = function () {
 
 exports.default = _alt2.default.createStore(PostAddStore);
 
-},{"../actions/PostAddActions":52,"../alt":54}],87:[function(require,module,exports){
+},{"../actions/PostAddActions":52,"../alt":54}],85:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7702,6 +7533,14 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _alt = require('../alt');
 
 var _alt2 = _interopRequireDefault(_alt);
+
+var _Auth = require('../components/Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
+
+var _HomeActions = require('../actions/HomeActions');
+
+var _HomeActions2 = _interopRequireDefault(_HomeActions);
 
 var _UserActions = require('../actions/UserActions');
 
@@ -7733,16 +7572,19 @@ var UserStore = function () {
   _createClass(UserStore, [{
     key: 'onRegisterUserSuccess',
     value: function onRegisterUserSuccess(user) {
-      this.loggedInUserId = user._id;
-      this.username = user.username;
-      this.roles = user.roles;
+      this.loggedInUserId = '';
+      this.username = '';
+      this.roles = [];
     }
   }, {
     key: 'onLoginUserSuccess',
-    value: function onLoginUserSuccess(user) {
+    value: function onLoginUserSuccess(responseData) {
+      var user = responseData.user;
       this.loggedInUserId = user._id;
       this.username = user.username;
       this.roles = user.roles;
+      _Auth2.default.authenticateUser(responseData.token);
+      _Auth2.default.saveUser(user);
     }
   }, {
     key: 'onLoginUserFail',
@@ -7755,17 +7597,8 @@ var UserStore = function () {
       this.loggedInUserId = '';
       this.username = '';
       this.roles = [];
-      this.userPosts = [];
-    }
-  }, {
-    key: 'onGetUserOwnPostsSuccess',
-    value: function onGetUserOwnPostsSuccess(posts) {
-      this.userPosts = posts;
-    }
-  }, {
-    key: 'onGetUserOwnPostsFail',
-    value: function onGetUserOwnPostsFail() {
-      console.log('Couldn\'t get user own posts. Problem with the DB');
+      _Auth2.default.deauthenticateUser();
+      _Auth2.default.removeUser();
     }
   }, {
     key: 'onGetProfileInfoSuccess',
@@ -7783,6 +7616,6 @@ var UserStore = function () {
 
 exports.default = _alt2.default.createStore(UserStore);
 
-},{"../actions/UserActions":53,"../alt":54}]},{},[79])
+},{"../actions/HomeActions":50,"../actions/UserActions":53,"../alt":54,"../components/Auth":56}]},{},[77])
 
 //# sourceMappingURL=bundle.js.map

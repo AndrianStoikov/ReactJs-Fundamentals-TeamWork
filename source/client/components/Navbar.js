@@ -1,4 +1,5 @@
 import React from 'react'
+import Auth from '../components/Auth'
 import { Link } from 'react-router-dom'
 import NavbarActions from '../actions/NavbarActions'
 import NavbarStore from '../stores/NavbarStore'
@@ -8,6 +9,7 @@ export default class Navbar extends React.Component {
   constructor (props) {
     super(props)
     this.state = NavbarStore.getState()
+
     this.onChange = this.onChange.bind(this)
   }
 
@@ -59,14 +61,22 @@ export default class Navbar extends React.Component {
           </Link>
         </div>
         <div id='navbar' className='navbar-collapse collapse' >
-          <ul className='nav navbar-nav' >
-            <li>
-              <Link to='/' >Home</Link>
-            </li>
-            <li>
-              <Link to='/post/add' >AddPost</Link>
-            </li>
-          </ul>
+          { Auth.isUserAuthenticated() ? (
+            <ul className='nav navbar-nav' >
+              <li>
+                <Link to='/' >Home</Link>
+              </li>
+              <li>
+                <Link to='/post/add' >AddPost</Link>
+              </li>
+            </ul>
+          ) : (
+            <ul className='nav navbar-nav' >
+              <li>
+                <Link to='/' >Home</Link>
+              </li>
+            </ul>
+          )}
           {navbarUserMenu}
         </div>
       </nav>
