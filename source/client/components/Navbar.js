@@ -1,6 +1,6 @@
 import React from 'react'
-import Auth from '../components/Auth'
 import { Link } from 'react-router-dom'
+import Auth from '../components/Auth'
 import NavbarActions from '../actions/NavbarActions'
 import NavbarStore from '../stores/NavbarStore'
 import NavbarUserMenu from './sub-components/NavbarUserMenu'
@@ -9,7 +9,6 @@ export default class Navbar extends React.Component {
   constructor (props) {
     super(props)
     this.state = NavbarStore.getState()
-
     this.onChange = this.onChange.bind(this)
   }
 
