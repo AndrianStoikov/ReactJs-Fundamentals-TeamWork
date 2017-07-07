@@ -1,6 +1,5 @@
 import alt from '../alt'
 import Auth from '../components/Auth'
-import HomeActions from '../actions/HomeActions'
 import UserActions from '../actions/UserActions'
 
 class UserStore {
@@ -20,10 +19,13 @@ class UserStore {
     }
   }
 
-  onRegisterUserSuccess (user) {
-    this.loggedInUserId = ''
-    this.username = ''
-    this.roles = []
+  onRegisterUserSuccess (responseData) {
+    const user = responseData.user
+    this.loggedInUserId = user._id
+    this.username = user.username
+    this.roles = user.roles
+    Auth.authenticateUser(responseData.token)
+    Auth.saveUser(user)
   }
 
   onLoginUserSuccess (responseData) {
@@ -43,8 +45,17 @@ class UserStore {
     this.loggedInUserId = ''
     this.username = ''
     this.roles = []
+    this.userPosts = []
     Auth.deauthenticateUser()
     Auth.removeUser()
+  }
+
+  onGetUserOwnPostsSuccess (posts) {
+    this.userPosts = posts
+  }
+
+  onGetUserOwnPostsFail () {
+    console.log('Couldn\'t get user own posts. Problem with the DB')
   }
 
   onGetProfileInfoSuccess (user) {
