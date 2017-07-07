@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import Auth from '../../components/Auth'
-import UserStore from '../../stores/UserStore'
 import PostAddStore from '../../stores/PostAddStore'
 import PostAddActions from '../../actions/PostAddActions'
 import Form from '../form/Form'
@@ -33,7 +32,7 @@ export default class PostAdd extends Component {
       return
     }
 
-    PostAddActions.addPost({'authorId': UserStore.getState().loggedInUserId, 'content': content})
+    PostAddActions.addPost({'authorId': Auth.getUser()._id, 'content': content})
   }
 
   render () {

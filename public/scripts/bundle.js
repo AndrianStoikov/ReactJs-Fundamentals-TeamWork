@@ -6323,10 +6323,6 @@ var _Auth = require('../../components/Auth');
 
 var _Auth2 = _interopRequireDefault(_Auth);
 
-var _UserStore = require('../../stores/UserStore');
-
-var _UserStore2 = _interopRequireDefault(_UserStore);
-
 var _PostAddStore = require('../../stores/PostAddStore');
 
 var _PostAddStore2 = _interopRequireDefault(_PostAddStore);
@@ -6390,7 +6386,7 @@ var PostAdd = function (_Component) {
         return;
       }
 
-      _PostAddActions2.default.addPost({ 'authorId': _UserStore2.default.getState().loggedInUserId, 'content': content });
+      _PostAddActions2.default.addPost({ 'authorId': _Auth2.default.getUser()._id, 'content': content });
     }
   }, {
     key: 'render',
@@ -6424,7 +6420,7 @@ var PostAdd = function (_Component) {
 
 exports.default = PostAdd;
 
-},{"../../actions/PostAddActions":53,"../../components/Auth":58,"../../stores/PostAddStore":89,"../../stores/UserStore":91,"../form/Form":66,"../form/Submit":69,"../form/TextGroup":70,"react":"react","react-router-dom":34}],72:[function(require,module,exports){
+},{"../../actions/PostAddActions":53,"../../components/Auth":58,"../../stores/PostAddStore":89,"../form/Form":66,"../form/Submit":69,"../form/TextGroup":70,"react":"react","react-router-dom":34}],72:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
