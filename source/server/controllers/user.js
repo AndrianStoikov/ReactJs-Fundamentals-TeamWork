@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const encryption = require('../utilities/encryption')
+const jwt = require('jsonwebtoken')
 
 module.exports = {
   register: {
@@ -24,7 +25,19 @@ module.exports = {
               return res.status(200).send({message: 'Wrong credentials!'})
             }
 
-            res.status(200).send(user)
+            const payload = {
+              exp: Math.floor(Date.now() / 1000) + (60 * 60),
+              sub: req.user._id
+            }
+
+            // create a token string
+            const token = jwt.sign(payload, 's0m3 r4nd0m str1ng')
+            let responseData = {
+              token: token,
+              user: req.user
+            }
+
+            res.status(200).send(responseData)
           })
         })
         .catch(error => {
@@ -46,7 +59,19 @@ module.exports = {
             return res.status(401).send({message: err})
           }
 
-          res.status(200).send(req.user)
+          const payload = {
+            exp: Math.floor(Date.now() / 1000) + (60 * 60),
+            sub: req.user._id
+          }
+
+          // create a token string
+          const token = jwt.sign(payload, 's0m3 r4nd0m str1ng')
+          let responseData = {
+            token: token,
+            user: req.user
+          }
+
+          res.status(200).send(responseData)
         })
       })
     }

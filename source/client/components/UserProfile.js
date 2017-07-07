@@ -21,7 +21,7 @@ export default class UserProfile extends React.Component {
 
   getUserOwnPosts () {
     let request = {
-      url: `/api/post/own/${this.state.loggedInUserId}`,
+      url: `/api/post/own/${this.props.match.params.userId}`,
       method: 'get'
     }
 

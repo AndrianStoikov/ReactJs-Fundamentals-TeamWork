@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Auth from '../../components/Auth'
 
 import UserActions from '../../actions/UserActions'
 import UserStore from '../../stores/UserStore'
@@ -9,6 +10,11 @@ export default class NavbarUserMenu extends React.Component {
     super(props)
 
     this.state = UserStore.getState()
+
+    if (Auth.isUserAuthenticated()) {
+      let user = Auth.getUser()
+      this.state.username = user.username
+    }
 
     this.onChange = this.onChange.bind(this)
   }
@@ -26,35 +32,32 @@ export default class NavbarUserMenu extends React.Component {
   }
 
   render () {
-    let userMenu
-
-    if (!this.state.loggedInUserId) {
-      userMenu = (
-        <ul className='nav navbar-nav pull-right' >
-          <li>
-            <Link to='/user/login' >Login</Link>
-          </li>
-          <li>
-            <Link to='/user/register' >Register</Link>
-          </li>
-        </ul>
-      )
-    } else {
-      userMenu = (
-        <ul className='nav navbar-nav pull-right' >
-          <li>
-            <Link to={`/user/profile/${this.state.loggedInUserId}`} >Profile</Link>
-          </li>
-          <li>
-            <a href='#' onClick={UserActions.logoutUser} >Logout</a>
-          </li>
-        </ul>
-      )
-    }
-
     return (
       <div>
-        {userMenu}
+        { Auth.isUserAuthenticated() ? (
+          <ul className='nav navbar-nav pull-right' >
+            <li>
+              <div className='navbar-text'>
+                Hello, {this.state.username}
+              </div>
+            </li>
+            <li>
+              <Link to={`/user/profile/${this.state.loggedInUserId}`} >Profile</Link>
+            </li>
+            <li>
+              <a href='#' onClick={UserActions.logoutUser} >Logout</a>
+            </li>
+          </ul>
+        ) : (
+          <ul className='nav navbar-nav pull-right' >
+            <li>
+              <Link to='/user/login' >Login</Link>
+            </li>
+            <li>
+              <Link to='/user/register' >Register</Link>
+            </li>
+          </ul>
+        )}
       </div>
     )
   }

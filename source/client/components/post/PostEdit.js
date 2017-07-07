@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
-import UserStore from '../stores/UserStore'
-import BlockUserStore from '../stores/BlockUserStore'
-import BlockUserAction from '../actions/BlockUserActions'
-import Form from './form/Form'
-import TextGroup from './form/TextGroup'
-import Submit from './form/Submit'
+import UserStore from '../../stores/UserStore'
+import PostEditStore from '../../stores/PostEditStore'
+import PostEditActions from '../../actions/PostEditActions'
+import Form from '../form/Form'
+import TextGroup from '../form/TextGroup'
+import Submit from '../form/Submit'
 
-export default class BlockUser extends Component {
+export default class PostEdit extends Component {
   constructor (props) {
     super(props)
-    this.state = BlockUserStore.getState()
+    this.state = PostEditStore.getState()
     this.onChange = this.onChange.bind(this)
   }
 
@@ -19,11 +19,15 @@ export default class BlockUser extends Component {
   }
 
   componentDidMount () {
-    BlockUserStore.listen(this.onChange)
+    PostEditStore.listen(this.onChange)
+    if (UserStore.getState().loggedInUserId !== '') {
+      let postId = this.props.match.params.postId
+      PostEditActions.getEditPostInfo(postId)
+    }
   }
 
   componentWillUnmount () {
-    BlockUserStore.unlisten(this.onChange)
+    PostEditStore.unlisten(this.onChange)
   }
 
   handleSubmit (e) {
@@ -31,11 +35,11 @@ export default class BlockUser extends Component {
 
     let content = this.state.content
     if (content === '') {
-      BlockUserAction.contentValidationFail()
+      PostEditActions.contentValidationFail()
       return
     }
 
-    BlockUserAction.getUserForBlock({'currentUserID': UserStore.getState().loggedInUserId, 'usernameForBlock': content})
+    PostEditActions.editPost({ 'content': content, 'postId': this.props.match.params.postId })
   }
 
   render () {
@@ -45,7 +49,7 @@ export default class BlockUser extends Component {
 
     return (
       <Form
-        title='Block user'
+        title='Edit Post'
         handleSubmit={this.handleSubmit.bind(this)}
         submitState={this.state.formSubmitState}
         message={this.state.message} >
@@ -53,13 +57,13 @@ export default class BlockUser extends Component {
         <TextGroup
           type='text'
           value={this.state.content}
-          label='Block user'
-          handleChange={BlockUserAction.handleContentChange}
+          label='Your Post'
+          handleChange={PostEditActions.handleContentChange}
           validationState={this.state.contentValidationState} />
 
         <Submit
           type='btn-primary'
-          value='Block' />
+          value='Edit Post' />
 
       </Form>
     )

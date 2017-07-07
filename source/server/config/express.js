@@ -8,6 +8,7 @@ const swig = require('swig')
 const React = require('react')
 const ReactDOM = require('react-dom/server')
 const Router = require('react-router')
+const cors = require('cors')
 
 const routes = require('../../client/routes')
 
@@ -20,6 +21,7 @@ module.exports = {
     app.use(express.static(path.normalize(path.join(__dirname, '../../../public'))))
     app.use(session({secret: 'S3cr3t', saveUninitialized: false, resave: false}))
     app.use(passport.initialize())
+    app.use(cors())
     app.use(passport.session())
   },
   serveReactRoutes: (app) => {
