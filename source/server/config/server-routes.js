@@ -18,8 +18,8 @@ module.exports = (app) => {
   app.post('/api/post/like/:id', controllers.post.like.post)
   app.post('/api/post/unlike/:id', controllers.post.unlike.post)
 
-  app.get("/api/user/getByUsername/:username", controllers.user.findUserByUsername.get)
-  app.post("/api/user/block/", controllers.user.blockUser)
+  app.get('/api/user/getByUsername/:username', controllers.user.findUserByUsername.get)
+  app.post('/api/user/block/', controllers.user.blockUser)
 
   app.post('/api/post/add', controllers.post.add.post)
 

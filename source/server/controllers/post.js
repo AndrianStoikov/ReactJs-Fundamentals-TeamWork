@@ -59,7 +59,7 @@ module.exports = {
       let postId = req.params.id
       let userid = '595bf6f9a8a7b9134c1f1bb5'
       Post
-        .findByIdAndUpdate(postId, {$push: {likes: userid}})
+        .findByIdAndUpdate(postId, {$addToSet: {likes: userid}})
         .then((post) => {
           res.status(200).send(post)
         })

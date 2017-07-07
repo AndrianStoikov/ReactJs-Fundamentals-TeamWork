@@ -18,4 +18,16 @@ export default class Helpers {
     }
     return array
   }
+
+  static likePost (request, updateFunction) {
+    $.ajax(request)
+      .done(() => updateFunction())
+      .fail((err) => console.log(err))
+  }
+
+  static unlikePost (request, updateFunction) {
+    $.ajax(request)
+      .done(() => updateFunction())
+      .fail((err) => console.log(err))
+  }
 }

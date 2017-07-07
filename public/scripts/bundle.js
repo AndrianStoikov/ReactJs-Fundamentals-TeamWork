@@ -5062,6 +5062,10 @@ var _PostCard = require('./sub-components/PostCard');
 
 var _PostCard2 = _interopRequireDefault(_PostCard);
 
+var _Helpers = require('../utilities/Helpers');
+
+var _Helpers2 = _interopRequireDefault(_Helpers);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5124,11 +5128,24 @@ var Home = function (_React$Component) {
       var _this2 = this;
 
       var posts = this.state.posts.map(function (post, index) {
+        var postId = post._id;
+
+        var likeRequest = {
+          url: '/api/post/like/' + postId,
+          method: 'post'
+        };
+        var unlikeRequest = {
+          url: '/api/post/unlike/' + postId,
+          method: 'post'
+        };
+
         return _react2.default.createElement(_PostCard2.default, {
           key: post._id,
           post: post,
           index: index,
-          getUserPosts: _this2.getUserPosts.bind(_this2) });
+          likePost: _Helpers2.default.likePost.bind(_this2, likeRequest, _this2.getUserPosts),
+          unlikePost: _Helpers2.default.unlikePost.bind(_this2, unlikeRequest, _this2.getUserPosts)
+        });
       });
 
       return _react2.default.createElement(
@@ -5154,7 +5171,7 @@ var Home = function (_React$Component) {
 
 exports.default = Home;
 
-},{"../actions/HomeActions":50,"../stores/HomeStore":84,"../stores/UserStore":87,"./sub-components/PostCard":71,"react":"react"}],59:[function(require,module,exports){
+},{"../actions/HomeActions":50,"../stores/HomeStore":84,"../stores/UserStore":87,"../utilities/Helpers":88,"./sub-components/PostCard":71,"react":"react"}],59:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5562,7 +5579,10 @@ var UserProfile = function (_React$Component) {
           name: this.state.name,
           roles: this.state.roles,
           profile: this.state.profile }),
-        _react2.default.createElement(_UserPosts2.default, { posts: this.state.userPosts })
+        _react2.default.createElement(_UserPosts2.default, {
+          posts: this.state.userPosts,
+          getUserPosts: this.getUserOwnPosts.bind(this)
+        })
       );
     }
   }]);
@@ -6464,36 +6484,6 @@ var PostCard = function (_React$Component) {
   }
 
   _createClass(PostCard, [{
-    key: 'likePost',
-    value: function likePost() {
-      var _this2 = this;
-
-      var postId = this.props.post._id;
-      var request = {
-        url: '/api/post/like/' + postId,
-        method: 'post'
-      };
-
-      $.ajax(request).done(function () {
-        return _this2.props.getUserPosts();
-      });
-    }
-  }, {
-    key: 'unlikePost',
-    value: function unlikePost() {
-      var _this3 = this;
-
-      var postId = this.props.post._id;
-      var request = {
-        url: '/api/post/unlike/' + postId,
-        method: 'post'
-      };
-
-      $.ajax(request).done(function () {
-        return _this3.props.getUserPosts();
-      });
-    }
-  }, {
     key: 'toggleCommentsPanel',
     value: function toggleCommentsPanel() {
       this.setState(function (prevState) {
@@ -6522,12 +6512,11 @@ var PostCard = function (_React$Component) {
             userId: _UserStore2.default.getState().loggedInUserId,
             toggleCommentsPanel: this.toggleCommentsPanel.bind(this),
             showCommentsPanel: this.state.showCommentsPanel,
-            likePost: this.likePost.bind(this),
-            unlikePost: this.unlikePost.bind(this),
+            likePost: this.props.likePost,
+            unlikePost: this.props.unlikePost,
             postLikes: this.props.post.likes,
             movieId: this.props.post._id })
         ),
-        this.state.showVotePanel ? _react2.default.createElement(_PostVotePanel2.default, { movieId: this.props.post._id }) : null,
         this.state.showCommentsPanel ? _react2.default.createElement(_PostCommentsPanel2.default, { comments: this.props.post.comments, postId: this.props.post._id }) : null,
         _react2.default.createElement('div', { id: 'clear' })
       );
@@ -7129,7 +7118,7 @@ var UserPosts = function (_React$Component) {
         _react2.default.createElement(
           'div',
           { className: 'user-posts' },
-          this.state.showPostsPanel ? _react2.default.createElement(_UserPostsPanel2.default, { posts: this.props.posts }) : null
+          this.state.showPostsPanel ? _react2.default.createElement(_UserPostsPanel2.default, { posts: this.props.posts, getUserPost: this.props.getUserPosts }) : null
         )
       );
     }
@@ -7157,6 +7146,10 @@ var _PostCard = require('../PostCard');
 
 var _PostCard2 = _interopRequireDefault(_PostCard);
 
+var _Helpers = require('../../../utilities/Helpers');
+
+var _Helpers2 = _interopRequireDefault(_Helpers);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -7175,14 +7168,61 @@ var UserPostsPanel = function (_React$Component) {
   }
 
   _createClass(UserPostsPanel, [{
+    key: 'likePost',
+    value: function likePost() {
+      var _this2 = this;
+
+      var postId = this.props.post._id;
+      var request = {
+        url: '/api/post/like/' + postId,
+        method: 'post'
+      };
+
+      $.ajax(request).done(function () {
+        return _this2.props.getUserPosts();
+      });
+    }
+  }, {
+    key: 'unlikePost',
+    value: function unlikePost() {
+      var _this3 = this;
+
+      var postId = this.props.post._id;
+      var request = {
+        url: '/api/post/unlike/' + postId,
+        method: 'post'
+      };
+
+      $.ajax(request).done(function () {
+        return _this3.props.getUserPosts();
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _this4 = this;
+
       var posts = this.props.posts.map(function (post, index) {
+        var postId = post._id;
+
+        var likeRequest = {
+          url: '/api/post/like/' + postId,
+          method: 'post'
+        };
+        var unlikeRequest = {
+          url: '/api/post/unlike/' + postId,
+          method: 'post'
+        };
+
         return _react2.default.createElement(_PostCard2.default, {
           key: post._id,
           index: index,
-          post: post });
+          post: post,
+          likePost: _Helpers2.default.likePost.bind(_this4, likeRequest, _this4.props.getUserPost),
+          unlikePost: _Helpers2.default.unlikePost.bind(_this4, unlikeRequest, _this4.props.getUserPost)
+        });
       });
+
       return _react2.default.createElement(
         'div',
         null,
@@ -7196,7 +7236,7 @@ var UserPostsPanel = function (_React$Component) {
 
 exports.default = UserPostsPanel;
 
-},{"../PostCard":71,"react":"react"}],79:[function(require,module,exports){
+},{"../../../utilities/Helpers":88,"../PostCard":71,"react":"react"}],79:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -7783,6 +7823,74 @@ var UserStore = function () {
 
 exports.default = _alt2.default.createStore(UserStore);
 
-},{"../actions/UserActions":53,"../alt":54}]},{},[79])
+},{"../actions/UserActions":53,"../alt":54}],88:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Helpers = function () {
+  function Helpers() {
+    _classCallCheck(this, Helpers);
+  }
+
+  _createClass(Helpers, null, [{
+    key: 'appendToArray',
+    value: function appendToArray(value, array) {
+      array.push(value);
+      return array;
+    }
+  }, {
+    key: 'prependToArray',
+    value: function prependToArray(value, array) {
+      array.unshift(value);
+      return array;
+    }
+  }, {
+    key: 'removeFromArray',
+    value: function removeFromArray(value, array) {
+      var index = array.indexOf(value);
+      if (index !== -1) {
+        array.splice(index, 1);
+      }
+      return array;
+    }
+  }, {
+    key: 'likePost',
+    value: function likePost(request, updateFunction) {
+      $.ajax(request).done(function () {
+        return updateFunction();
+      }).fail(function (err) {
+        return console.log(err);
+      });
+    }
+  }, {
+    key: 'unlikePost',
+    value: function unlikePost(request, updateFunction) {
+      $.ajax(request).done(function () {
+        return updateFunction();
+      }).fail(function (err) {
+        return console.log(err);
+      });
+    }
+  }]);
+
+  return Helpers;
+}();
+
+exports.default = Helpers;
+
+},{"react":"react"}]},{},[79])
 
 //# sourceMappingURL=bundle.js.map

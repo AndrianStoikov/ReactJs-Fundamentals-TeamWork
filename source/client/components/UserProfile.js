@@ -67,7 +67,10 @@ export default class UserProfile extends React.Component {
           name={this.state.name}
           roles={this.state.roles}
           profile={this.state.profile} />
-        <UserPosts posts={this.state.userPosts} />
+        <UserPosts
+          posts={this.state.userPosts}
+          getUserPosts={this.getUserOwnPosts.bind(this)}
+        />
       </div>
     )
   }
