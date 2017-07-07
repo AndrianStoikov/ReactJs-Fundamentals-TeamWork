@@ -7017,13 +7017,6 @@ var Routes = function Routes() {
         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/register', component: _UserRegister2.default }),
         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/post/add', component: _PostAdd2.default }),
         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/block', component: _BlockUser2.default }),
-        _react2.default.createElement(_reactRouterDom.Route, { path: '/render', render: function render(props) {
-                return _react2.default.createElement(
-                    'h1',
-                    null,
-                    'MAIKA TI DA EBA UMRQLA'
-                );
-            } }),
         _react2.default.createElement(_reactRouterDom.Route, { component: _Home2.default })
     );
 };

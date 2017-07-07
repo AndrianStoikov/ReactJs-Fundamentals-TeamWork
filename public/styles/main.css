@@ -7683,7 +7683,7 @@ label {
 .profile-info {
   margin: 0 0 20px 286px;
   max-width: 405px;
-  color: #fff !important;
+  color: #fff;
 }
 .btn-transparent {
   border: 1px solid white;
