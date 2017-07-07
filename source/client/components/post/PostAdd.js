@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
+import Auth from '../../components/Auth'
 import UserStore from '../../stores/UserStore'
 import PostAddStore from '../../stores/PostAddStore'
 import PostAddActions from '../../actions/PostAddActions'
@@ -36,7 +37,7 @@ export default class PostAdd extends Component {
   }
 
   render () {
-    if (UserStore.getState().loggedInUserId === '') {
+    if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
     }
 
