@@ -1,4 +1,5 @@
 import alt from '../alt'
+import DadaRequests from '../DataRequests'
 
 class BlockUserActions {
   constructor () {
@@ -33,12 +34,7 @@ class BlockUserActions {
           currentUserId: cureentUserId
         }
 
-        let request = {
-          url: '/api/user/block/',
-          method: 'post',
-          data: JSON.stringify(dataForRequest),
-          contentType: 'application/json'
-        }
+        let request = DadaRequests.post('/api/user/block/', dataForRequest, true)
 
         if (userForBlockId !== cureentUserId) {
           $.ajax(request)

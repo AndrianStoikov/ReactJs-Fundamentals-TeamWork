@@ -16,7 +16,6 @@ module.exports = {
         author: inputData.authorId,
         content: inputData.content
       }
-
       Post.create(postData)
         .then(post => {
           if (!post) { return res.status(500).send({message: 'Cannot write post in database'}) }
