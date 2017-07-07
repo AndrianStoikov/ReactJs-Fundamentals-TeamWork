@@ -20,6 +20,7 @@ export default class PostAdd extends Component {
 
   componentDidMount () {
     PostAddStore.listen(this.onChange)
+    PostAddActions.loadPostAddForm()
   }
 
   componentWillUnmount () {

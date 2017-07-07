@@ -34,6 +34,13 @@ class PostAddStore {
     this.message = 'Enter post content'
     this.formSubmitState = ''
   }
+
+  onLoadPostAddForm () {
+    this.content = ''
+    this.contentValidationState = ''
+    this.message = ''
+    this.formSubmitState = ''
+  }
 }
 
 export default alt.createStore(PostAddStore)
