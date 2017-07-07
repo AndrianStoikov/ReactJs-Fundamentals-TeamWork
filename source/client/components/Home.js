@@ -7,6 +7,8 @@ import HomeActions from '../actions/HomeActions'
 import PostCard from './sub-components/PostCard'
 import Helpers from '../utilities/Helpers'
 
+import Auth from './Auth'
+
 export default class Home extends React.Component {
   constructor (props) {
     super(props)
@@ -19,24 +21,11 @@ export default class Home extends React.Component {
     this.setState(state)
   }
 
-  getUserPosts () {
-    if (UserStore.getState().loggedInUserId === '') {
-      return
-    }
-
-    let request = {
-      url: '/api/posts/all',
-      method: 'get'
-    }
-
-    $.ajax(request)
-      .done(data => HomeActions.getUserPostsSuccess(data))
-      .fail(err => HomeActions.getUserPostsFail(err))
-  }
-
   componentDidMount () {
     HomeStore.listen(this.onChange)
-    this.getUserPosts()
+    if (Auth.isUserAuthenticated()) {
+      HomeActions.getUserPosts()
+    }
   }
 
   componentWillUnmount () {
@@ -61,8 +50,8 @@ export default class Home extends React.Component {
           key={post._id}
           post={post}
           index={index}
-          likePost={Helpers.likePost.bind(this, likeRequest, this.getUserPosts)}
-          unlikePost={Helpers.unlikePost.bind(this, unlikeRequest, this.getUserPosts)}
+          likePost={Helpers.likePost.bind(this, likeRequest, HomeActions.getUserPosts)}
+          unlikePost={Helpers.unlikePost.bind(this, unlikeRequest, HomeActions.getUserPosts)}
         />
       )
     })

@@ -1,12 +1,15 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import Auth from '../Auth'
+
 export default class PostPanelToggles extends React.Component {
 
   isLiked () {
+    let currentUserId = Auth.getUser()._id
     let likes = this.props.postLikes
     for (let like of likes) {
-      if (this.props.userId === like.toString()) {
+      if (currentUserId === like.toString()) {
         return true
       }
     }

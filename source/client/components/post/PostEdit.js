@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Auth from '../../components/Auth'
 import { Redirect } from 'react-router-dom'
 import UserStore from '../../stores/UserStore'
 import PostEditStore from '../../stores/PostEditStore'
@@ -20,7 +21,7 @@ export default class PostEdit extends Component {
 
   componentDidMount () {
     PostEditStore.listen(this.onChange)
-    if (UserStore.getState().loggedInUserId !== '') {
+    if (Auth.getUser()._id) {
       let postId = this.props.match.params.postId
       PostEditActions.getEditPostInfo(postId)
     }
@@ -43,7 +44,7 @@ export default class PostEdit extends Component {
   }
 
   render () {
-    if (UserStore.getState().loggedInUserId === '') {
+    if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
     }
 

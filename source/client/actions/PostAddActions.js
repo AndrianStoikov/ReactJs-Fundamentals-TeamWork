@@ -1,4 +1,5 @@
 import alt from '../alt'
+import Data from '../DataRequests'
 
 class PostAddActions {
   constructor () {
@@ -12,12 +13,7 @@ class PostAddActions {
   }
 
   addPost (data) {
-    let request = {
-      url: '/api/post/add',
-      method: 'POST',
-      data: JSON.stringify(data),
-      contentType: 'application/json'
-    }
+    let request = Data.post('/api/post/add', data, true)
 
     $.ajax(request)
       .done(() => {

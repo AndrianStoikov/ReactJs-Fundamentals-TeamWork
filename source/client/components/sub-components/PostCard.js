@@ -1,10 +1,7 @@
 import React from 'react'
 
-import UserStore from '../../stores/UserStore'
-
 import PostInfo from './PostInfo'
 import PostPanelsToggle from './PostPanelsToggle'
-import PostVotePanel from './PostVotePanel'
 import PostCommentsPanel from './PostCommentsPanel'
 
 export default class PostCard extends React.Component {
@@ -30,7 +27,6 @@ export default class PostCard extends React.Component {
           <span className='position pull-left' >{ this.props.index + 1 }</span>
           <PostInfo post={this.props.post} />
           <PostPanelsToggle
-            userId={UserStore.getState().loggedInUserId}
             toggleCommentsPanel={this.toggleCommentsPanel.bind(this)}
             showCommentsPanel={this.state.showCommentsPanel}
             likePost={this.props.likePost}

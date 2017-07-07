@@ -16,7 +16,6 @@ module.exports = {
         author: inputData.authorId,
         content: inputData.content
       }
-
       Post.create(postData)
         .then(post => {
           if (!post) { return res.status(500).send({message: 'Cannot write post in database'}) }
@@ -81,6 +80,8 @@ module.exports = {
           .then(() => {
             res.status(200).send({message: `Post was successfully edited!`})
           })
+      } else {
+        res.sendStatus(401)
       }
     })
   },

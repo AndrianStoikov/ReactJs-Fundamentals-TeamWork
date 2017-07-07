@@ -6,7 +6,10 @@ class BlockUserActions {
       'handleContentChange',
       'contentValidationFail',
       'blockUserSuccess',
-      'blockUserFail'
+      'blockUserFail',
+      'blockUserWhoIsBlockedError',
+      'userNotExist',
+      'blockYourProfileError'
     )
   }
 
@@ -26,8 +29,6 @@ class BlockUserActions {
           return true
         }
 
-        let userForBlockId = data[0]._id
-
         let dataForRequest = {
           userForBlockId: data[0]._id,
           currentUserId: cureentUserId
@@ -43,12 +44,15 @@ class BlockUserActions {
         if (userForBlockId !== cureentUserId) {
           $.ajax(request)
             .done(() => this.blockUserSuccess())
-            .fail(err => this.blockUserFail(err))
+            .fail(err => {
+              this.blockUserWhoIsBlockedError()
+            })
         } else {
-          this.blockUserFail()
+          this.blockYourProfileError()
         }
+
       })
-      .fail((err) => this.blockUserFail(err))
+      .fail((err) => this.userNotExist())
 
     return true
   }

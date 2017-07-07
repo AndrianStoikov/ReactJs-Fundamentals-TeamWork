@@ -19,32 +19,10 @@ export default class UserProfile extends React.Component {
     this.setState(state)
   }
 
-  getUserOwnPosts () {
-    let request = {
-      url: `/api/post/own/${this.props.match.params.userId}`,
-      method: 'get'
-    }
-
-    $.ajax(request)
-      .done(posts => UserActions.getUserOwnPostsSuccess(posts))
-      .fail(() => UserActions.getUserOwnPostsFail())
-  }
-
-  getUserInformation () {
-    let userId = this.props.match.params.userId
-    let request = {
-      url: `/api/user/${userId}`,
-      method: 'get'
-    }
-
-    $.ajax(request)
-      .done(userInfo => UserActions.getProfileInfoSuccess(userInfo))
-  }
-
   componentDidMount () {
     UserStore.listen(this.onChange)
-    this.getUserOwnPosts()
-    this.getUserInformation()
+    UserActions.getUserOwnPosts(this.props.match.params.userId)
+    UserActions.getUserInformation(this.props.match.params.userId)
   }
 
   componentWillUnmount () {
@@ -69,7 +47,7 @@ export default class UserProfile extends React.Component {
           profile={this.state.profile} />
         <UserPosts
           posts={this.state.userPosts}
-          getUserPosts={this.getUserOwnPosts.bind(this)}
+          getUserPosts={UserActions.getUserOwnPosts.bind(this, this.props.match.params.userId)}
         />
       </div>
     )

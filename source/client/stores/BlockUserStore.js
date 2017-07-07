@@ -11,8 +11,10 @@ class BlockUserStore {
     this.formSubmitState = ''
   }
 
-  onBlockUserFail (err) {
-    console.log('Failed to block user', err)
+  onBlockYourProfileError () {
+    this.contentValidationState = 'has-error'
+    this.message = "You cannot block your profile"
+    this.formSubmitState = ''
   }
 
   onBlockUserSuccess () {
@@ -24,6 +26,18 @@ class BlockUserStore {
 
   onHandleContentChange (e) {
     this.content = e.target.value
+  }
+
+  onUserNotExist(){
+    this.contentValidationState = 'has-error'
+    this.message = "This user doesn't exist"
+    this.formSubmitState = ''
+  }
+
+  onBlockUserWhoIsBlockedError(){
+    this.contentValidationState = 'has-error'
+    this.message = 'This user is blocked'
+    this.formSubmitState = ''
   }
 
   onContentValidationFail () {
