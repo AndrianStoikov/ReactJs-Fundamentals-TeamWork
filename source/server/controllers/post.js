@@ -1,6 +1,14 @@
 const Post = require('../models/Post')
 
 module.exports = {
+  get: (req, res) => {
+    let postId = req.postId
+    Post
+      .findById(postId)
+      .then((post) => {
+        res.status(200).send(post)
+      })
+  },
   add: {
     post: (req, res) => {
       let inputData = req.body
@@ -28,6 +36,18 @@ module.exports = {
       let userId = '595bf6f9a8a7b9134c1f1bb5'
       Post
         .find({author: userId})
+        .sort('-dateCreated')
+        .then((posts) => {
+          res.status(200).send(posts)
+        })
+    }
+  },
+  own: {
+    get: (req, res) => {
+      let userId = req.params.userId
+      Post
+        .find({author: userId})
+        .sort('-dateCreated')
         .then((posts) => {
           res.status(200).send(posts)
         })
@@ -64,6 +84,30 @@ module.exports = {
           })
       }
     })
+  },
+  like: {
+    post: (req, res) => {
+      // METHOD SHOULD BE FIXED SO THE RIGHT USER CAN LIKE THE POST
+      let postId = req.params.id
+      let userid = '595bf6f9a8a7b9134c1f1bb5'
+      Post
+        .findByIdAndUpdate(postId, {$push: {likes: userid}})
+        .then((post) => {
+          res.status(200).send(post)
+        })
+    }
+  },
+  unlike: {
+    post: (req, res) => {
+      // METHOD SHOULD BE FIXED SO THE RIGHT USER CAN LIKE THE POST
+      let postId = req.params.id
+      let userid = '595bf6f9a8a7b9134c1f1bb5'
+      Post
+        .findByIdAndUpdate(postId, {$pull: {likes: userid}})
+        .then((post) => {
+          res.status(200).send(post)
+        })
+    }
   }
 }
 

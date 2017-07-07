@@ -1,6 +1,5 @@
 import alt from '../alt'
-
-import HomeActions from '../actions/HomeActions'
+import Auth from '../components/Auth'
 import UserActions from '../actions/UserActions'
 
 class UserStore {
@@ -10,18 +9,32 @@ class UserStore {
     this.loggedInUserId = ''
     this.username = ''
     this.roles = []
+    this.userPosts = []
+    this.profile = {
+      userUsername: '',
+      userAge: '',
+      userFirstName: '',
+      userLastName: '',
+      userGender: ''
+    }
   }
 
-  onRegisterUserSuccess (user) {
+  onRegisterUserSuccess (responseData) {
+    const user = responseData.user
     this.loggedInUserId = user._id
     this.username = user.username
     this.roles = user.roles
+    Auth.authenticateUser(responseData.token)
+    Auth.saveUser(user)
   }
 
-  onLoginUserSuccess (user) {
+  onLoginUserSuccess (responseData) {
+    const user = responseData.user
     this.loggedInUserId = user._id
     this.username = user.username
     this.roles = user.roles
+    Auth.authenticateUser(responseData.token)
+    Auth.saveUser(user)
   }
 
   onLoginUserFail () {
@@ -32,6 +45,25 @@ class UserStore {
     this.loggedInUserId = ''
     this.username = ''
     this.roles = []
+    this.userPosts = []
+    Auth.deauthenticateUser()
+    Auth.removeUser()
+  }
+
+  onGetUserOwnPostsSuccess (posts) {
+    this.userPosts = posts
+  }
+
+  onGetUserOwnPostsFail () {
+    console.log('Couldn\'t get user own posts. Problem with the DB')
+  }
+
+  onGetProfileInfoSuccess (user) {
+    this.profile.userUsername = user.username
+    this.profile.userAge = user.age
+    this.profile.userFirstName = user.firstName
+    this.profile.userLastName = user.lastName
+    this.profile.gender = user.gender
   }
 }
 

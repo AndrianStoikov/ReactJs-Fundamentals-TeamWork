@@ -13,7 +13,7 @@ export default class PostInfo extends React.Component {
         <br />
         <p>{ this.props.post.content }</p>
         <span className='votes' >Likes:
-                    <strong> { this.props.post.likes }</strong>
+                    <strong> { this.props.post.likes.length }</strong>
         </span>
       </div>
     )
