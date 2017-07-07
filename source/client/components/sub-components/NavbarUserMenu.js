@@ -11,11 +11,6 @@ export default class NavbarUserMenu extends React.Component {
 
     this.state = UserStore.getState()
 
-    if (Auth.isUserAuthenticated()) {
-      let user = Auth.getUser()
-      this.state.username = user.username
-    }
-
     this.onChange = this.onChange.bind(this)
   }
 
@@ -32,6 +27,10 @@ export default class NavbarUserMenu extends React.Component {
   }
 
   render () {
+    // if (Auth.isUserAuthenticated()) {
+    //   let user = Auth.getUser()
+    //   this.setState({loggedInUserId: user._id})
+    // }
     return (
       <div>
         { Auth.isUserAuthenticated() ? (
@@ -42,7 +41,7 @@ export default class NavbarUserMenu extends React.Component {
               </div>
             </li>
             <li>
-              <Link to={`/user/profile/${this.state.loggedInUserId}`} >Profile</Link>
+              <Link to={`/user/profile/${Auth.getUser()._id}`} >Profile</Link>
             </li>
             <li>
               <a href='#' onClick={UserActions.logoutUser} >Logout</a>
