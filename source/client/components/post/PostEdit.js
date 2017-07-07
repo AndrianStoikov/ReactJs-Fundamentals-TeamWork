@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import UserStore from '../../stores/UserStore'
-import PostAddStore from '../../stores/PostAddStore'
-import PostAddActions from '../../actions/PostAddActions'
+import PostEditStore from '../../stores/PostEditStore'
+import PostEditActions from '../../actions/PostEditActions'
 import Form from '../form/Form'
 import TextGroup from '../form/TextGroup'
 import Submit from '../form/Submit'
 
-export default class PostAdd extends Component {
+export default class PostEdit extends Component {
   constructor (props) {
     super(props)
-    this.state = PostAddStore.getState()
+    this.state = PostEditStore.getState()
     this.onChange = this.onChange.bind(this)
   }
 
@@ -19,8 +19,15 @@ export default class PostAdd extends Component {
   }
 
   componentDidMount () {
-    PostAddStore.listen(this.onChange)
-    PostAddActions.loadPostAddForm()
+    PostEditStore.listen(this.onChange)
+    if (UserStore.getState().loggedInUserId !== '') {
+      let postId = this.props.match.params.postId
+      PostEditActions.getEditPostInfo(postId)
+    }
+  }
+
+  componentWillUnmount () {
+    PostEditStore.unlisten(this.onChange)
   }
 
   handleSubmit (e) {
@@ -28,11 +35,11 @@ export default class PostAdd extends Component {
 
     let content = this.state.content
     if (content === '') {
-      PostAddActions.contentValidationFail()
+      PostEditActions.contentValidationFail()
       return
     }
 
-    PostAddActions.addPost({'authorId': UserStore.getState().loggedInUserId, 'content': content})
+    PostEditActions.editPost({ 'content': content, 'postId': this.props.match.params.postId })
   }
 
   render () {
@@ -42,21 +49,21 @@ export default class PostAdd extends Component {
 
     return (
       <Form
-        title='New Post'
+        title='Edit Post'
         handleSubmit={this.handleSubmit.bind(this)}
         submitState={this.state.formSubmitState}
-        message={this.state.message}>
+        message={this.state.message} >
 
         <TextGroup
           type='text'
           value={this.state.content}
           label='Your Post'
-          handleChange={PostAddActions.handleContentChange}
+          handleChange={PostEditActions.handleContentChange}
           validationState={this.state.contentValidationState} />
 
         <Submit
           type='btn-primary'
-          value='Post' />
+          value='Edit Post' />
 
       </Form>
     )

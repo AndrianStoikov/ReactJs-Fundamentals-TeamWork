@@ -22,6 +22,8 @@ module.exports = (app) => {
   app.post("/api/user/block/", controllers.user.blockUser)
 
   app.post('/api/post/add', controllers.post.add.post)
+  app.get('/api/post/edit/:postId', controllers.post.editGet)
+  app.post('/api/post/edit/:postId', controllers.post.editPost)
 
   app.all('*', controllers.home.redirectToHome)
 }
