@@ -1,4 +1,4 @@
-import React from 'react'
+import Data from '../DataRequests'
 
 export default class Helpers {
   static appendToArray (value, array) {
@@ -17,5 +17,19 @@ export default class Helpers {
       array.splice(index, 1)
     }
     return array
+  }
+
+  static likePost (request, updateFunction) {
+    request = Data.post(request, {}, true)
+    $.ajax(request)
+      .done(() => updateFunction())
+      .fail((err) => console.log(err))
+  }
+
+  static unlikePost (request, updateFunction) {
+    request = Data.post(request, {}, true)
+    $.ajax(request)
+      .done(() => updateFunction())
+      .fail((err) => console.log(err))
   }
 }

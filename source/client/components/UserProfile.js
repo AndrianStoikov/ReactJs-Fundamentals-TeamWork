@@ -19,11 +19,9 @@ export default class UserProfile extends React.Component {
     this.setState(state)
   }
 
-
-
   componentDidMount () {
     UserStore.listen(this.onChange)
-    UserActions.getUserOwnPosts(this.state.loggedInUserId)
+    UserActions.getUserOwnPosts(this.props.match.params.userId)
     UserActions.getUserInformation(this.props.match.params.userId)
   }
 
@@ -47,7 +45,10 @@ export default class UserProfile extends React.Component {
           name={this.state.name}
           roles={this.state.roles}
           profile={this.state.profile} />
-        <UserPosts posts={this.state.userPosts} />
+        <UserPosts
+          posts={this.state.userPosts}
+          getUserPosts={UserActions.getUserOwnPosts.bind(this, this.props.match.params.userId)}
+        />
       </div>
     )
   }

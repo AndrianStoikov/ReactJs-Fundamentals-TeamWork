@@ -1,63 +1,61 @@
 import alt from '../alt'
-import DadaRequests from '../DataRequests'
 
 class BlockUserActions {
-    constructor() {
-        this.generateActions(
-            'handleContentChange',
-            'contentValidationFail',
-            'blockUserSuccess',
-            'blockUserFail',
-            'blockUserWhoIsBlockedError',
-            'userNotExist',
-            'blockYourProfileError'
-        )
+  constructor () {
+    this.generateActions(
+      'handleContentChange',
+      'contentValidationFail',
+      'blockUserSuccess',
+      'blockUserFail',
+      'blockUserWhoIsBlockedError',
+      'userNotExist',
+      'blockYourProfileError'
+    )
+  }
+
+  getUserForBlock (data) {
+    let request = {
+      url: '/api/user/getByUsername/' + data.usernameForBlock,
+      method: 'get',
+      data: JSON.stringify(data),
+      contentType: 'application/json'
     }
 
-    getUserForBlock(data) {
-        let request = {
-            url: '/api/user/getByUsername/' + data.usernameForBlock,
-            method: 'get',
-            data: JSON.stringify(data),
-            contentType: 'application/json'
+    let cureentUserId = data.currentUserID
+
+    $.ajax(request)
+      .done((data) => {
+        if (data.length <= 0) {
+          return true
         }
 
-        let cureentUserId = data.currentUserID
+        let dataForRequest = {
+          userForBlockId: data[0]._id,
+          currentUserId: cureentUserId
+        }
 
-        $.ajax(request)
-            .done((data) => {
-                if (data.length <= 0) {
-                    return true
-                }
+        let request = {
+          url: '/api/user/block/',
+          method: 'post',
+          data: JSON.stringify(dataForRequest),
+          contentType: 'application/json'
+        }
 
-                let dataForRequest = {
-                    userForBlockId: data[0]._id,
-                    currentUserId: cureentUserId
-                }
-
-                let request = {
-                    url: '/api/user/block/',
-                    method: 'post',
-                    data: JSON.stringify(dataForRequest),
-                    contentType: 'application/json'
-                }
-
-                if (userForBlockId !== cureentUserId) {
-                    $.ajax(request)
-                        .done(() => this.blockUserSuccess())
-                        .fail(err => {
-                            this.blockUserWhoIsBlockedError()
-                        } )
-                } else {
-                    this.blockYourProfileError()
-                }
-
-
+        if (userForBlockId !== cureentUserId) {
+          $.ajax(request)
+            .done(() => this.blockUserSuccess())
+            .fail(err => {
+              this.blockUserWhoIsBlockedError()
             })
-            .fail((err) => this.userNotExist())
+        } else {
+          this.blockYourProfileError()
+        }
 
-        return true
-    }
+      })
+      .fail((err) => this.userNotExist())
+
+    return true
+  }
 }
 
 export default alt.createActions(BlockUserActions)
