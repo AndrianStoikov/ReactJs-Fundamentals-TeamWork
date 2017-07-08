@@ -162,5 +162,17 @@ module.exports = {
     } else {
       res.status(401).send()
     }
+  },
+  getAdmins: (req, res) => {
+    if (req.user.roles.indexOf('Admin') >= 0) {
+      User.find({roles: 'Admin'}).then(users => {
+        if (!users) {
+          return res.status(404).send({message: 'No admins found'})
+        }
+        res.status(200).send(users)
+      })
+    } else {
+      res.status(401).send()
+    }
   }
 }

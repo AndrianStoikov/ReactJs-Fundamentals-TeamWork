@@ -5,10 +5,20 @@ class AdminPanelStore {
   constructor () {
     this.bindActions(AdminPanelActions)
 
+    this.admins = []
     this.userForAdmin = ''
     this.contentValidationState = ''
     this.message = ''
     this.formSubmitState = ''
+  }
+
+  onGetAdminsFail (err) {
+    console.log('Failed to load admins', err)
+  }
+
+  onGetAdminsSuccess (data) {
+    this.admins = data
+    console.log(data)
   }
 
   onMakeAdminSuccess (post) {

@@ -8,7 +8,9 @@ class AdminPanelActions {
       'contentValidationFail',
       'makeAdminSuccess',
       'makeAdminFail',
-      'loadAdminPanelForm'
+      'loadAdminPanelForm',
+      'getAdminsSuccess',
+      'getAdminsFail'
     )
   }
 
@@ -19,6 +21,18 @@ class AdminPanelActions {
         this.makeAdminSuccess()
       })
       .fail((err) => this.makeAdminFail(err))
+
+    return true
+  }
+
+  getAdmins () {
+    let request = Data.get('/user/getAdmins', true)
+
+    $.ajax(request)
+      .done((data) => {
+        this.getAdminsSuccess(data)
+      })
+      .fail((err) => this.getAdminsFail(err))
 
     return true
   }
