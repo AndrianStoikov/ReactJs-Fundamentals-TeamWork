@@ -69,8 +69,13 @@ export default class Navbar extends React.Component {
                 <Link to='/post/add' >AddPost</Link>
               </li>
               <li>
-                <Link to='/post/edit/595f8e7127790e383403ccf4' >EditPost(testing)</Link>
+                <Link to='/post/edit/5960d462e5e8481cccfbba6f' >EditPost(testing)</Link>
               </li>
+              { JSON.parse(window.localStorage.getItem('user')).roles.indexOf('Admin') >= 0 &&
+                <li>
+                  <Link to='/user/admin-panel' >Admin Panel</Link>
+                </li>
+              }
             </ul>
           ) : (
             <ul className='nav navbar-nav' >
