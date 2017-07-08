@@ -21,6 +21,7 @@ export default class AdminPanel extends Component {
   componentDidMount () {
     AdminPanelStore.listen(this.onChange)
     AdminPanelActions.loadAdminPanelForm()
+    AdminPanelActions.getAdmins()
   }
 
   componentWillUnmount () {
@@ -48,25 +49,49 @@ export default class AdminPanel extends Component {
       return <Redirect to='/user/login' />
     }
 
+    let admins = this.state.admins.map((admin, index) => {
+      return (
+        <li key={admin._id} className='list-group-item'>
+          {admin.username}
+        </li>
+      )
+    })
+
     return (
-      <Form
-        title='Make Admin'
-        handleSubmit={this.handleSubmit.bind(this)}
-        submitState={this.state.formSubmitState}
-        message={this.state.message}>
+      <div>
+        <Form
+          title='Make Admin'
+          handleSubmit={this.handleSubmit.bind(this)}
+          submitState={this.state.formSubmitState}
+          message={this.state.message}>
 
-        <TextGroup
-          type='text'
-          value={this.state.userForAdmin}
-          label='Username'
-          handleChange={AdminPanelActions.handleContentChange}
-          validationState={this.state.contentValidationState} />
+          <TextGroup
+            type='text'
+            value={this.state.userForAdmin}
+            label='Username'
+            handleChange={AdminPanelActions.handleContentChange}
+            validationState={this.state.contentValidationState} />
 
-        <Submit
-          type='btn-primary'
-          value='Make Admin' />
+          <Submit
+            type='btn-primary'
+            value='Make Admin' />
 
-      </Form>
+        </Form>
+        <div className='container' >
+          <div className='row flipInX animated' >
+            <div className='col-sm-8' >
+              <div className='panel panel-default' >
+                <div className='panel-heading' >Current admins</div>
+                <div className='panel-body' >
+                  <ul className='list-group'>
+                    {admins}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 }
