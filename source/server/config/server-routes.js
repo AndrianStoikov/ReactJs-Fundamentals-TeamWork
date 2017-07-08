@@ -21,6 +21,7 @@ module.exports = (app) => {
 
   app.get('/api/user/getByUsername/:username', controllers.user.findUserByUsername.get)
   app.post('/api/user/block/', authCheck, controllers.user.blockUser)
+  app.post('/api/user/makeAdmin', authCheck, controllers.user.makeAdmin)
 
   app.all('*', controllers.home.redirectToHome)
 }

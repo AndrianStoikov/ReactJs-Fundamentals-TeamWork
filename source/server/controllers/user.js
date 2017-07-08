@@ -146,5 +146,21 @@ module.exports = {
         res.status(404).send()
       }
     })
+  },
+  makeAdmin: (req, res) => {
+    if (req.user.roles.indexOf('Admin') >= 0) {
+      let userForAdmin = req.body.userForAdmin
+      User.findOne({username: userForAdmin}).then(user => {
+        if (!user) {
+          return res.status(404).send({message: 'No such user exists'})
+        } else {
+          user.roles.push('Admin')
+          user.save()
+          res.status(200).send()
+        }
+      })
+    } else {
+      res.status(401).send()
+    }
   }
 }

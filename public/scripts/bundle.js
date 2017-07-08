@@ -4414,7 +4414,56 @@ var DataRequests = function () {
 
 exports.default = DataRequests;
 
-},{"./components/Auth":58}],48:[function(require,module,exports){
+},{"./components/Auth":60}],48:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+var _DataRequests = require('../DataRequests');
+
+var _DataRequests2 = _interopRequireDefault(_DataRequests);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AdminPanelActions = function () {
+  function AdminPanelActions() {
+    _classCallCheck(this, AdminPanelActions);
+
+    this.generateActions('handleContentChange', 'contentValidationFail', 'makeAdminSuccess', 'makeAdminFail', 'loadAdminPanelForm');
+  }
+
+  _createClass(AdminPanelActions, [{
+    key: 'addPost',
+    value: function addPost(data) {
+      var _this = this;
+
+      var request = _DataRequests2.default.post('/api/user/makeAdmin', data, true);
+      $.ajax(request).done(function () {
+        _this.makeAdminSuccess();
+      }).fail(function (err) {
+        return _this.makeAdminFail(err);
+      });
+
+      return true;
+    }
+  }]);
+
+  return AdminPanelActions;
+}();
+
+exports.default = _alt2.default.createActions(AdminPanelActions);
+
+},{"../DataRequests":47,"../alt":57}],49:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4491,7 +4540,7 @@ var BlockUserActions = function () {
 
 exports.default = _alt2.default.createActions(BlockUserActions);
 
-},{"../alt":56}],49:[function(require,module,exports){
+},{"../alt":57}],50:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4514,7 +4563,7 @@ var FooterActions = function FooterActions() {
 
 exports.default = _alt2.default.createActions(FooterActions);
 
-},{"../alt":56}],50:[function(require,module,exports){
+},{"../alt":57}],51:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4537,7 +4586,7 @@ var FormActions = function FormActions() {
 
 exports.default = _alt2.default.createActions(FormActions);
 
-},{"../alt":56}],51:[function(require,module,exports){
+},{"../alt":57}],52:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4587,7 +4636,7 @@ var HomeActions = function () {
 
 exports.default = _alt2.default.createActions(HomeActions);
 
-},{"../DataRequests":47,"../alt":56}],52:[function(require,module,exports){
+},{"../DataRequests":47,"../alt":57}],53:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4610,7 +4659,7 @@ var NavbarActions = function NavbarActions() {
 
 exports.default = _alt2.default.createActions(NavbarActions);
 
-},{"../alt":56}],53:[function(require,module,exports){
+},{"../alt":57}],54:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4659,7 +4708,7 @@ var PostAddActions = function () {
 
 exports.default = _alt2.default.createActions(PostAddActions);
 
-},{"../DataRequests":47,"../alt":56}],54:[function(require,module,exports){
+},{"../DataRequests":47,"../alt":57}],55:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4726,7 +4775,7 @@ var PostEditActions = function () {
 
 exports.default = _alt2.default.createActions(PostEditActions);
 
-},{"../DataRequests":47,"../alt":56}],55:[function(require,module,exports){
+},{"../DataRequests":47,"../alt":57}],56:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4875,7 +4924,7 @@ var UserActions = function () {
 
 exports.default = _alt2.default.createActions(UserActions);
 
-},{"../DataRequests":47,"../alt":56,"./HomeActions":51}],56:[function(require,module,exports){
+},{"../DataRequests":47,"../alt":57,"./HomeActions":52}],57:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4890,7 +4939,132 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = new _alt2.default();
 
-},{"alt":3}],57:[function(require,module,exports){
+},{"alt":3}],58:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouterDom = require('react-router-dom');
+
+var _Auth = require('../components/Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
+
+var _AdminPanelStore = require('../stores/AdminPanelStore');
+
+var _AdminPanelStore2 = _interopRequireDefault(_AdminPanelStore);
+
+var _AdminPanelActions = require('../actions/AdminPanelActions');
+
+var _AdminPanelActions2 = _interopRequireDefault(_AdminPanelActions);
+
+var _Form = require('./form/Form');
+
+var _Form2 = _interopRequireDefault(_Form);
+
+var _TextGroup = require('./form/TextGroup');
+
+var _TextGroup2 = _interopRequireDefault(_TextGroup);
+
+var _Submit = require('./form/Submit');
+
+var _Submit2 = _interopRequireDefault(_Submit);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AdminPanel = function (_Component) {
+  _inherits(AdminPanel, _Component);
+
+  function AdminPanel(props) {
+    _classCallCheck(this, AdminPanel);
+
+    var _this = _possibleConstructorReturn(this, (AdminPanel.__proto__ || Object.getPrototypeOf(AdminPanel)).call(this, props));
+
+    _this.state = _AdminPanelStore2.default.getState();
+    _this.onChange = _this.onChange.bind(_this);
+    return _this;
+  }
+
+  _createClass(AdminPanel, [{
+    key: 'onChange',
+    value: function onChange(state) {
+      this.setState(state);
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      _AdminPanelStore2.default.listen(this.onChange);
+      _AdminPanelActions2.default.loadAdminPanelForm();
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      _AdminPanelStore2.default.unlisten(this.onChange);
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+
+      var userForAdmin = this.state.userForAdmin;
+      if (userForAdmin === '') {
+        _AdminPanelActions2.default.contentValidationFail();
+        return;
+      }
+
+      _AdminPanelActions2.default.addPost({ 'userForAdmin': userForAdmin });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (!_Auth2.default.isUserAuthenticated()) {
+        return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/user/login' });
+      }
+
+      if (JSON.parse(window.localStorage.getItem('user')).roles.indexOf('Admin') < 0) {
+        return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/user/login' });
+      }
+
+      return _react2.default.createElement(
+        _Form2.default,
+        {
+          title: 'Make Admin',
+          handleSubmit: this.handleSubmit.bind(this),
+          submitState: this.state.formSubmitState,
+          message: this.state.message },
+        _react2.default.createElement(_TextGroup2.default, {
+          type: 'text',
+          value: this.state.userForAdmin,
+          label: 'Username',
+          handleChange: _AdminPanelActions2.default.handleContentChange,
+          validationState: this.state.contentValidationState }),
+        _react2.default.createElement(_Submit2.default, {
+          type: 'btn-primary',
+          value: 'Make Admin' })
+      );
+    }
+  }]);
+
+  return AdminPanel;
+}(_react.Component);
+
+exports.default = AdminPanel;
+
+},{"../actions/AdminPanelActions":48,"../components/Auth":60,"../stores/AdminPanelStore":86,"./form/Form":68,"./form/Submit":71,"./form/TextGroup":72,"react":"react","react-router-dom":34}],59:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4978,7 +5152,7 @@ var App = function (_React$Component) {
 
 exports.default = App;
 
-},{"../actions/UserActions":55,"../routes":83,"../stores/UserStore":91,"./Footer":60,"./Navbar":62,"react":"react"}],58:[function(require,module,exports){
+},{"../actions/UserActions":56,"../routes":85,"../stores/UserStore":94,"./Footer":62,"./Navbar":64,"react":"react"}],60:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5040,7 +5214,7 @@ var Auth = function () {
 
 exports.default = Auth;
 
-},{}],59:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5160,7 +5334,7 @@ var BlockUser = function (_Component) {
 
 exports.default = BlockUser;
 
-},{"../actions/BlockUserActions":48,"../stores/BlockUserStore":84,"../stores/UserStore":91,"./form/Form":66,"./form/Submit":69,"./form/TextGroup":70,"react":"react","react-router-dom":34}],60:[function(require,module,exports){
+},{"../actions/BlockUserActions":49,"../stores/BlockUserStore":87,"../stores/UserStore":94,"./form/Form":68,"./form/Submit":71,"./form/TextGroup":72,"react":"react","react-router-dom":34}],62:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5303,7 +5477,7 @@ var Footer = function (_Component) {
 
 exports.default = Footer;
 
-},{"../stores/FooterStore":85,"react":"react","react-router-dom":34}],61:[function(require,module,exports){
+},{"../stores/FooterStore":88,"react":"react","react-router-dom":34}],63:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5419,7 +5593,7 @@ var Home = function (_React$Component) {
 
 exports.default = Home;
 
-},{"../actions/HomeActions":51,"../stores/HomeStore":87,"../utilities/Helpers":92,"./Auth":58,"./sub-components/PostCard":75,"react":"react"}],62:[function(require,module,exports){
+},{"../actions/HomeActions":52,"../stores/HomeStore":90,"../utilities/Helpers":95,"./Auth":60,"./sub-components/PostCard":77,"react":"react"}],64:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5569,8 +5743,17 @@ var Navbar = function (_React$Component) {
               null,
               _react2.default.createElement(
                 _reactRouterDom.Link,
-                { to: '/post/edit/595f8e7127790e383403ccf4' },
+                { to: '/post/edit/5960d462e5e8481cccfbba6f' },
                 'EditPost(testing)'
+              )
+            ),
+            JSON.parse(window.localStorage.getItem('user')).roles.indexOf('Admin') >= 0 && _react2.default.createElement(
+              'li',
+              null,
+              _react2.default.createElement(
+                _reactRouterDom.Link,
+                { to: '/user/admin-panel' },
+                'Admin Panel'
               )
             )
           ) : _react2.default.createElement(
@@ -5597,7 +5780,7 @@ var Navbar = function (_React$Component) {
 
 exports.default = Navbar;
 
-},{"../actions/NavbarActions":52,"../components/Auth":58,"../stores/NavbarStore":88,"./sub-components/NavbarUserMenu":74,"react":"react","react-router-dom":34}],63:[function(require,module,exports){
+},{"../actions/NavbarActions":53,"../components/Auth":60,"../stores/NavbarStore":91,"./sub-components/NavbarUserMenu":76,"react":"react","react-router-dom":34}],65:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5734,7 +5917,7 @@ var UserLogin = function (_Component) {
 
 exports.default = UserLogin;
 
-},{"../actions/FormActions":50,"../actions/UserActions":55,"../stores/FormStore":86,"../stores/UserStore":91,"./form/Form":66,"./form/Submit":69,"./form/TextGroup":70,"react":"react","react-router-dom":34}],64:[function(require,module,exports){
+},{"../actions/FormActions":51,"../actions/UserActions":56,"../stores/FormStore":89,"../stores/UserStore":94,"./form/Form":68,"./form/Submit":71,"./form/TextGroup":72,"react":"react","react-router-dom":34}],66:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5838,7 +6021,7 @@ var UserProfile = function (_React$Component) {
 
 exports.default = UserProfile;
 
-},{"../actions/UserActions":55,"../stores/UserStore":91,"./sub-components/user-profile/UserInfo":79,"./sub-components/user-profile/UserPosts":80,"react":"react"}],65:[function(require,module,exports){
+},{"../actions/UserActions":56,"../stores/UserStore":94,"./sub-components/user-profile/UserInfo":81,"./sub-components/user-profile/UserPosts":82,"react":"react"}],67:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6028,7 +6211,7 @@ var UserRegister = function (_Component) {
 
 exports.default = UserRegister;
 
-},{"../actions/FormActions":50,"../actions/UserActions":55,"../stores/FormStore":86,"../stores/UserStore":91,"./form/Form":66,"./form/RadioElement":67,"./form/RadioGroup":68,"./form/Submit":69,"./form/TextGroup":70,"react":"react","react-router-dom":34}],66:[function(require,module,exports){
+},{"../actions/FormActions":51,"../actions/UserActions":56,"../stores/FormStore":89,"../stores/UserStore":94,"./form/Form":68,"./form/RadioElement":69,"./form/RadioGroup":70,"./form/Submit":71,"./form/TextGroup":72,"react":"react","react-router-dom":34}],68:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6108,7 +6291,7 @@ var Form = function (_Component) {
 
 exports.default = Form;
 
-},{"react":"react"}],67:[function(require,module,exports){
+},{"react":"react"}],69:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6165,7 +6348,7 @@ var RadioElement = function (_Component) {
 
 exports.default = RadioElement;
 
-},{"react":"react"}],68:[function(require,module,exports){
+},{"react":"react"}],70:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6216,7 +6399,7 @@ var RadioGroup = function (_Component) {
 
 exports.default = RadioGroup;
 
-},{"react":"react"}],69:[function(require,module,exports){
+},{"react":"react"}],71:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6258,7 +6441,7 @@ var Submit = function (_Component) {
 
 exports.default = Submit;
 
-},{"react":"react"}],70:[function(require,module,exports){
+},{"react":"react"}],72:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6317,7 +6500,7 @@ var TextGroup = function (_Component) {
 
 exports.default = TextGroup;
 
-},{"react":"react"}],71:[function(require,module,exports){
+},{"react":"react"}],73:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6389,6 +6572,11 @@ var PostAdd = function (_Component) {
       _PostAddActions2.default.loadPostAddForm();
     }
   }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      _PostAddStore2.default.unlisten(this.onChange);
+    }
+  }, {
     key: 'handleSubmit',
     value: function handleSubmit(e) {
       e.preventDefault();
@@ -6433,7 +6621,7 @@ var PostAdd = function (_Component) {
 
 exports.default = PostAdd;
 
-},{"../../actions/PostAddActions":53,"../../components/Auth":58,"../../stores/PostAddStore":89,"../form/Form":66,"../form/Submit":69,"../form/TextGroup":70,"react":"react","react-router-dom":34}],72:[function(require,module,exports){
+},{"../../actions/PostAddActions":54,"../../components/Auth":60,"../../stores/PostAddStore":92,"../form/Form":68,"../form/Submit":71,"../form/TextGroup":72,"react":"react","react-router-dom":34}],74:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6561,7 +6749,7 @@ var PostEdit = function (_Component) {
 
 exports.default = PostEdit;
 
-},{"../../actions/PostEditActions":54,"../../components/Auth":58,"../../stores/PostEditStore":90,"../../stores/UserStore":91,"../form/Form":66,"../form/Submit":69,"../form/TextGroup":70,"react":"react","react-router-dom":34}],73:[function(require,module,exports){
+},{"../../actions/PostEditActions":55,"../../components/Auth":60,"../../stores/PostEditStore":93,"../../stores/UserStore":94,"../form/Form":68,"../form/Submit":71,"../form/TextGroup":72,"react":"react","react-router-dom":34}],75:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6672,7 +6860,7 @@ var CommentsForm = function (_Component) {
 
 exports.default = CommentsForm;
 
-},{"../../actions/FormActions":50,"../../stores/FormStore":86,"react":"react"}],74:[function(require,module,exports){
+},{"../../actions/FormActions":51,"../../stores/FormStore":89,"react":"react"}],76:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6804,7 +6992,7 @@ var NavbarUserMenu = function (_React$Component) {
 
 exports.default = NavbarUserMenu;
 
-},{"../../actions/UserActions":55,"../../components/Auth":58,"../../stores/UserStore":91,"react":"react","react-router-dom":34}],75:[function(require,module,exports){
+},{"../../actions/UserActions":56,"../../components/Auth":60,"../../stores/UserStore":94,"react":"react","react-router-dom":34}],77:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6895,7 +7083,7 @@ var PostCard = function (_React$Component) {
 
 exports.default = PostCard;
 
-},{"./PostCommentsPanel":76,"./PostInfo":77,"./PostPanelsToggle":78,"react":"react"}],76:[function(require,module,exports){
+},{"./PostCommentsPanel":78,"./PostInfo":79,"./PostPanelsToggle":80,"react":"react"}],78:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6979,7 +7167,7 @@ var PostCommentsPanel = function (_React$Component) {
 
 exports.default = PostCommentsPanel;
 
-},{"./CommentsForm":73,"react":"react"}],77:[function(require,module,exports){
+},{"./CommentsForm":75,"react":"react"}],79:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7052,7 +7240,7 @@ var PostInfo = function (_React$Component) {
 
 exports.default = PostInfo;
 
-},{"react":"react","react-router-dom":34}],78:[function(require,module,exports){
+},{"react":"react","react-router-dom":34}],80:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7168,7 +7356,7 @@ var PostPanelToggles = function (_React$Component) {
 
 exports.default = PostPanelToggles;
 
-},{"../Auth":58,"react":"react","react-router-dom":34}],79:[function(require,module,exports){
+},{"../Auth":60,"react":"react","react-router-dom":34}],81:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7283,7 +7471,7 @@ var UserInfo = function (_React$Component) {
 
 exports.default = UserInfo;
 
-},{"react":"react","react-router-dom":34}],80:[function(require,module,exports){
+},{"react":"react","react-router-dom":34}],82:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7378,7 +7566,7 @@ var UserPosts = function (_React$Component) {
 
 exports.default = UserPosts;
 
-},{"./UserPostsPanel":81,"react":"react"}],81:[function(require,module,exports){
+},{"./UserPostsPanel":83,"react":"react"}],83:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7485,7 +7673,7 @@ var UserPostsPanel = function (_React$Component) {
 
 exports.default = UserPostsPanel;
 
-},{"../../../utilities/Helpers":92,"../PostCard":75,"react":"react"}],82:[function(require,module,exports){
+},{"../../../utilities/Helpers":95,"../PostCard":77,"react":"react"}],84:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -7510,7 +7698,7 @@ _reactDom2.default.render(_react2.default.createElement(
   _react2.default.createElement(_App2.default, null)
 ), document.getElementById('app'));
 
-},{"./components/App":57,"react":"react","react-dom":"react-dom","react-router-dom":34}],83:[function(require,module,exports){
+},{"./components/App":59,"react":"react","react-dom":"react-dom","react-router-dom":34}],85:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7551,6 +7739,10 @@ var _BlockUser = require('./components/BlockUser');
 
 var _BlockUser2 = _interopRequireDefault(_BlockUser);
 
+var _AdminPanel = require('./components/AdminPanel');
+
+var _AdminPanel2 = _interopRequireDefault(_AdminPanel);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Routes = function Routes() {
@@ -7564,13 +7756,89 @@ var Routes = function Routes() {
     _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/post/add', component: _PostAdd2.default }),
     _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/post/edit/:postId', component: _PostEdit2.default }),
     _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/block', component: _BlockUser2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/admin-panel', component: _AdminPanel2.default }),
     _react2.default.createElement(_reactRouterDom.Route, { component: _Home2.default })
   );
 };
 
 exports.default = Routes;
 
-},{"./components/BlockUser":59,"./components/Home":61,"./components/UserLogin":63,"./components/UserProfile":64,"./components/UserRegister":65,"./components/post/PostAdd":71,"./components/post/PostEdit":72,"react":"react","react-router-dom":34}],84:[function(require,module,exports){
+},{"./components/AdminPanel":58,"./components/BlockUser":61,"./components/Home":63,"./components/UserLogin":65,"./components/UserProfile":66,"./components/UserRegister":67,"./components/post/PostAdd":73,"./components/post/PostEdit":74,"react":"react","react-router-dom":34}],86:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _AdminPanelActions = require('../actions/AdminPanelActions');
+
+var _AdminPanelActions2 = _interopRequireDefault(_AdminPanelActions);
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AdminPanelStore = function () {
+  function AdminPanelStore() {
+    _classCallCheck(this, AdminPanelStore);
+
+    this.bindActions(_AdminPanelActions2.default);
+
+    this.userForAdmin = '';
+    this.contentValidationState = '';
+    this.message = '';
+    this.formSubmitState = '';
+  }
+
+  _createClass(AdminPanelStore, [{
+    key: 'onMakeAdminSuccess',
+    value: function onMakeAdminSuccess(post) {
+      console.log('Added post');
+      this.userForAdmin = '';
+      this.contentValidationState = '';
+      this.message = 'Admin added';
+      this.formSubmitState = '';
+    }
+  }, {
+    key: 'onMakeAdminFail',
+    value: function onMakeAdminFail(err) {
+      console.log('Failed to add admin', err);
+    }
+  }, {
+    key: 'onHandleContentChange',
+    value: function onHandleContentChange(e) {
+      this.userForAdmin = e.target.value;
+      this.helpBlock = '';
+    }
+  }, {
+    key: 'onContentValidationFail',
+    value: function onContentValidationFail() {
+      this.contentValidationState = 'has-error';
+      this.message = 'Enter username';
+      this.formSubmitState = '';
+    }
+  }, {
+    key: 'onLoadAdminPanelForm',
+    value: function onLoadAdminPanelForm() {
+      this.userForAdmin = '';
+      this.contentValidationState = '';
+      this.message = '';
+      this.formSubmitState = '';
+    }
+  }]);
+
+  return AdminPanelStore;
+}();
+
+exports.default = _alt2.default.createStore(AdminPanelStore);
+
+},{"../actions/AdminPanelActions":48,"../alt":57}],87:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7651,7 +7919,7 @@ var BlockUserStore = function () {
 
 exports.default = _alt2.default.createStore(BlockUserStore);
 
-},{"../actions/BlockUserActions":48,"../alt":56}],85:[function(require,module,exports){
+},{"../actions/BlockUserActions":49,"../alt":57}],88:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7678,7 +7946,7 @@ var FooterStore = function FooterStore() {
 
 exports.default = _alt2.default.createStore(FooterStore);
 
-},{"../actions/FooterActions":49,"../alt":56}],86:[function(require,module,exports){
+},{"../actions/FooterActions":50,"../alt":57}],89:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7843,7 +8111,7 @@ var FormStore = function () {
 
 exports.default = _alt2.default.createStore(FormStore);
 
-},{"../actions/FormActions":50,"../actions/UserActions":55,"../alt":56}],87:[function(require,module,exports){
+},{"../actions/FormActions":51,"../actions/UserActions":56,"../alt":57}],90:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7890,7 +8158,7 @@ var HomeStore = function () {
 
 exports.default = _alt2.default.createStore(HomeStore);
 
-},{"../actions/HomeActions":51,"../alt":56}],88:[function(require,module,exports){
+},{"../actions/HomeActions":52,"../alt":57}],91:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7932,7 +8200,7 @@ var NavbarStore = function () {
 
 exports.default = _alt2.default.createStore(NavbarStore);
 
-},{"../actions/NavbarActions":52,"../alt":56}],89:[function(require,module,exports){
+},{"../actions/NavbarActions":53,"../alt":57}],92:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8008,7 +8276,7 @@ var PostAddStore = function () {
 
 exports.default = _alt2.default.createStore(PostAddStore);
 
-},{"../actions/PostAddActions":53,"../alt":56}],90:[function(require,module,exports){
+},{"../actions/PostAddActions":54,"../alt":57}],93:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8087,7 +8355,7 @@ var PostEditStore = function () {
 
 exports.default = _alt2.default.createStore(PostEditStore);
 
-},{"../actions/PostEditActions":54,"../alt":56}],91:[function(require,module,exports){
+},{"../actions/PostEditActions":55,"../alt":57}],94:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8192,7 +8460,7 @@ var UserStore = function () {
 
 exports.default = _alt2.default.createStore(UserStore);
 
-},{"../actions/UserActions":55,"../alt":56,"../components/Auth":58}],92:[function(require,module,exports){
+},{"../actions/UserActions":56,"../alt":57,"../components/Auth":60}],95:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8262,6 +8530,6 @@ var Helpers = function () {
 
 exports.default = Helpers;
 
-},{"../DataRequests":47}]},{},[82])
+},{"../DataRequests":47}]},{},[84])
 
 //# sourceMappingURL=bundle.js.map
