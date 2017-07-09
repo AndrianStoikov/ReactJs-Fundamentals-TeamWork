@@ -22,6 +22,7 @@ const Routes = () => (
     <Route exact path='/user/admin-panel' component={AdminPanel} />
     <Route component={Home} />
   </Switch>
+    //само да пробваме
 )
 
 export default Routes
