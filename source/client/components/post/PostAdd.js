@@ -23,6 +23,10 @@ export default class PostAdd extends Component {
     PostAddActions.loadPostAddForm()
   }
 
+  componentWillUnmount () {
+    PostAddStore.unlisten(this.onChange)
+  }
+
   handleSubmit (e) {
     e.preventDefault()
 

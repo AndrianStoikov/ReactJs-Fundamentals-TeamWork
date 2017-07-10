@@ -45,6 +45,13 @@ class BlockUserStore {
     this.message = 'Enter username of user who want to block'
     this.formSubmitState = ''
   }
+
+  onLoadBlockUserForm(){
+    this.content = ''
+    this.contentValidationState = ''
+    this.message = ''
+    this.formSubmitState = ''
+  }
 }
 
 export default alt.createStore(BlockUserStore)

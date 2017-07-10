@@ -32,9 +32,33 @@ export default class PostPanelToggles extends React.Component {
         Like
       </a>
     }
+
+    let editMovie
+    let deleteMovie
+    if (this.props.post.author === Auth.getUser()._id || Auth.isUserAdmin()) {
+      editMovie =
+        <Link
+          to={`/post/edit/${this.props.post._id}`}
+          className='btn btn-warning'>
+          Edit Post
+        </Link>
+      deleteMovie =
+        <Link
+          to={`/post/delete/${this.props.post._id}`}
+          className='btn btn-danger'>
+          Delete Post
+        </Link>
+    }
     return (
       <div className='pull-right btn-group' >
         <Link to={`/post/comment/${this.props.postId}`} className='btn btn-primary'>Comment post</Link>
+        {editMovie}
+        {deleteMovie}
+        <a
+          className='btn btn-primary'
+          onClick={this.props.toggleCommentsPanel} >
+          {this.props.showCommentsPanel ? 'Hide' : 'Comments'}
+        </a>
         {likeButton}
       </div>
     )

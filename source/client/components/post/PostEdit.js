@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Auth from '../../components/Auth'
 import { Redirect } from 'react-router-dom'
-import UserStore from '../../stores/UserStore'
 import PostEditStore from '../../stores/post-stores/PostEditStore'
 import PostEditActions from '../../actions/post-actions/PostEditActions'
 import Form from '../form/Form'

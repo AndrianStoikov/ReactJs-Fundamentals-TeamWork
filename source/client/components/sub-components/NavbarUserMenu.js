@@ -37,6 +37,9 @@ export default class NavbarUserMenu extends React.Component {
               </div>
             </li>
             <li>
+              <Link to={`/user/profile-picture/${Auth.getUser()._id}`} >Add Profile Picture</Link>
+            </li>
+            <li>
               <Link to={`/user/profile/${Auth.getUser()._id}`} >Profile</Link>
             </li>
             <li>

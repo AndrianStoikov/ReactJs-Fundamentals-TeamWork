@@ -92,7 +92,8 @@ module.exports = {
           age: user.age,
           firstName: user.firstName,
           lastName: user.lastName,
-          gender: user.gender
+          gender: user.gender,
+          profilePicture: user.profilePicture
         }
 
         res.status(200).send(userObj)
@@ -105,7 +106,6 @@ module.exports = {
   },
   get: (req, res) => {
     let userId = req.params.userId
-
     User.findById(userId).then(user => {
       if (!user) { return res.status(404).send({message: 'User no longer exists'}) }
 
@@ -114,7 +114,8 @@ module.exports = {
         age: user.age,
         firstName: user.firstName,
         lastName: user.lastName,
-        gender: user.gender
+        gender: user.gender,
+        profilePicture: user.profilePicture
       }
 
       res.status(200).send(userObj)
@@ -146,5 +147,61 @@ module.exports = {
         res.status(404).send()
       }
     })
+  },
+  makeAdmin: (req, res) => {
+    if (req.user.roles.indexOf('Admin') >= 0) {
+      let userForAdmin = req.body.userForAdmin
+      User.findOne({username: userForAdmin}).then(user => {
+        if (!user) {
+          return res.status(404).send({message: 'No such user exists'})
+        } else {
+          user.roles.push('Admin')
+          user.save()
+          res.status(200).send()
+        }
+      })
+    } else {
+      res.status(401).send()
+    }
+  },
+  getAdmins: (req, res) => {
+    if (req.user.roles.indexOf('Admin') >= 0) {
+      User.find({roles: 'Admin'}).then(users => {
+        if (!users) {
+          return res.status(404).send({message: 'No admins found'})
+        }
+        res.status(200).send(users)
+      })
+    } else {
+      res.status(401).send()
+    }
+  },
+  addProfilePicture: (req, res) => {
+    let profilePic = req.file.path.substring(req.file.path.indexOf('\\'))
+    User.findById(req.user._id).then(user => {
+      if (!user) {
+        res.sendStatus(404)
+        return
+      }
+      if (checkIfUserCanEdit(req.user, user._id)) {
+        user.profilePicture = profilePic
+        user.save()
+          .then(() => {
+            res.status(200).send({message: `New profile picture added`})
+          })
+      } else {
+        res.sendStatus(401)
+      }
+    })
   }
+}
+
+function checkIfUserCanEdit (currUser, authorId) {
+  if (currUser._id.toString() === authorId.toString()) {
+    return true
+  }
+  if (currUser.roles.indexOf('Admin') >= 0) {
+    return true
+  }
+  return false
 }
