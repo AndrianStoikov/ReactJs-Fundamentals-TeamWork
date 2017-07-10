@@ -72,10 +72,7 @@ export default class Navbar extends React.Component {
                             <li>
                                 <Link to='/post/add'>AddPost</Link>
                             </li>
-                            <li>
-                                <Link to='/post/edit/5960d462e5e8481cccfbba6f'>EditPost(testing)</Link>
-                            </li>
-                            { JSON.parse(window.localStorage.getItem('user')).roles.indexOf('Admin') >= 0 &&
+                            { Auth.isUserAdmin() &&
                             <li>
                                 <Link to='/user/admin-panel'>Admin Panel</Link>
                             </li>
