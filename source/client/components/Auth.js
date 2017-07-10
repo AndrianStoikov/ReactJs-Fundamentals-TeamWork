@@ -28,7 +28,10 @@ class Auth {
     return window.localStorage.getItem('token')
   }
   static isUserAdmin () {
-    return JSON.parse(window.localStorage.getItem('user')).roles.indexOf('Admin') >= 0
+    if (window.localStorage.getItem('user')) {
+      return JSON.parse(window.localStorage.getItem('user')).roles.indexOf('Admin') >= 0
+    }
+    return false
   }
 }
 
