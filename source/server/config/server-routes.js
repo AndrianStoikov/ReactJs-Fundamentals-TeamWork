@@ -1,5 +1,8 @@
 const controllers = require('../controllers')
 const authCheck = require('../middleware/auth-check')
+const multer = require('multer')
+
+let upload = multer({dest: './public/images'})
 
 module.exports = (app) => {
   // User routes
@@ -23,6 +26,7 @@ module.exports = (app) => {
   app.post('/api/user/block/', authCheck, controllers.user.blockUser)
   app.post('/api/user/makeAdmin', authCheck, controllers.user.makeAdmin)
   app.get('/user/getAdmins', authCheck, controllers.user.getAdmins)
+  app.post('/api/user/profile-picture/:userId', authCheck, upload.single('image'), controllers.user.addProfilePicture)
 
   app.all('*', controllers.home.redirectToHome)
 }

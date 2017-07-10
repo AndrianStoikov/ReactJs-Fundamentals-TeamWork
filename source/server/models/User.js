@@ -40,7 +40,8 @@ let userSchema = mongoose.Schema({
         }
     },
     roles: [{type: mongoose.Schema.Types.String}],
-    blockedUsersId: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}]
+    blockedUsersId: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    profilePicture: { type: mongoose.Schema.Types.String }
 })
 
 userSchema.method({
