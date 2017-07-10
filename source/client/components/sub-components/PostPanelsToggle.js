@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
 import Auth from '../Auth'
 
@@ -34,15 +34,8 @@ export default class PostPanelToggles extends React.Component {
     }
     return (
       <div className='pull-right btn-group' >
-        <a
-          className='btn btn-primary'
-          onClick={this.props.toggleCommentsPanel} >
-          {this.props.showCommentsPanel ? 'Hide' : 'Comments'}
-        </a>
+        <Link to={`/post/comment/${this.props.postId}`} className='btn btn-primary'>Comment post</Link>
         {likeButton}
-        <Link to={`/movie/${this.props.movieId}/review/add`} className='btn btn-warning' >
-          Write review
-        </Link>
       </div>
     )
   }

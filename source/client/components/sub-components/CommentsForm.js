@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import FormStore from '../../stores/FormStore'
 import FormActions from '../../actions/FormActions'
-// import PostActions from '../../actions/PostActions'
+import PostCommentActions from '../../actions/post-actions/PostCommentActions'
 
 export default class CommentsForm extends Component {
   constructor (props) {
@@ -32,7 +32,7 @@ export default class CommentsForm extends Component {
       return
     }
 
-    // PostActions.addComment(this.props.movieId, this.state.comment)
+    PostActions.addComment(this.props.movieId, this.state.comment)
   }
 
   render () {
