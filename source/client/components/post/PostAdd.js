@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import Auth from '../../components/Auth'
-import UserStore from '../../stores/UserStore'
 import PostAddStore from '../../stores/PostAddStore'
 import PostAddActions from '../../actions/PostAddActions'
 import Form from '../form/Form'
@@ -22,6 +21,10 @@ export default class PostAdd extends Component {
   componentDidMount () {
     PostAddStore.listen(this.onChange)
     PostAddActions.loadPostAddForm()
+  }
+
+  componentWillUnmount () {
+    PostAddStore.unlisten(this.onChange)
   }
 
   handleSubmit (e) {

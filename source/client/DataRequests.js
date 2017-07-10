@@ -2,7 +2,7 @@ import Auth from './components/Auth'
 
 class DataRequests {
   static post (url, data, authenticated) {
-    let headers = { 'Content-Type': 'application/json' }
+    let headers = {'Content-Type': 'application/json'}
 
     if (authenticated) {
       headers.Authorization = `bearer ${Auth.getToken()}`
@@ -18,7 +18,7 @@ class DataRequests {
   }
 
   static get (url, authenticated) {
-    let headers = { contentType: 'application/json' }
+    let headers = {contentType: 'application/json'}
 
     if (authenticated) {
       headers.Authorization = `bearer ${Auth.getToken()}`

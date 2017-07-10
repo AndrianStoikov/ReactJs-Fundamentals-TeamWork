@@ -16,6 +16,8 @@ class HomeActions {
     $.ajax(request)
       .done(data => this.getUserPostsSuccess(data))
       .fail(err => this.getUserPostsFail(err))
+
+    return true
   }
 }
 

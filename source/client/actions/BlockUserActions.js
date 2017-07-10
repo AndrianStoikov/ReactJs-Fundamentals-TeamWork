@@ -1,5 +1,4 @@
 import alt from '../alt'
-import DadaRequests from '../DataRequests'
 
 class BlockUserActions {
     constructor() {
@@ -10,7 +9,8 @@ class BlockUserActions {
             'blockUserFail',
             'blockUserWhoIsBlockedError',
             'userNotExist',
-            'blockYourProfileError'
+            'blockYourProfileError',
+            'loadBlockUserForm'
         )
     }
 
@@ -47,11 +47,10 @@ class BlockUserActions {
                         .done(() => this.blockUserSuccess())
                         .fail(err => {
                             this.blockUserWhoIsBlockedError()
-                        } )
+                        })
                 } else {
                     this.blockYourProfileError()
                 }
-
 
             })
             .fail((err) => this.userNotExist())

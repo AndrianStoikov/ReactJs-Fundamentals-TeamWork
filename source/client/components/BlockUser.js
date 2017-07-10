@@ -20,6 +20,7 @@ export default class BlockUser extends Component {
 
   componentDidMount () {
     BlockUserStore.listen(this.onChange)
+    BlockUserAction.loadBlockUserForm()
   }
 
   componentWillUnmount () {

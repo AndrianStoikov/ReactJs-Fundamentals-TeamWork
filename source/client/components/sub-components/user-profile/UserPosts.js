@@ -32,8 +32,9 @@ export default class UserPosts extends React.Component {
             {this.state.showPostsPanel ? 'Hide' : 'Show User Posts' }
           </a>
         </div>
-        <div className='user-posts'>
-          {this.state.showPostsPanel ? <UserPostsPanel posts={this.props.posts} /> : null}
+        <div className='user-posts' >
+          {this.state.showPostsPanel
+            ? <UserPostsPanel posts={this.props.posts} getUserPost={this.props.getUserPosts} /> : null}
         </div>
       </div>
     )

@@ -66,9 +66,13 @@ module.exports = {
 
           // create a token string
           const token = jwt.sign(payload, 's0m3 r4nd0m str1ng')
+
+          let userObj = req.user
+          delete userObj.password
+          delete userObj.salt
           let responseData = {
             token: token,
-            user: req.user
+            user: userObj
           }
 
           res.status(200).send(responseData)
@@ -142,5 +146,33 @@ module.exports = {
         res.status(404).send()
       }
     })
+  },
+  makeAdmin: (req, res) => {
+    if (req.user.roles.indexOf('Admin') >= 0) {
+      let userForAdmin = req.body.userForAdmin
+      User.findOne({username: userForAdmin}).then(user => {
+        if (!user) {
+          return res.status(404).send({message: 'No such user exists'})
+        } else {
+          user.roles.push('Admin')
+          user.save()
+          res.status(200).send()
+        }
+      })
+    } else {
+      res.status(401).send()
+    }
+  },
+  getAdmins: (req, res) => {
+    if (req.user.roles.indexOf('Admin') >= 0) {
+      User.find({roles: 'Admin'}).then(users => {
+        if (!users) {
+          return res.status(404).send({message: 'No admins found'})
+        }
+        res.status(200).send(users)
+      })
+    } else {
+      res.status(401).send()
+    }
   }
 }
