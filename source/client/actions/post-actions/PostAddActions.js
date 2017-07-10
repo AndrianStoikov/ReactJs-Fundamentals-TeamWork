@@ -1,5 +1,5 @@
-import alt from '../alt'
-import Data from '../DataRequests'
+import alt from '../../alt'
+import Data from '../../DataRequests'
 
 class PostAddActions {
   constructor () {

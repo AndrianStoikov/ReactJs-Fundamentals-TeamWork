@@ -1,18 +1,22 @@
 const Post = require('../models/Post')
+const Comment = require('../models/Comment')
 
 module.exports = {
   get: (req, res) => {
-    let postId = req.postId
+    let postId = req.params.postId
     Post
       .findById(postId)
+      .populate('comments', 'content', null, {sort: {dateCreated: 1}})
       .then((post) => {
+        if(post === null) {
+          res.status(400).send({message: 'Post not found.'})
+        }
         res.status(200).send(post)
       })
   },
   add: {
     post: (req, res) => {
       let inputData = req.body
-      console.log(inputData)
       let postData = {
         author: inputData.authorId,
         content: inputData.content
@@ -35,6 +39,7 @@ module.exports = {
       let userId = req.user._id
       Post
         .find({author: userId})
+        .populate('comments', 'content', null, {sort: {dateCreated: 1}})
         .sort('-dateCreated')
         .then((posts) => {
           res.status(200).send(posts)
@@ -46,6 +51,7 @@ module.exports = {
       let userId = req.params.userId
       Post
         .find({author: userId})
+        .populate('comments', 'content', null, {sort: {dateCreated: 1}})
         .sort('-dateCreated')
         .then((posts) => {
           res.status(200).send(posts)
@@ -153,6 +159,29 @@ module.exports = {
         res.sendStatus(401)
       }
     })
+  },
+  commentsPost: (req, res) => {
+    let postId = req.params.postId
+    let inputData = req.body
+
+    let commentObj = {
+      author: req.user._id,
+      content: inputData.comment,
+      post: postId
+    }
+
+    Post
+      .findById(postId)
+      .then((post) => {
+        Comment
+          .create(commentObj)
+          .then((comment) => {
+            post.comments.push(comment._id)
+            post
+              .save()
+              .then(() => res.status(200).send(comment))
+          })
+      })
   }
 }
 

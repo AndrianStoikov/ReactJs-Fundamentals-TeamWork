@@ -23,12 +23,17 @@ module.exports = (app) => {
   app.post('/api/post/unlike/:id', authCheck, controllers.post.unlike.post)
   app.get('/api/post/delete/:postId', authCheck, controllers.post.deleteGet)
   app.post('/api/post/delete/:postId', authCheck, controllers.post.deletePost)
+  app.post('/api/post/comments/:postId', authCheck, controllers.post.commentsPost)
 
   app.get('/api/user/getByUsername/:username', controllers.user.findUserByUsername.get)
   app.post('/api/user/block/', authCheck, controllers.user.blockUser)
   app.post('/api/user/makeAdmin', authCheck, controllers.user.makeAdmin)
   app.get('/user/getAdmins', authCheck, controllers.user.getAdmins)
   app.post('/api/user/profile-picture/:userId', authCheck, upload.single('image'), controllers.user.addProfilePicture)
+
+  app.get('/api/comment/:id', authCheck, controllers.comment.get)
+  app.post('/api/comment/edit/:id', authCheck, controllers.comment.edit)
+  app.post('/api/comment/delete/:id', authCheck, controllers.comment.delete)
 
   app.all('*', controllers.home.redirectToHome)
 }
