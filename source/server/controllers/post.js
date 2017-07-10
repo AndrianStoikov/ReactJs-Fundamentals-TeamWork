@@ -121,6 +121,38 @@ module.exports = {
           res.status(200).send(post)
         })
     }
+  },
+  deleteGet: (req, res) => {
+    let postId = req.params.postId
+    Post.findById(postId).then((post) => {
+      if (!post) {
+        res.sendStatus(404)
+        return
+      }
+      let canEdit = checkIfUserCanEdit(req.user, post.author)
+      if (canEdit) {
+        res.status(200).send(post)
+      } else {
+        res.sendStatus(404)
+      }
+    })
+  },
+  deletePost: (req, res) => {
+    let postId = req.params.postId
+    Post.findById(postId).then(post => {
+      if (!post) {
+        res.sendStatus(404)
+        return
+      }
+      if (checkIfUserCanEdit(req.user, post.author)) {
+        post.remove()
+          .then(() => {
+            res.status(200).send({message: `Post was successfully removed!`})
+          })
+      } else {
+        res.sendStatus(401)
+      }
+    })
   }
 }
 
