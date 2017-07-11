@@ -47,6 +47,7 @@ export default class Home extends React.Component {
           posts={this.state.postsToDisplay}
           getUserPost={HomeActions.getUserPosts}
         />
+        { Auth.isUserAuthenticated() &&
         <ReactPaginate
           previousLabel={'Previous'}
           nextLabel={'Next'}
@@ -58,7 +59,7 @@ export default class Home extends React.Component {
           onPageChange={this.handlePageChange}
           containerClassName={'pagination'}
           subContainerClassName={'pages pagination'}
-          activeClassName={'active'} />
+          activeClassName={'active'} />}
       </div>
     )
   }
