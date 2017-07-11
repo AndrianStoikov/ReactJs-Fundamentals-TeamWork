@@ -28,7 +28,7 @@ class UserActions {
     return true
   }
 
-  etUserInformation (userId) {
+  getUserInformation (userId) {
     let request = Data.get(`/api/user/${userId}`, true)
 
     $.ajax(request)
