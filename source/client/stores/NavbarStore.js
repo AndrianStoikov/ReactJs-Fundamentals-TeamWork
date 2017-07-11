@@ -4,7 +4,6 @@ import NavbarActions from '../actions/NavbarActions'
 class NavbarStore {
   constructor () {
     this.bindActions(NavbarActions)
-
     this.ajaxAnimationClass = ''
   }
 
