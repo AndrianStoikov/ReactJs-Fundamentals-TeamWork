@@ -6,11 +6,12 @@ class UserStore {
   constructor () {
     this.bindActions(UserActions)
 
-    this.loggedInUserId = ''
+    this._id = ''
     this.username = ''
     this.roles = []
     this.userPosts = []
     this.profile = {
+      _id: '',
       userUsername: '',
       userAge: '',
       userFirstName: '',
@@ -22,7 +23,6 @@ class UserStore {
 
   onRegisterUserSuccess (responseData) {
     const user = responseData.user
-    this.loggedInUserId = user._id
     this.username = user.username
     this.roles = user.roles
     Auth.authenticateUser(responseData.token)
@@ -31,7 +31,6 @@ class UserStore {
 
   onLoginUserSuccess (responseData) {
     const user = responseData.user
-    this.loggedInUserId = user._id
     this.username = user.username
     this.roles = user.roles
     Auth.authenticateUser(responseData.token)
@@ -43,7 +42,6 @@ class UserStore {
   }
 
   onLogoutUserSuccess () {
-    this.loggedInUserId = ''
     this.username = ''
     this.roles = []
     this.userPosts = []
@@ -60,12 +58,17 @@ class UserStore {
   }
 
   onGetProfileInfoSuccess (user) {
+    this.profile._id = user._id
     this.profile.userUsername = user.username
     this.profile.userAge = user.age
     this.profile.userFirstName = user.firstName
     this.profile.userLastName = user.lastName
     this.profile.userGender = user.gender
     this.profile.userProfilePicture = user.profilePicture
+  }
+
+  onFollowUserSuccess (user) {
+    Auth.saveUser(user)
   }
 }
 

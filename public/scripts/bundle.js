@@ -81,7 +81,7 @@ function makeAction(alt, namespace, name, implementation, obj) {
   return action;
 }
 module.exports = exports['default'];
-},{"../functions":2,"../utils/AltUtils":7,"is-promise":16}],2:[function(require,module,exports){
+},{"../functions":2,"../utils/AltUtils":7,"is-promise":34}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -496,7 +496,7 @@ var Alt = function () {
 
 exports['default'] = Alt;
 module.exports = exports['default'];
-},{"./actions":1,"./functions":2,"./store":6,"./utils/AltUtils":7,"./utils/StateFunctions":8,"flux":12}],4:[function(require,module,exports){
+},{"./actions":1,"./functions":2,"./store":6,"./utils/AltUtils":7,"./utils/StateFunctions":8,"flux":16}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -659,7 +659,7 @@ var AltStore = function () {
 
 exports['default'] = AltStore;
 module.exports = exports['default'];
-},{"../functions":2,"transmitter":44}],5:[function(require,module,exports){
+},{"../functions":2,"transmitter":67}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -897,7 +897,7 @@ var StoreMixin = {
 
 exports['default'] = StoreMixin;
 module.exports = exports['default'];
-},{"../functions":2,"transmitter":44}],6:[function(require,module,exports){
+},{"../functions":2,"transmitter":67}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1302,6 +1302,185 @@ function filterSnapshots(instance, state, stores) {
   }, {});
 }
 },{"../functions":2}],9:[function(require,module,exports){
+/*!
+  Copyright (c) 2016 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames () {
+		var classes = [];
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
+
+			var argType = typeof arg;
+
+			if (argType === 'string' || argType === 'number') {
+				classes.push(arg);
+			} else if (Array.isArray(arg)) {
+				classes.push(classNames.apply(null, arg));
+			} else if (argType === 'object') {
+				for (var key in arg) {
+					if (hasOwn.call(arg, key) && arg[key]) {
+						classes.push(key);
+					}
+				}
+			}
+		}
+
+		return classes.join(' ');
+	}
+
+	if (typeof module !== 'undefined' && module.exports) {
+		module.exports = classNames;
+	} else if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
+		// register as 'classnames', consistent with npm package name
+		define('classnames', [], function () {
+			return classNames;
+		});
+	} else {
+		window.classNames = classNames;
+	}
+}());
+
+},{}],10:[function(require,module,exports){
+var pSlice = Array.prototype.slice;
+var objectKeys = require('./lib/keys.js');
+var isArguments = require('./lib/is_arguments.js');
+
+var deepEqual = module.exports = function (actual, expected, opts) {
+  if (!opts) opts = {};
+  // 7.1. All identical values are equivalent, as determined by ===.
+  if (actual === expected) {
+    return true;
+
+  } else if (actual instanceof Date && expected instanceof Date) {
+    return actual.getTime() === expected.getTime();
+
+  // 7.3. Other pairs that do not both pass typeof value == 'object',
+  // equivalence is determined by ==.
+  } else if (!actual || !expected || typeof actual != 'object' && typeof expected != 'object') {
+    return opts.strict ? actual === expected : actual == expected;
+
+  // 7.4. For all other Object pairs, including Array objects, equivalence is
+  // determined by having the same number of owned properties (as verified
+  // with Object.prototype.hasOwnProperty.call), the same set of keys
+  // (although not necessarily the same order), equivalent values for every
+  // corresponding key, and an identical 'prototype' property. Note: this
+  // accounts for both named and indexed properties on Arrays.
+  } else {
+    return objEquiv(actual, expected, opts);
+  }
+}
+
+function isUndefinedOrNull(value) {
+  return value === null || value === undefined;
+}
+
+function isBuffer (x) {
+  if (!x || typeof x !== 'object' || typeof x.length !== 'number') return false;
+  if (typeof x.copy !== 'function' || typeof x.slice !== 'function') {
+    return false;
+  }
+  if (x.length > 0 && typeof x[0] !== 'number') return false;
+  return true;
+}
+
+function objEquiv(a, b, opts) {
+  var i, key;
+  if (isUndefinedOrNull(a) || isUndefinedOrNull(b))
+    return false;
+  // an identical 'prototype' property.
+  if (a.prototype !== b.prototype) return false;
+  //~~~I've managed to break Object.keys through screwy arguments passing.
+  //   Converting to array solves the problem.
+  if (isArguments(a)) {
+    if (!isArguments(b)) {
+      return false;
+    }
+    a = pSlice.call(a);
+    b = pSlice.call(b);
+    return deepEqual(a, b, opts);
+  }
+  if (isBuffer(a)) {
+    if (!isBuffer(b)) {
+      return false;
+    }
+    if (a.length !== b.length) return false;
+    for (i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+  try {
+    var ka = objectKeys(a),
+        kb = objectKeys(b);
+  } catch (e) {//happens when one is a string literal and the other isn't
+    return false;
+  }
+  // having the same number of owned properties (keys incorporates
+  // hasOwnProperty)
+  if (ka.length != kb.length)
+    return false;
+  //the same set of keys (although not necessarily the same order),
+  ka.sort();
+  kb.sort();
+  //~~~cheap key test
+  for (i = ka.length - 1; i >= 0; i--) {
+    if (ka[i] != kb[i])
+      return false;
+  }
+  //equivalent values for every corresponding key, and
+  //~~~possibly expensive deep test
+  for (i = ka.length - 1; i >= 0; i--) {
+    key = ka[i];
+    if (!deepEqual(a[key], b[key], opts)) return false;
+  }
+  return typeof a === typeof b;
+}
+
+},{"./lib/is_arguments.js":11,"./lib/keys.js":12}],11:[function(require,module,exports){
+var supportsArgumentsClass = (function(){
+  return Object.prototype.toString.call(arguments)
+})() == '[object Arguments]';
+
+exports = module.exports = supportsArgumentsClass ? supported : unsupported;
+
+exports.supported = supported;
+function supported(object) {
+  return Object.prototype.toString.call(object) == '[object Arguments]';
+};
+
+exports.unsupported = unsupported;
+function unsupported(object){
+  return object &&
+    typeof object == 'object' &&
+    typeof object.length == 'number' &&
+    Object.prototype.hasOwnProperty.call(object, 'callee') &&
+    !Object.prototype.propertyIsEnumerable.call(object, 'callee') ||
+    false;
+};
+
+},{}],12:[function(require,module,exports){
+exports = module.exports = typeof Object.keys === 'function'
+  ? Object.keys : shim;
+
+exports.shim = shim;
+function shim (obj) {
+  var keys = [];
+  for (var key in obj) keys.push(key);
+  return keys;
+}
+
+},{}],13:[function(require,module,exports){
 "use strict";
 
 /**
@@ -1340,7 +1519,7 @@ emptyFunction.thatReturnsArgument = function (arg) {
 };
 
 module.exports = emptyFunction;
-},{}],10:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -1399,7 +1578,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 }).call(this,require('_process'))
 
-},{"_process":17}],11:[function(require,module,exports){
+},{"_process":35}],15:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -1469,7 +1648,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = warning;
 }).call(this,require('_process'))
 
-},{"./emptyFunction":9,"_process":17}],12:[function(require,module,exports){
+},{"./emptyFunction":13,"_process":35}],16:[function(require,module,exports){
 /**
  * Copyright (c) 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -1481,7 +1660,7 @@ module.exports = warning;
 
 module.exports.Dispatcher = require('./lib/Dispatcher');
 
-},{"./lib/Dispatcher":13}],13:[function(require,module,exports){
+},{"./lib/Dispatcher":17}],17:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2014-2015, Facebook, Inc.
@@ -1716,7 +1895,7 @@ var Dispatcher = (function () {
 module.exports = Dispatcher;
 }).call(this,require('_process'))
 
-},{"_process":17,"fbjs/lib/invariant":14}],14:[function(require,module,exports){
+},{"_process":35,"fbjs/lib/invariant":18}],18:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -1769,7 +1948,969 @@ var invariant = function (condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 }).call(this,require('_process'))
 
-},{"_process":17}],15:[function(require,module,exports){
+},{"_process":35}],19:[function(require,module,exports){
+/**
+ * Indicates that navigation was caused by a call to history.push.
+ */
+'use strict';
+
+exports.__esModule = true;
+var PUSH = 'PUSH';
+
+exports.PUSH = PUSH;
+/**
+ * Indicates that navigation was caused by a call to history.replace.
+ */
+var REPLACE = 'REPLACE';
+
+exports.REPLACE = REPLACE;
+/**
+ * Indicates that navigation was caused by some other action such
+ * as using a browser's back/forward buttons and/or manually manipulating
+ * the URL in a browser's location bar. This is the default.
+ *
+ * See https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onpopstate
+ * for more information.
+ */
+var POP = 'POP';
+
+exports.POP = POP;
+exports['default'] = {
+  PUSH: PUSH,
+  REPLACE: REPLACE,
+  POP: POP
+};
+},{}],20:[function(require,module,exports){
+"use strict";
+
+exports.__esModule = true;
+exports.loopAsync = loopAsync;
+
+function loopAsync(turns, work, callback) {
+  var currentTurn = 0;
+  var isDone = false;
+
+  function done() {
+    isDone = true;
+    callback.apply(this, arguments);
+  }
+
+  function next() {
+    if (isDone) return;
+
+    if (currentTurn < turns) {
+      work.call(this, currentTurn++, next, done);
+    } else {
+      done.apply(this, arguments);
+    }
+  }
+
+  next();
+}
+},{}],21:[function(require,module,exports){
+(function (process){
+/*eslint-disable no-empty */
+'use strict';
+
+exports.__esModule = true;
+exports.saveState = saveState;
+exports.readState = readState;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _warning = require('warning');
+
+var _warning2 = _interopRequireDefault(_warning);
+
+var KeyPrefix = '@@History/';
+var QuotaExceededError = 'QuotaExceededError';
+var SecurityError = 'SecurityError';
+
+function createKey(key) {
+  return KeyPrefix + key;
+}
+
+function saveState(key, state) {
+  try {
+    window.sessionStorage.setItem(createKey(key), JSON.stringify(state));
+  } catch (error) {
+    if (error.name === SecurityError) {
+      // Blocking cookies in Chrome/Firefox/Safari throws SecurityError on any
+      // attempt to access window.sessionStorage.
+      process.env.NODE_ENV !== 'production' ? _warning2['default'](false, '[history] Unable to save state; sessionStorage is not available due to security settings') : undefined;
+
+      return;
+    }
+
+    if (error.name === QuotaExceededError && window.sessionStorage.length === 0) {
+      // Safari "private mode" throws QuotaExceededError.
+      process.env.NODE_ENV !== 'production' ? _warning2['default'](false, '[history] Unable to save state; sessionStorage is not available in Safari private mode') : undefined;
+
+      return;
+    }
+
+    throw error;
+  }
+}
+
+function readState(key) {
+  var json = undefined;
+  try {
+    json = window.sessionStorage.getItem(createKey(key));
+  } catch (error) {
+    if (error.name === SecurityError) {
+      // Blocking cookies in Chrome/Firefox/Safari throws SecurityError on any
+      // attempt to access window.sessionStorage.
+      process.env.NODE_ENV !== 'production' ? _warning2['default'](false, '[history] Unable to read state; sessionStorage is not available due to security settings') : undefined;
+
+      return null;
+    }
+  }
+
+  if (json) {
+    try {
+      return JSON.parse(json);
+    } catch (error) {
+      // Ignore invalid JSON.
+    }
+  }
+
+  return null;
+}
+}).call(this,require('_process'))
+
+},{"_process":35,"warning":32}],22:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+exports.addEventListener = addEventListener;
+exports.removeEventListener = removeEventListener;
+exports.getHashPath = getHashPath;
+exports.replaceHashPath = replaceHashPath;
+exports.getWindowPath = getWindowPath;
+exports.go = go;
+exports.getUserConfirmation = getUserConfirmation;
+exports.supportsHistory = supportsHistory;
+exports.supportsGoWithoutReloadUsingHash = supportsGoWithoutReloadUsingHash;
+
+function addEventListener(node, event, listener) {
+  if (node.addEventListener) {
+    node.addEventListener(event, listener, false);
+  } else {
+    node.attachEvent('on' + event, listener);
+  }
+}
+
+function removeEventListener(node, event, listener) {
+  if (node.removeEventListener) {
+    node.removeEventListener(event, listener, false);
+  } else {
+    node.detachEvent('on' + event, listener);
+  }
+}
+
+function getHashPath() {
+  // We can't use window.location.hash here because it's not
+  // consistent across browsers - Firefox will pre-decode it!
+  return window.location.href.split('#')[1] || '';
+}
+
+function replaceHashPath(path) {
+  window.location.replace(window.location.pathname + window.location.search + '#' + path);
+}
+
+function getWindowPath() {
+  return window.location.pathname + window.location.search + window.location.hash;
+}
+
+function go(n) {
+  if (n) window.history.go(n);
+}
+
+function getUserConfirmation(message, callback) {
+  callback(window.confirm(message));
+}
+
+/**
+ * Returns true if the HTML5 history API is supported. Taken from Modernizr.
+ *
+ * https://github.com/Modernizr/Modernizr/blob/master/LICENSE
+ * https://github.com/Modernizr/Modernizr/blob/master/feature-detects/history.js
+ * changed to avoid false negatives for Windows Phones: https://github.com/rackt/react-router/issues/586
+ */
+
+function supportsHistory() {
+  var ua = navigator.userAgent;
+  if ((ua.indexOf('Android 2.') !== -1 || ua.indexOf('Android 4.0') !== -1) && ua.indexOf('Mobile Safari') !== -1 && ua.indexOf('Chrome') === -1 && ua.indexOf('Windows Phone') === -1) {
+    return false;
+  }
+  // FIXME: Work around our browser history not working correctly on Chrome
+  // iOS: https://github.com/rackt/react-router/issues/2565
+  if (ua.indexOf('CriOS') !== -1) {
+    return false;
+  }
+  return window.history && 'pushState' in window.history;
+}
+
+/**
+ * Returns false if using go(n) with hash history causes a full page reload.
+ */
+
+function supportsGoWithoutReloadUsingHash() {
+  var ua = navigator.userAgent;
+  return ua.indexOf('Firefox') === -1;
+}
+},{}],23:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+exports.canUseDOM = canUseDOM;
+},{}],24:[function(require,module,exports){
+(function (process){
+'use strict';
+
+exports.__esModule = true;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _invariant = require('invariant');
+
+var _invariant2 = _interopRequireDefault(_invariant);
+
+var _Actions = require('./Actions');
+
+var _ExecutionEnvironment = require('./ExecutionEnvironment');
+
+var _DOMUtils = require('./DOMUtils');
+
+var _DOMStateStorage = require('./DOMStateStorage');
+
+var _createDOMHistory = require('./createDOMHistory');
+
+var _createDOMHistory2 = _interopRequireDefault(_createDOMHistory);
+
+var _parsePath = require('./parsePath');
+
+var _parsePath2 = _interopRequireDefault(_parsePath);
+
+/**
+ * Creates and returns a history object that uses HTML5's history API
+ * (pushState, replaceState, and the popstate event) to manage history.
+ * This is the recommended method of managing history in browsers because
+ * it provides the cleanest URLs.
+ *
+ * Note: In browsers that do not support the HTML5 history API full
+ * page reloads will be used to preserve URLs.
+ */
+function createBrowserHistory() {
+  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+  !_ExecutionEnvironment.canUseDOM ? process.env.NODE_ENV !== 'production' ? _invariant2['default'](false, 'Browser history needs a DOM') : _invariant2['default'](false) : undefined;
+
+  var forceRefresh = options.forceRefresh;
+
+  var isSupported = _DOMUtils.supportsHistory();
+  var useRefresh = !isSupported || forceRefresh;
+
+  function getCurrentLocation(historyState) {
+    historyState = historyState || window.history.state || {};
+
+    var path = _DOMUtils.getWindowPath();
+    var _historyState = historyState;
+    var key = _historyState.key;
+
+    var state = undefined;
+    if (key) {
+      state = _DOMStateStorage.readState(key);
+    } else {
+      state = null;
+      key = history.createKey();
+
+      if (isSupported) window.history.replaceState(_extends({}, historyState, { key: key }), null, path);
+    }
+
+    var location = _parsePath2['default'](path);
+
+    return history.createLocation(_extends({}, location, { state: state }), undefined, key);
+  }
+
+  function startPopStateListener(_ref) {
+    var transitionTo = _ref.transitionTo;
+
+    function popStateListener(event) {
+      if (event.state === undefined) return; // Ignore extraneous popstate events in WebKit.
+
+      transitionTo(getCurrentLocation(event.state));
+    }
+
+    _DOMUtils.addEventListener(window, 'popstate', popStateListener);
+
+    return function () {
+      _DOMUtils.removeEventListener(window, 'popstate', popStateListener);
+    };
+  }
+
+  function finishTransition(location) {
+    var basename = location.basename;
+    var pathname = location.pathname;
+    var search = location.search;
+    var hash = location.hash;
+    var state = location.state;
+    var action = location.action;
+    var key = location.key;
+
+    if (action === _Actions.POP) return; // Nothing to do.
+
+    _DOMStateStorage.saveState(key, state);
+
+    var path = (basename || '') + pathname + search + hash;
+    var historyState = {
+      key: key
+    };
+
+    if (action === _Actions.PUSH) {
+      if (useRefresh) {
+        window.location.href = path;
+        return false; // Prevent location update.
+      } else {
+          window.history.pushState(historyState, null, path);
+        }
+    } else {
+      // REPLACE
+      if (useRefresh) {
+        window.location.replace(path);
+        return false; // Prevent location update.
+      } else {
+          window.history.replaceState(historyState, null, path);
+        }
+    }
+  }
+
+  var history = _createDOMHistory2['default'](_extends({}, options, {
+    getCurrentLocation: getCurrentLocation,
+    finishTransition: finishTransition,
+    saveState: _DOMStateStorage.saveState
+  }));
+
+  var listenerCount = 0,
+      stopPopStateListener = undefined;
+
+  function listenBefore(listener) {
+    if (++listenerCount === 1) stopPopStateListener = startPopStateListener(history);
+
+    var unlisten = history.listenBefore(listener);
+
+    return function () {
+      unlisten();
+
+      if (--listenerCount === 0) stopPopStateListener();
+    };
+  }
+
+  function listen(listener) {
+    if (++listenerCount === 1) stopPopStateListener = startPopStateListener(history);
+
+    var unlisten = history.listen(listener);
+
+    return function () {
+      unlisten();
+
+      if (--listenerCount === 0) stopPopStateListener();
+    };
+  }
+
+  // deprecated
+  function registerTransitionHook(hook) {
+    if (++listenerCount === 1) stopPopStateListener = startPopStateListener(history);
+
+    history.registerTransitionHook(hook);
+  }
+
+  // deprecated
+  function unregisterTransitionHook(hook) {
+    history.unregisterTransitionHook(hook);
+
+    if (--listenerCount === 0) stopPopStateListener();
+  }
+
+  return _extends({}, history, {
+    listenBefore: listenBefore,
+    listen: listen,
+    registerTransitionHook: registerTransitionHook,
+    unregisterTransitionHook: unregisterTransitionHook
+  });
+}
+
+exports['default'] = createBrowserHistory;
+module.exports = exports['default'];
+}).call(this,require('_process'))
+
+},{"./Actions":19,"./DOMStateStorage":21,"./DOMUtils":22,"./ExecutionEnvironment":23,"./createDOMHistory":25,"./parsePath":30,"_process":35,"invariant":33}],25:[function(require,module,exports){
+(function (process){
+'use strict';
+
+exports.__esModule = true;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _invariant = require('invariant');
+
+var _invariant2 = _interopRequireDefault(_invariant);
+
+var _ExecutionEnvironment = require('./ExecutionEnvironment');
+
+var _DOMUtils = require('./DOMUtils');
+
+var _createHistory = require('./createHistory');
+
+var _createHistory2 = _interopRequireDefault(_createHistory);
+
+function createDOMHistory(options) {
+  var history = _createHistory2['default'](_extends({
+    getUserConfirmation: _DOMUtils.getUserConfirmation
+  }, options, {
+    go: _DOMUtils.go
+  }));
+
+  function listen(listener) {
+    !_ExecutionEnvironment.canUseDOM ? process.env.NODE_ENV !== 'production' ? _invariant2['default'](false, 'DOM history needs a DOM') : _invariant2['default'](false) : undefined;
+
+    return history.listen(listener);
+  }
+
+  return _extends({}, history, {
+    listen: listen
+  });
+}
+
+exports['default'] = createDOMHistory;
+module.exports = exports['default'];
+}).call(this,require('_process'))
+
+},{"./DOMUtils":22,"./ExecutionEnvironment":23,"./createHistory":26,"_process":35,"invariant":33}],26:[function(require,module,exports){
+//import warning from 'warning'
+'use strict';
+
+exports.__esModule = true;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _deepEqual = require('deep-equal');
+
+var _deepEqual2 = _interopRequireDefault(_deepEqual);
+
+var _AsyncUtils = require('./AsyncUtils');
+
+var _Actions = require('./Actions');
+
+var _createLocation2 = require('./createLocation');
+
+var _createLocation3 = _interopRequireDefault(_createLocation2);
+
+var _runTransitionHook = require('./runTransitionHook');
+
+var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
+
+var _parsePath = require('./parsePath');
+
+var _parsePath2 = _interopRequireDefault(_parsePath);
+
+var _deprecate = require('./deprecate');
+
+var _deprecate2 = _interopRequireDefault(_deprecate);
+
+function createRandomKey(length) {
+  return Math.random().toString(36).substr(2, length);
+}
+
+function locationsAreEqual(a, b) {
+  return a.pathname === b.pathname && a.search === b.search &&
+  //a.action === b.action && // Different action !== location change.
+  a.key === b.key && _deepEqual2['default'](a.state, b.state);
+}
+
+var DefaultKeyLength = 6;
+
+function createHistory() {
+  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+  var getCurrentLocation = options.getCurrentLocation;
+  var finishTransition = options.finishTransition;
+  var saveState = options.saveState;
+  var go = options.go;
+  var keyLength = options.keyLength;
+  var getUserConfirmation = options.getUserConfirmation;
+
+  if (typeof keyLength !== 'number') keyLength = DefaultKeyLength;
+
+  var transitionHooks = [];
+
+  function listenBefore(hook) {
+    transitionHooks.push(hook);
+
+    return function () {
+      transitionHooks = transitionHooks.filter(function (item) {
+        return item !== hook;
+      });
+    };
+  }
+
+  var allKeys = [];
+  var changeListeners = [];
+  var location = undefined;
+
+  function getCurrent() {
+    if (pendingLocation && pendingLocation.action === _Actions.POP) {
+      return allKeys.indexOf(pendingLocation.key);
+    } else if (location) {
+      return allKeys.indexOf(location.key);
+    } else {
+      return -1;
+    }
+  }
+
+  function updateLocation(newLocation) {
+    var current = getCurrent();
+
+    location = newLocation;
+
+    if (location.action === _Actions.PUSH) {
+      allKeys = [].concat(allKeys.slice(0, current + 1), [location.key]);
+    } else if (location.action === _Actions.REPLACE) {
+      allKeys[current] = location.key;
+    }
+
+    changeListeners.forEach(function (listener) {
+      listener(location);
+    });
+  }
+
+  function listen(listener) {
+    changeListeners.push(listener);
+
+    if (location) {
+      listener(location);
+    } else {
+      var _location = getCurrentLocation();
+      allKeys = [_location.key];
+      updateLocation(_location);
+    }
+
+    return function () {
+      changeListeners = changeListeners.filter(function (item) {
+        return item !== listener;
+      });
+    };
+  }
+
+  function confirmTransitionTo(location, callback) {
+    _AsyncUtils.loopAsync(transitionHooks.length, function (index, next, done) {
+      _runTransitionHook2['default'](transitionHooks[index], location, function (result) {
+        if (result != null) {
+          done(result);
+        } else {
+          next();
+        }
+      });
+    }, function (message) {
+      if (getUserConfirmation && typeof message === 'string') {
+        getUserConfirmation(message, function (ok) {
+          callback(ok !== false);
+        });
+      } else {
+        callback(message !== false);
+      }
+    });
+  }
+
+  var pendingLocation = undefined;
+
+  function transitionTo(nextLocation) {
+    if (location && locationsAreEqual(location, nextLocation)) return; // Nothing to do.
+
+    pendingLocation = nextLocation;
+
+    confirmTransitionTo(nextLocation, function (ok) {
+      if (pendingLocation !== nextLocation) return; // Transition was interrupted.
+
+      if (ok) {
+        // treat PUSH to current path like REPLACE to be consistent with browsers
+        if (nextLocation.action === _Actions.PUSH) {
+          var prevPath = createPath(location);
+          var nextPath = createPath(nextLocation);
+
+          if (nextPath === prevPath) nextLocation.action = _Actions.REPLACE;
+        }
+
+        if (finishTransition(nextLocation) !== false) updateLocation(nextLocation);
+      } else if (location && nextLocation.action === _Actions.POP) {
+        var prevIndex = allKeys.indexOf(location.key);
+        var nextIndex = allKeys.indexOf(nextLocation.key);
+
+        if (prevIndex !== -1 && nextIndex !== -1) go(prevIndex - nextIndex); // Restore the URL.
+      }
+    });
+  }
+
+  function push(location) {
+    transitionTo(createLocation(location, _Actions.PUSH, createKey()));
+  }
+
+  function replace(location) {
+    transitionTo(createLocation(location, _Actions.REPLACE, createKey()));
+  }
+
+  function goBack() {
+    go(-1);
+  }
+
+  function goForward() {
+    go(1);
+  }
+
+  function createKey() {
+    return createRandomKey(keyLength);
+  }
+
+  function createPath(location) {
+    if (location == null || typeof location === 'string') return location;
+
+    var pathname = location.pathname;
+    var search = location.search;
+    var hash = location.hash;
+
+    var result = pathname;
+
+    if (search) result += search;
+
+    if (hash) result += hash;
+
+    return result;
+  }
+
+  function createHref(location) {
+    return createPath(location);
+  }
+
+  function createLocation(location, action) {
+    var key = arguments.length <= 2 || arguments[2] === undefined ? createKey() : arguments[2];
+
+    if (typeof action === 'object') {
+      //warning(
+      //  false,
+      //  'The state (2nd) argument to history.createLocation is deprecated; use a ' +
+      //  'location descriptor instead'
+      //)
+
+      if (typeof location === 'string') location = _parsePath2['default'](location);
+
+      location = _extends({}, location, { state: action });
+
+      action = key;
+      key = arguments[3] || createKey();
+    }
+
+    return _createLocation3['default'](location, action, key);
+  }
+
+  // deprecated
+  function setState(state) {
+    if (location) {
+      updateLocationState(location, state);
+      updateLocation(location);
+    } else {
+      updateLocationState(getCurrentLocation(), state);
+    }
+  }
+
+  function updateLocationState(location, state) {
+    location.state = _extends({}, location.state, state);
+    saveState(location.key, location.state);
+  }
+
+  // deprecated
+  function registerTransitionHook(hook) {
+    if (transitionHooks.indexOf(hook) === -1) transitionHooks.push(hook);
+  }
+
+  // deprecated
+  function unregisterTransitionHook(hook) {
+    transitionHooks = transitionHooks.filter(function (item) {
+      return item !== hook;
+    });
+  }
+
+  // deprecated
+  function pushState(state, path) {
+    if (typeof path === 'string') path = _parsePath2['default'](path);
+
+    push(_extends({ state: state }, path));
+  }
+
+  // deprecated
+  function replaceState(state, path) {
+    if (typeof path === 'string') path = _parsePath2['default'](path);
+
+    replace(_extends({ state: state }, path));
+  }
+
+  return {
+    listenBefore: listenBefore,
+    listen: listen,
+    transitionTo: transitionTo,
+    push: push,
+    replace: replace,
+    go: go,
+    goBack: goBack,
+    goForward: goForward,
+    createKey: createKey,
+    createPath: createPath,
+    createHref: createHref,
+    createLocation: createLocation,
+
+    setState: _deprecate2['default'](setState, 'setState is deprecated; use location.key to save state instead'),
+    registerTransitionHook: _deprecate2['default'](registerTransitionHook, 'registerTransitionHook is deprecated; use listenBefore instead'),
+    unregisterTransitionHook: _deprecate2['default'](unregisterTransitionHook, 'unregisterTransitionHook is deprecated; use the callback returned from listenBefore instead'),
+    pushState: _deprecate2['default'](pushState, 'pushState is deprecated; use push instead'),
+    replaceState: _deprecate2['default'](replaceState, 'replaceState is deprecated; use replace instead')
+  };
+}
+
+exports['default'] = createHistory;
+module.exports = exports['default'];
+},{"./Actions":19,"./AsyncUtils":20,"./createLocation":27,"./deprecate":28,"./parsePath":30,"./runTransitionHook":31,"deep-equal":10}],27:[function(require,module,exports){
+//import warning from 'warning'
+'use strict';
+
+exports.__esModule = true;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _Actions = require('./Actions');
+
+var _parsePath = require('./parsePath');
+
+var _parsePath2 = _interopRequireDefault(_parsePath);
+
+function createLocation() {
+  var location = arguments.length <= 0 || arguments[0] === undefined ? '/' : arguments[0];
+  var action = arguments.length <= 1 || arguments[1] === undefined ? _Actions.POP : arguments[1];
+  var key = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+  var _fourthArg = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
+
+  if (typeof location === 'string') location = _parsePath2['default'](location);
+
+  if (typeof action === 'object') {
+    //warning(
+    //  false,
+    //  'The state (2nd) argument to createLocation is deprecated; use a ' +
+    //  'location descriptor instead'
+    //)
+
+    location = _extends({}, location, { state: action });
+
+    action = key || _Actions.POP;
+    key = _fourthArg;
+  }
+
+  var pathname = location.pathname || '/';
+  var search = location.search || '';
+  var hash = location.hash || '';
+  var state = location.state || null;
+
+  return {
+    pathname: pathname,
+    search: search,
+    hash: hash,
+    state: state,
+    action: action,
+    key: key
+  };
+}
+
+exports['default'] = createLocation;
+module.exports = exports['default'];
+},{"./Actions":19,"./parsePath":30}],28:[function(require,module,exports){
+//import warning from 'warning'
+
+"use strict";
+
+exports.__esModule = true;
+function deprecate(fn) {
+  return fn;
+  //return function () {
+  //  warning(false, '[history] ' + message)
+  //  return fn.apply(this, arguments)
+  //}
+}
+
+exports["default"] = deprecate;
+module.exports = exports["default"];
+},{}],29:[function(require,module,exports){
+"use strict";
+
+exports.__esModule = true;
+function extractPath(string) {
+  var match = string.match(/^https?:\/\/[^\/]*/);
+
+  if (match == null) return string;
+
+  return string.substring(match[0].length);
+}
+
+exports["default"] = extractPath;
+module.exports = exports["default"];
+},{}],30:[function(require,module,exports){
+(function (process){
+'use strict';
+
+exports.__esModule = true;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _warning = require('warning');
+
+var _warning2 = _interopRequireDefault(_warning);
+
+var _extractPath = require('./extractPath');
+
+var _extractPath2 = _interopRequireDefault(_extractPath);
+
+function parsePath(path) {
+  var pathname = _extractPath2['default'](path);
+  var search = '';
+  var hash = '';
+
+  process.env.NODE_ENV !== 'production' ? _warning2['default'](path === pathname, 'A path must be pathname + search + hash only, not a fully qualified URL like "%s"', path) : undefined;
+
+  var hashIndex = pathname.indexOf('#');
+  if (hashIndex !== -1) {
+    hash = pathname.substring(hashIndex);
+    pathname = pathname.substring(0, hashIndex);
+  }
+
+  var searchIndex = pathname.indexOf('?');
+  if (searchIndex !== -1) {
+    search = pathname.substring(searchIndex);
+    pathname = pathname.substring(0, searchIndex);
+  }
+
+  if (pathname === '') pathname = '/';
+
+  return {
+    pathname: pathname,
+    search: search,
+    hash: hash
+  };
+}
+
+exports['default'] = parsePath;
+module.exports = exports['default'];
+}).call(this,require('_process'))
+
+},{"./extractPath":29,"_process":35,"warning":32}],31:[function(require,module,exports){
+(function (process){
+'use strict';
+
+exports.__esModule = true;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _warning = require('warning');
+
+var _warning2 = _interopRequireDefault(_warning);
+
+function runTransitionHook(hook, location, callback) {
+  var result = hook(location, callback);
+
+  if (hook.length < 2) {
+    // Assume the hook runs synchronously and automatically
+    // call the callback with the return value.
+    callback(result);
+  } else {
+    process.env.NODE_ENV !== 'production' ? _warning2['default'](result === undefined, 'You should not "return" in a transition hook with a callback argument; call the callback instead') : undefined;
+  }
+}
+
+exports['default'] = runTransitionHook;
+module.exports = exports['default'];
+}).call(this,require('_process'))
+
+},{"_process":35,"warning":32}],32:[function(require,module,exports){
+(function (process){
+/**
+ * Copyright 2014-2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+'use strict';
+
+/**
+ * Similar to invariant but only logs a warning if the condition is not met.
+ * This can be used to log issues in development environments in critical
+ * paths. Removing the logging code for production environments will keep the
+ * same logic and follow the same code paths.
+ */
+
+var warning = function() {};
+
+if (process.env.NODE_ENV !== 'production') {
+  warning = function(condition, format, args) {
+    var len = arguments.length;
+    args = new Array(len > 2 ? len - 2 : 0);
+    for (var key = 2; key < len; key++) {
+      args[key - 2] = arguments[key];
+    }
+    if (format === undefined) {
+      throw new Error(
+        '`warning(condition, format, ...args)` requires a warning ' +
+        'message argument'
+      );
+    }
+
+    if (format.length < 10 || (/^[s\W]*$/).test(format)) {
+      throw new Error(
+        'The warning format should be able to uniquely identify this ' +
+        'warning. Please, use a more descriptive format than: ' + format
+      );
+    }
+
+    if (!condition) {
+      var argIndex = 0;
+      var message = 'Warning: ' +
+        format.replace(/%s/g, function() {
+          return args[argIndex++];
+        });
+      if (typeof console !== 'undefined') {
+        console.error(message);
+      }
+      try {
+        // This error was thrown as a convenience so that you can use this stack
+        // to find the callsite that caused this warning to fire.
+        throw new Error(message);
+      } catch(x) {}
+    }
+  };
+}
+
+module.exports = warning;
+
+}).call(this,require('_process'))
+
+},{"_process":35}],33:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -1825,14 +2966,14 @@ module.exports = invariant;
 
 }).call(this,require('_process'))
 
-},{"_process":17}],16:[function(require,module,exports){
+},{"_process":35}],34:[function(require,module,exports){
 module.exports = isPromise;
 
 function isPromise(obj) {
   return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
 }
 
-},{}],17:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2018,7 +3159,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],18:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -2084,7 +3225,7 @@ module.exports = checkPropTypes;
 
 }).call(this,require('_process'))
 
-},{"./lib/ReactPropTypesSecret":22,"_process":17,"fbjs/lib/invariant":10,"fbjs/lib/warning":11}],19:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":40,"_process":35,"fbjs/lib/invariant":14,"fbjs/lib/warning":15}],37:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2145,7 +3286,7 @@ module.exports = function() {
   return ReactPropTypes;
 };
 
-},{"./lib/ReactPropTypesSecret":22,"fbjs/lib/emptyFunction":9,"fbjs/lib/invariant":10}],20:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":40,"fbjs/lib/emptyFunction":13,"fbjs/lib/invariant":14}],38:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -2662,7 +3803,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 
 }).call(this,require('_process'))
 
-},{"./checkPropTypes":18,"./lib/ReactPropTypesSecret":22,"_process":17,"fbjs/lib/emptyFunction":9,"fbjs/lib/invariant":10,"fbjs/lib/warning":11}],21:[function(require,module,exports){
+},{"./checkPropTypes":36,"./lib/ReactPropTypesSecret":40,"_process":35,"fbjs/lib/emptyFunction":13,"fbjs/lib/invariant":14,"fbjs/lib/warning":15}],39:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -2697,7 +3838,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 }).call(this,require('_process'))
 
-},{"./factoryWithThrowingShims":19,"./factoryWithTypeCheckers":20,"_process":17}],22:[function(require,module,exports){
+},{"./factoryWithThrowingShims":37,"./factoryWithTypeCheckers":38,"_process":35}],40:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2713,7 +3854,720 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],23:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
+(function (process){
+/**
+ * Copyright 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+'use strict';
+
+var React = require('react');
+
+var REACT_ELEMENT_TYPE =
+  (typeof Symbol === 'function' && Symbol.for && Symbol.for('react.element')) ||
+  0xeac7;
+
+var emptyFunction = require('fbjs/lib/emptyFunction');
+var invariant = require('fbjs/lib/invariant');
+var warning = require('fbjs/lib/warning');
+
+var SEPARATOR = '.';
+var SUBSEPARATOR = ':';
+
+var didWarnAboutMaps = false;
+
+var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
+var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
+
+function getIteratorFn(maybeIterable) {
+  var iteratorFn =
+    maybeIterable &&
+    ((ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL]) ||
+      maybeIterable[FAUX_ITERATOR_SYMBOL]);
+  if (typeof iteratorFn === 'function') {
+    return iteratorFn;
+  }
+}
+
+function escape(key) {
+  var escapeRegex = /[=:]/g;
+  var escaperLookup = {
+    '=': '=0',
+    ':': '=2'
+  };
+  var escapedString = ('' + key).replace(escapeRegex, function(match) {
+    return escaperLookup[match];
+  });
+
+  return '$' + escapedString;
+}
+
+function getComponentKey(component, index) {
+  // Do some typechecking here since we call this blindly. We want to ensure
+  // that we don't block potential future ES APIs.
+  if (component && typeof component === 'object' && component.key != null) {
+    // Explicit key
+    return escape(component.key);
+  }
+  // Implicit key determined by the index in the set
+  return index.toString(36);
+}
+
+function traverseAllChildrenImpl(
+  children,
+  nameSoFar,
+  callback,
+  traverseContext
+) {
+  var type = typeof children;
+
+  if (type === 'undefined' || type === 'boolean') {
+    // All of the above are perceived as null.
+    children = null;
+  }
+
+  if (
+    children === null ||
+    type === 'string' ||
+    type === 'number' ||
+    // The following is inlined from ReactElement. This means we can optimize
+    // some checks. React Fiber also inlines this logic for similar purposes.
+    (type === 'object' && children.$$typeof === REACT_ELEMENT_TYPE)
+  ) {
+    callback(
+      traverseContext,
+      children,
+      // If it's the only child, treat the name as if it was wrapped in an array
+      // so that it's consistent if the number of children grows.
+      nameSoFar === '' ? SEPARATOR + getComponentKey(children, 0) : nameSoFar
+    );
+    return 1;
+  }
+
+  var child;
+  var nextName;
+  var subtreeCount = 0; // Count of children found in the current subtree.
+  var nextNamePrefix = nameSoFar === '' ? SEPARATOR : nameSoFar + SUBSEPARATOR;
+
+  if (Array.isArray(children)) {
+    for (var i = 0; i < children.length; i++) {
+      child = children[i];
+      nextName = nextNamePrefix + getComponentKey(child, i);
+      subtreeCount += traverseAllChildrenImpl(
+        child,
+        nextName,
+        callback,
+        traverseContext
+      );
+    }
+  } else {
+    var iteratorFn = getIteratorFn(children);
+    if (iteratorFn) {
+      if (process.env.NODE_ENV !== 'production') {
+        // Warn about using Maps as children
+        if (iteratorFn === children.entries) {
+          warning(
+            didWarnAboutMaps,
+            'Using Maps as children is unsupported and will likely yield ' +
+              'unexpected results. Convert it to a sequence/iterable of keyed ' +
+              'ReactElements instead.'
+          );
+          didWarnAboutMaps = true;
+        }
+      }
+
+      var iterator = iteratorFn.call(children);
+      var step;
+      var ii = 0;
+      while (!(step = iterator.next()).done) {
+        child = step.value;
+        nextName = nextNamePrefix + getComponentKey(child, ii++);
+        subtreeCount += traverseAllChildrenImpl(
+          child,
+          nextName,
+          callback,
+          traverseContext
+        );
+      }
+    } else if (type === 'object') {
+      var addendum = '';
+      if (process.env.NODE_ENV !== 'production') {
+        addendum =
+          ' If you meant to render a collection of children, use an array ' +
+          'instead or wrap the object using createFragment(object) from the ' +
+          'React add-ons.';
+      }
+      var childrenString = '' + children;
+      invariant(
+        false,
+        'Objects are not valid as a React child (found: %s).%s',
+        childrenString === '[object Object]'
+          ? 'object with keys {' + Object.keys(children).join(', ') + '}'
+          : childrenString,
+        addendum
+      );
+    }
+  }
+
+  return subtreeCount;
+}
+
+function traverseAllChildren(children, callback, traverseContext) {
+  if (children == null) {
+    return 0;
+  }
+
+  return traverseAllChildrenImpl(children, '', callback, traverseContext);
+}
+
+var userProvidedKeyEscapeRegex = /\/+/g;
+function escapeUserProvidedKey(text) {
+  return ('' + text).replace(userProvidedKeyEscapeRegex, '$&/');
+}
+
+function cloneAndReplaceKey(oldElement, newKey) {
+  return React.cloneElement(
+    oldElement,
+    {key: newKey},
+    oldElement.props !== undefined ? oldElement.props.children : undefined
+  );
+}
+
+var DEFAULT_POOL_SIZE = 10;
+var DEFAULT_POOLER = oneArgumentPooler;
+
+var oneArgumentPooler = function(copyFieldsFrom) {
+  var Klass = this;
+  if (Klass.instancePool.length) {
+    var instance = Klass.instancePool.pop();
+    Klass.call(instance, copyFieldsFrom);
+    return instance;
+  } else {
+    return new Klass(copyFieldsFrom);
+  }
+};
+
+var addPoolingTo = function addPoolingTo(CopyConstructor, pooler) {
+  // Casting as any so that flow ignores the actual implementation and trusts
+  // it to match the type we declared
+  var NewKlass = CopyConstructor;
+  NewKlass.instancePool = [];
+  NewKlass.getPooled = pooler || DEFAULT_POOLER;
+  if (!NewKlass.poolSize) {
+    NewKlass.poolSize = DEFAULT_POOL_SIZE;
+  }
+  NewKlass.release = standardReleaser;
+  return NewKlass;
+};
+
+var standardReleaser = function standardReleaser(instance) {
+  var Klass = this;
+  invariant(
+    instance instanceof Klass,
+    'Trying to release an instance into a pool of a different type.'
+  );
+  instance.destructor();
+  if (Klass.instancePool.length < Klass.poolSize) {
+    Klass.instancePool.push(instance);
+  }
+};
+
+var fourArgumentPooler = function fourArgumentPooler(a1, a2, a3, a4) {
+  var Klass = this;
+  if (Klass.instancePool.length) {
+    var instance = Klass.instancePool.pop();
+    Klass.call(instance, a1, a2, a3, a4);
+    return instance;
+  } else {
+    return new Klass(a1, a2, a3, a4);
+  }
+};
+
+function MapBookKeeping(mapResult, keyPrefix, mapFunction, mapContext) {
+  this.result = mapResult;
+  this.keyPrefix = keyPrefix;
+  this.func = mapFunction;
+  this.context = mapContext;
+  this.count = 0;
+}
+MapBookKeeping.prototype.destructor = function() {
+  this.result = null;
+  this.keyPrefix = null;
+  this.func = null;
+  this.context = null;
+  this.count = 0;
+};
+addPoolingTo(MapBookKeeping, fourArgumentPooler);
+
+function mapSingleChildIntoContext(bookKeeping, child, childKey) {
+  var result = bookKeeping.result;
+  var keyPrefix = bookKeeping.keyPrefix;
+  var func = bookKeeping.func;
+  var context = bookKeeping.context;
+
+  var mappedChild = func.call(context, child, bookKeeping.count++);
+  if (Array.isArray(mappedChild)) {
+    mapIntoWithKeyPrefixInternal(
+      mappedChild,
+      result,
+      childKey,
+      emptyFunction.thatReturnsArgument
+    );
+  } else if (mappedChild != null) {
+    if (React.isValidElement(mappedChild)) {
+      mappedChild = cloneAndReplaceKey(
+        mappedChild,
+        // Keep both the (mapped) and old keys if they differ, just as
+        // traverseAllChildren used to do for objects as children
+        keyPrefix +
+          (mappedChild.key && (!child || child.key !== mappedChild.key)
+            ? escapeUserProvidedKey(mappedChild.key) + '/'
+            : '') +
+          childKey
+      );
+    }
+    result.push(mappedChild);
+  }
+}
+
+function mapIntoWithKeyPrefixInternal(children, array, prefix, func, context) {
+  var escapedPrefix = '';
+  if (prefix != null) {
+    escapedPrefix = escapeUserProvidedKey(prefix) + '/';
+  }
+  var traverseContext = MapBookKeeping.getPooled(
+    array,
+    escapedPrefix,
+    func,
+    context
+  );
+  traverseAllChildren(children, mapSingleChildIntoContext, traverseContext);
+  MapBookKeeping.release(traverseContext);
+}
+
+var numericPropertyRegex = /^\d+$/;
+
+var warnedAboutNumeric = false;
+
+function createReactFragment(object) {
+  if (typeof object !== 'object' || !object || Array.isArray(object)) {
+    warning(
+      false,
+      'React.addons.createFragment only accepts a single object. Got: %s',
+      object
+    );
+    return object;
+  }
+  if (React.isValidElement(object)) {
+    warning(
+      false,
+      'React.addons.createFragment does not accept a ReactElement ' +
+        'without a wrapper object.'
+    );
+    return object;
+  }
+
+  invariant(
+    object.nodeType !== 1,
+    'React.addons.createFragment(...): Encountered an invalid child; DOM ' +
+      'elements are not valid children of React components.'
+  );
+
+  var result = [];
+
+  for (var key in object) {
+    if (process.env.NODE_ENV !== 'production') {
+      if (!warnedAboutNumeric && numericPropertyRegex.test(key)) {
+        warning(
+          false,
+          'React.addons.createFragment(...): Child objects should have ' +
+            'non-numeric keys so ordering is preserved.'
+        );
+        warnedAboutNumeric = true;
+      }
+    }
+    mapIntoWithKeyPrefixInternal(
+      object[key],
+      result,
+      key,
+      emptyFunction.thatReturnsArgument
+    );
+  }
+
+  return result;
+}
+
+module.exports = createReactFragment;
+
+}).call(this,require('_process'))
+
+},{"_process":35,"fbjs/lib/emptyFunction":13,"fbjs/lib/invariant":14,"fbjs/lib/warning":15,"react":"react"}],42:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var BreakView = function BreakView(props) {
+  var label = props.breakLabel;
+  var className = props.breakClassName || 'break';
+
+  return _react2.default.createElement(
+    'li',
+    { className: className },
+    label
+  );
+};
+
+exports.default = BreakView;
+
+},{"react":"react"}],43:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var PageView = function PageView(props) {
+  var cssClassName = props.pageClassName;
+  var linkClassName = props.pageLinkClassName;
+  var onClick = props.onClick;
+  var href = props.href;
+  var ariaLabel = 'Page ' + props.page + (props.extraAriaContext ? ' ' + props.extraAriaContext : '');
+  var ariaCurrent = null;
+
+  if (props.selected) {
+    ariaCurrent = 'page';
+    ariaLabel = 'Page ' + props.page + ' is your current page';
+    if (typeof cssClassName !== 'undefined') {
+      cssClassName = cssClassName + ' ' + props.activeClassName;
+    } else {
+      cssClassName = props.activeClassName;
+    }
+  }
+
+  return _react2.default.createElement(
+    'li',
+    { className: cssClassName },
+    _react2.default.createElement(
+      'a',
+      { onClick: onClick,
+        className: linkClassName,
+        href: href,
+        tabIndex: '0',
+        'aria-label': ariaLabel,
+        'aria-current': ariaCurrent,
+        onKeyPress: onClick },
+      props.page
+    )
+  );
+};
+
+exports.default = PageView;
+
+},{"react":"react"}],44:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _reactAddonsCreateFragment = require('react-addons-create-fragment');
+
+var _reactAddonsCreateFragment2 = _interopRequireDefault(_reactAddonsCreateFragment);
+
+var _PageView = require('./PageView');
+
+var _PageView2 = _interopRequireDefault(_PageView);
+
+var _BreakView = require('./BreakView');
+
+var _BreakView2 = _interopRequireDefault(_BreakView);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PaginationBoxView = function (_Component) {
+  _inherits(PaginationBoxView, _Component);
+
+  function PaginationBoxView(props) {
+    _classCallCheck(this, PaginationBoxView);
+
+    var _this = _possibleConstructorReturn(this, (PaginationBoxView.__proto__ || Object.getPrototypeOf(PaginationBoxView)).call(this, props));
+
+    _this.handlePreviousPage = function (evt) {
+      evt.preventDefault ? evt.preventDefault() : evt.returnValue = false;
+      if (_this.state.selected > 0) {
+        _this.handlePageSelected(_this.state.selected - 1, evt);
+      }
+    };
+
+    _this.handleNextPage = function (evt) {
+      evt.preventDefault ? evt.preventDefault() : evt.returnValue = false;
+      if (_this.state.selected < _this.props.pageCount - 1) {
+        _this.handlePageSelected(_this.state.selected + 1, evt);
+      }
+    };
+
+    _this.handlePageSelected = function (selected, evt) {
+      evt.preventDefault ? evt.preventDefault() : evt.returnValue = false;
+
+      if (_this.state.selected === selected) return;
+
+      _this.setState({ selected: selected });
+
+      // Call the callback with the new selected item:
+      _this.callCallback(selected);
+    };
+
+    _this.callCallback = function (selectedItem) {
+      if (typeof _this.props.onPageChange !== "undefined" && typeof _this.props.onPageChange === "function") {
+        _this.props.onPageChange({ selected: selectedItem });
+      }
+    };
+
+    _this.pagination = function () {
+      var items = {};
+
+      if (_this.props.pageCount <= _this.props.pageRangeDisplayed) {
+
+        for (var index = 0; index < _this.props.pageCount; index++) {
+          items['key' + index] = _this.getPageElement(index);
+        }
+      } else {
+
+        var leftSide = _this.props.pageRangeDisplayed / 2;
+        var rightSide = _this.props.pageRangeDisplayed - leftSide;
+
+        if (_this.state.selected > _this.props.pageCount - _this.props.pageRangeDisplayed / 2) {
+          rightSide = _this.props.pageCount - _this.state.selected;
+          leftSide = _this.props.pageRangeDisplayed - rightSide;
+        } else if (_this.state.selected < _this.props.pageRangeDisplayed / 2) {
+          leftSide = _this.state.selected;
+          rightSide = _this.props.pageRangeDisplayed - leftSide;
+        }
+
+        var _index = void 0;
+        var page = void 0;
+        var breakView = void 0;
+        var createPageView = function createPageView(index) {
+          return _this.getPageElement(index);
+        };
+
+        for (_index = 0; _index < _this.props.pageCount; _index++) {
+
+          page = _index + 1;
+
+          if (page <= _this.props.marginPagesDisplayed) {
+            items['key' + _index] = createPageView(_index);
+            continue;
+          }
+
+          if (page > _this.props.pageCount - _this.props.marginPagesDisplayed) {
+            items['key' + _index] = createPageView(_index);
+            continue;
+          }
+
+          if (_index >= _this.state.selected - leftSide && _index <= _this.state.selected + rightSide) {
+            items['key' + _index] = createPageView(_index);
+            continue;
+          }
+
+          var keys = Object.keys(items);
+          var breakLabelKey = keys[keys.length - 1];
+          var breakLabelValue = items[breakLabelKey];
+
+          if (_this.props.breakLabel && breakLabelValue !== breakView) {
+            breakView = _react2.default.createElement(_BreakView2.default, {
+              breakLabel: _this.props.breakLabel,
+              breakClassName: _this.props.breakClassName
+            });
+
+            items['key' + _index] = breakView;
+          }
+        }
+      }
+
+      return items;
+    };
+
+    _this.state = {
+      selected: props.initialPage ? props.initialPage : props.forcePage ? props.forcePage : 0
+    };
+    return _this;
+  }
+
+  _createClass(PaginationBoxView, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      // Call the callback with the initialPage item:
+      if (typeof this.props.initialPage !== 'undefined' && !this.props.disableInitialCallback) {
+        this.callCallback(this.props.initialPage);
+      }
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (typeof nextProps.forcePage !== 'undefined' && this.props.forcePage !== nextProps.forcePage) {
+        this.setState({ selected: nextProps.forcePage });
+      }
+    }
+  }, {
+    key: 'hrefBuilder',
+    value: function hrefBuilder(pageIndex) {
+      if (this.props.hrefBuilder && pageIndex !== this.state.selected && pageIndex >= 0 && pageIndex < this.props.pageCount) {
+        return this.props.hrefBuilder(pageIndex + 1);
+      }
+    }
+  }, {
+    key: 'getPageElement',
+    value: function getPageElement(index) {
+      return _react2.default.createElement(_PageView2.default, {
+        onClick: this.handlePageSelected.bind(null, index),
+        selected: this.state.selected === index,
+        pageClassName: this.props.pageClassName,
+        pageLinkClassName: this.props.pageLinkClassName,
+        activeClassName: this.props.activeClassName,
+        extraAriaContext: this.props.extraAriaContext,
+        href: this.hrefBuilder(index),
+        page: index + 1 });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var disabled = this.props.disabledClassName;
+
+      var previousClasses = (0, _classnames2.default)(this.props.previousClassName, _defineProperty({}, disabled, this.state.selected === 0));
+
+      var nextClasses = (0, _classnames2.default)(this.props.nextClassName, _defineProperty({}, disabled, this.state.selected === this.props.pageCount - 1));
+
+      return _react2.default.createElement(
+        'ul',
+        { className: this.props.containerClassName },
+        _react2.default.createElement(
+          'li',
+          { className: previousClasses },
+          _react2.default.createElement(
+            'a',
+            { onClick: this.handlePreviousPage,
+              className: this.props.previousLinkClassName,
+              href: this.hrefBuilder(this.state.selected - 1),
+              tabIndex: '0',
+              onKeyPress: this.handlePreviousPage },
+            this.props.previousLabel
+          )
+        ),
+        (0, _reactAddonsCreateFragment2.default)(this.pagination()),
+        _react2.default.createElement(
+          'li',
+          { className: nextClasses },
+          _react2.default.createElement(
+            'a',
+            { onClick: this.handleNextPage,
+              className: this.props.nextLinkClassName,
+              href: this.hrefBuilder(this.state.selected + 1),
+              tabIndex: '0',
+              onKeyPress: this.handleNextPage },
+            this.props.nextLabel
+          )
+        )
+      );
+    }
+  }]);
+
+  return PaginationBoxView;
+}(_react.Component);
+
+PaginationBoxView.propTypes = {
+  pageCount: _propTypes2.default.number.isRequired,
+  pageRangeDisplayed: _propTypes2.default.number.isRequired,
+  marginPagesDisplayed: _propTypes2.default.number.isRequired,
+  previousLabel: _propTypes2.default.node,
+  nextLabel: _propTypes2.default.node,
+  breakLabel: _propTypes2.default.node,
+  hrefBuilder: _propTypes2.default.func,
+  onPageChange: _propTypes2.default.func,
+  initialPage: _propTypes2.default.number,
+  forcePage: _propTypes2.default.number,
+  disableInitialCallback: _propTypes2.default.bool,
+  containerClassName: _propTypes2.default.string,
+  pageClassName: _propTypes2.default.string,
+  pageLinkClassName: _propTypes2.default.string,
+  activeClassName: _propTypes2.default.string,
+  previousClassName: _propTypes2.default.string,
+  nextClassName: _propTypes2.default.string,
+  previousLinkClassName: _propTypes2.default.string,
+  nextLinkClassName: _propTypes2.default.string,
+  disabledClassName: _propTypes2.default.string,
+  breakClassName: _propTypes2.default.string
+};
+PaginationBoxView.defaultProps = {
+  pageCount: 10,
+  pageRangeDisplayed: 2,
+  marginPagesDisplayed: 3,
+  activeClassName: "selected",
+  previousClassName: "previous",
+  nextClassName: "next",
+  previousLabel: "Previous",
+  nextLabel: "Next",
+  breakLabel: "...",
+  disabledClassName: "disabled",
+  disableInitialCallback: false
+};
+exports.default = PaginationBoxView;
+;
+
+},{"./BreakView":42,"./PageView":43,"classnames":9,"prop-types":39,"react":"react","react-addons-create-fragment":41}],45:[function(require,module,exports){
+'use strict';
+
+var _PaginationBoxView = require('./PaginationBoxView');
+
+var _PaginationBoxView2 = _interopRequireDefault(_PaginationBoxView);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = _PaginationBoxView2.default;
+
+},{"./PaginationBoxView":44}],46:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -2773,7 +4627,7 @@ BrowserRouter.propTypes = {
   children: _propTypes2.default.node
 };
 exports.default = BrowserRouter;
-},{"history/createBrowserHistory":39,"prop-types":21,"react":"react","react-router":"react-router"}],24:[function(require,module,exports){
+},{"history/createBrowserHistory":62,"prop-types":39,"react":"react","react-router":"react-router"}],47:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -2832,7 +4686,7 @@ HashRouter.propTypes = {
   children: _propTypes2.default.node
 };
 exports.default = HashRouter;
-},{"history/createHashHistory":40,"prop-types":21,"react":"react","react-router":"react-router"}],25:[function(require,module,exports){
+},{"history/createHashHistory":63,"prop-types":39,"react":"react","react-router":"react-router"}],48:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -2935,7 +4789,7 @@ Link.contextTypes = {
   }).isRequired
 };
 exports.default = Link;
-},{"prop-types":21,"react":"react"}],26:[function(require,module,exports){
+},{"prop-types":39,"react":"react"}],49:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -2948,7 +4802,7 @@ Object.defineProperty(exports, 'default', {
     return _reactRouter.MemoryRouter;
   }
 });
-},{"react-router":"react-router"}],27:[function(require,module,exports){
+},{"react-router":"react-router"}],50:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -3029,7 +4883,7 @@ NavLink.defaultProps = {
 };
 
 exports.default = NavLink;
-},{"./Link":25,"prop-types":21,"react":"react","react-router":"react-router"}],28:[function(require,module,exports){
+},{"./Link":48,"prop-types":39,"react":"react","react-router":"react-router"}],51:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -3042,7 +4896,7 @@ Object.defineProperty(exports, 'default', {
     return _reactRouter.Prompt;
   }
 });
-},{"react-router":"react-router"}],29:[function(require,module,exports){
+},{"react-router":"react-router"}],52:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -3055,7 +4909,7 @@ Object.defineProperty(exports, 'default', {
     return _reactRouter.Redirect;
   }
 });
-},{"react-router":"react-router"}],30:[function(require,module,exports){
+},{"react-router":"react-router"}],53:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -3068,7 +4922,7 @@ Object.defineProperty(exports, 'default', {
     return _reactRouter.Route;
   }
 });
-},{"react-router":"react-router"}],31:[function(require,module,exports){
+},{"react-router":"react-router"}],54:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -3081,7 +4935,7 @@ Object.defineProperty(exports, 'default', {
     return _reactRouter.Router;
   }
 });
-},{"react-router":"react-router"}],32:[function(require,module,exports){
+},{"react-router":"react-router"}],55:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -3094,7 +4948,7 @@ Object.defineProperty(exports, 'default', {
     return _reactRouter.StaticRouter;
   }
 });
-},{"react-router":"react-router"}],33:[function(require,module,exports){
+},{"react-router":"react-router"}],56:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -3107,7 +4961,7 @@ Object.defineProperty(exports, 'default', {
     return _reactRouter.Switch;
   }
 });
-},{"react-router":"react-router"}],34:[function(require,module,exports){
+},{"react-router":"react-router"}],57:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -3180,7 +5034,7 @@ exports.StaticRouter = _StaticRouter3.default;
 exports.Switch = _Switch3.default;
 exports.matchPath = _matchPath3.default;
 exports.withRouter = _withRouter3.default;
-},{"./BrowserRouter":23,"./HashRouter":24,"./Link":25,"./MemoryRouter":26,"./NavLink":27,"./Prompt":28,"./Redirect":29,"./Route":30,"./Router":31,"./StaticRouter":32,"./Switch":33,"./matchPath":35,"./withRouter":42}],35:[function(require,module,exports){
+},{"./BrowserRouter":46,"./HashRouter":47,"./Link":48,"./MemoryRouter":49,"./NavLink":50,"./Prompt":51,"./Redirect":52,"./Route":53,"./Router":54,"./StaticRouter":55,"./Switch":56,"./matchPath":58,"./withRouter":65}],58:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -3193,7 +5047,7 @@ Object.defineProperty(exports, 'default', {
     return _reactRouter.matchPath;
   }
 });
-},{"react-router":"react-router"}],36:[function(require,module,exports){
+},{"react-router":"react-router"}],59:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -3249,7 +5103,7 @@ var supportsGoWithoutReloadUsingHash = exports.supportsGoWithoutReloadUsingHash 
 var isExtraneousPopstateEvent = exports.isExtraneousPopstateEvent = function isExtraneousPopstateEvent(event) {
   return event.state === undefined && navigator.userAgent.indexOf('CriOS') === -1;
 };
-},{}],37:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -3328,7 +5182,7 @@ var createLocation = exports.createLocation = function createLocation(path, stat
 var locationsAreEqual = exports.locationsAreEqual = function locationsAreEqual(a, b) {
   return a.pathname === b.pathname && a.search === b.search && a.hash === b.hash && a.key === b.key && (0, _valueEqual2.default)(a.state, b.state);
 };
-},{"./PathUtils":38,"resolve-pathname":43,"value-equal":45}],38:[function(require,module,exports){
+},{"./PathUtils":61,"resolve-pathname":66,"value-equal":68}],61:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -3390,7 +5244,7 @@ var createPath = exports.createPath = function createPath(location) {
 
   return path;
 };
-},{}],39:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -3698,7 +5552,7 @@ var createBrowserHistory = function createBrowserHistory() {
 };
 
 exports.default = createBrowserHistory;
-},{"./DOMUtils":36,"./LocationUtils":37,"./PathUtils":38,"./createTransitionManager":41,"invariant":15,"warning":46}],40:[function(require,module,exports){
+},{"./DOMUtils":59,"./LocationUtils":60,"./PathUtils":61,"./createTransitionManager":64,"invariant":33,"warning":69}],63:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -4023,7 +5877,7 @@ var createHashHistory = function createHashHistory() {
 };
 
 exports.default = createHashHistory;
-},{"./DOMUtils":36,"./LocationUtils":37,"./PathUtils":38,"./createTransitionManager":41,"invariant":15,"warning":46}],41:[function(require,module,exports){
+},{"./DOMUtils":59,"./LocationUtils":60,"./PathUtils":61,"./createTransitionManager":64,"invariant":33,"warning":69}],64:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -4109,7 +5963,7 @@ var createTransitionManager = function createTransitionManager() {
 };
 
 exports.default = createTransitionManager;
-},{"warning":46}],42:[function(require,module,exports){
+},{"warning":69}],65:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -4122,7 +5976,7 @@ Object.defineProperty(exports, 'default', {
     return _reactRouter.withRouter;
   }
 });
-},{"react-router":"react-router"}],43:[function(require,module,exports){
+},{"react-router":"react-router"}],66:[function(require,module,exports){
 'use strict';
 
 var isAbsolute = function isAbsolute(pathname) {
@@ -4193,7 +6047,7 @@ var resolvePathname = function resolvePathname(to) {
 };
 
 module.exports = resolvePathname;
-},{}],44:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 "use strict";
 
 function transmitter() {
@@ -4246,7 +6100,7 @@ function transmitter() {
 }
 
 module.exports = transmitter;
-},{}],45:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -4287,7 +6141,7 @@ var valueEqual = function valueEqual(a, b) {
 };
 
 exports.default = valueEqual;
-},{}],46:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -4352,7 +6206,7 @@ module.exports = warning;
 
 }).call(this,require('_process'))
 
-},{"_process":17}],47:[function(require,module,exports){
+},{"_process":35}],70:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4394,7 +6248,7 @@ var DataRequests = function () {
   }, {
     key: 'get',
     value: function get(url, authenticated) {
-      var headers = { contentType: 'application/json' };
+      var headers = { 'Content-Type': 'application/json' };
 
       if (authenticated) {
         headers.Authorization = 'bearer ' + _Auth2.default.getToken();
@@ -4414,7 +6268,7 @@ var DataRequests = function () {
 
 exports.default = DataRequests;
 
-},{"./components/Auth":64}],48:[function(require,module,exports){
+},{"./components/Auth":88}],71:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4478,7 +6332,7 @@ var AdminPanelActions = function () {
 
 exports.default = _alt2.default.createActions(AdminPanelActions);
 
-},{"../DataRequests":47,"../alt":61}],49:[function(require,module,exports){
+},{"../DataRequests":70,"../alt":85}],72:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4555,7 +6409,7 @@ var BlockUserActions = function () {
 
 exports.default = _alt2.default.createActions(BlockUserActions);
 
-},{"../alt":61}],50:[function(require,module,exports){
+},{"../alt":85}],73:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4578,7 +6432,7 @@ var FooterActions = function FooterActions() {
 
 exports.default = _alt2.default.createActions(FooterActions);
 
-},{"../alt":61}],51:[function(require,module,exports){
+},{"../alt":85}],74:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4601,7 +6455,7 @@ var FormActions = function FormActions() {
 
 exports.default = _alt2.default.createActions(FormActions);
 
-},{"../alt":61}],52:[function(require,module,exports){
+},{"../alt":85}],75:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4626,7 +6480,7 @@ var HomeActions = function () {
   function HomeActions() {
     _classCallCheck(this, HomeActions);
 
-    this.generateActions('getUserPostsSuccess', 'getUserPostsFail', 'removePostsSuccess');
+    this.generateActions('getUserPostsSuccess', 'getUserPostsFail', 'removePostsSuccess', 'handlePageChange');
   }
 
   _createClass(HomeActions, [{
@@ -4651,7 +6505,69 @@ var HomeActions = function () {
 
 exports.default = _alt2.default.createActions(HomeActions);
 
-},{"../DataRequests":47,"../alt":61}],53:[function(require,module,exports){
+},{"../DataRequests":70,"../alt":85}],76:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+var _DataRequests = require('../DataRequests');
+
+var _DataRequests2 = _interopRequireDefault(_DataRequests);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var MessageActions = function () {
+  function MessageActions() {
+    _classCallCheck(this, MessageActions);
+
+    this.generateActions('sendMessageSuccess', 'getThreadMessagesSuccess', 'getThreadMessagesFail');
+  }
+
+  _createClass(MessageActions, [{
+    key: 'getThreadMessages',
+    value: function getThreadMessages(otherUserUsername) {
+      var _this = this;
+
+      var req = _DataRequests2.default.get('/api/thread/' + otherUserUsername, true);
+      $.ajax(req).done(function (thread) {
+        return _this.getThreadMessagesSuccess(thread);
+      }).fail(function () {
+        return _this.getThreadMessagesFail();
+      });
+
+      return true;
+    }
+  }, {
+    key: 'sendMessage',
+    value: function sendMessage(content, threadId) {
+      var _this2 = this;
+
+      var req = _DataRequests2.default.post('/api/message/add/' + threadId, content, true);
+
+      $.ajax(req).done(function (thread) {
+        return _this2.sendMessageSuccess(thread);
+      });
+
+      return true;
+    }
+  }]);
+
+  return MessageActions;
+}();
+
+exports.default = _alt2.default.createActions(MessageActions);
+
+},{"../DataRequests":70,"../alt":85}],77:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4674,7 +6590,7 @@ var NavbarActions = function NavbarActions() {
 
 exports.default = _alt2.default.createActions(NavbarActions);
 
-},{"../alt":61}],54:[function(require,module,exports){
+},{"../alt":85}],78:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4741,7 +6657,7 @@ var PostDeleteActions = function () {
 
 exports.default = _alt2.default.createActions(PostDeleteActions);
 
-},{"../DataRequests":47,"../alt":61}],55:[function(require,module,exports){
+},{"../DataRequests":70,"../alt":85}],79:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4804,7 +6720,7 @@ var ProfilePictureAddActions = function () {
 
 exports.default = _alt2.default.createActions(ProfilePictureAddActions);
 
-},{"../alt":61,"../components/Auth":64}],56:[function(require,module,exports){
+},{"../alt":85,"../components/Auth":88}],80:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4849,7 +6765,7 @@ var SearchBarActions = function () {
 
 exports.default = _alt2.default.createActions(SearchBarActions);
 
-},{"../DataRequests":47,"../alt":61}],57:[function(require,module,exports){
+},{"../DataRequests":70,"../alt":85}],81:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4878,32 +6794,42 @@ var UserActions = function () {
   function UserActions() {
     _classCallCheck(this, UserActions);
 
-    this.generateActions('registerUserSuccess', 'registerUserFail', 'loginUserSuccess', 'loginUserFail', 'logoutUserSuccess', 'getUserOwnPostsSuccess', 'getUserOwnPostsFail', 'getProfileInfoSuccess', 'logoutUserSuccess');
+    this.generateActions('registerUserSuccess', 'registerUserFail', 'loginUserSuccess', 'loginUserFail', 'logoutUserSuccess', 'getUserOwnPostsSuccess', 'getUserOwnPostsFail', 'getProfileInfoSuccess', 'logoutUserSuccess', 'followUserSuccess', 'getUserThreadsSuccess', 'getUserThreadsFail');
   }
 
   _createClass(UserActions, [{
-    key: 'getUserOwnPosts',
-    value: function getUserOwnPosts(currentUserId) {
+    key: 'getUserThreads',
+    value: function getUserThreads(userId) {
       var _this = this;
 
-      var request = _DataRequests2.default.get('/api/post/own/' + currentUserId, true);
-
-      $.ajax(request).done(function (posts) {
-        return _this.getUserOwnPostsSuccess(posts);
+      // let request = Data.get(`/api/threads`, true)
+      var request = {
+        url: '/api/threads',
+        method: 'GET',
+        contentType: 'application/json'
+      };
+      $.ajax(request).done(function (threads) {
+        return _this.getUserThreadsSuccess(threads);
       }).fail(function () {
-        return _this.getUserOwnPostsFail();
+        return _this.getUserThreadsFail();
       });
+
+      return true;
     }
   }, {
-    key: 'getUserInformation',
-    value: function getUserInformation(userId) {
+    key: 'getUserOwnPosts',
+    value: function getUserOwnPosts(userId) {
       var _this2 = this;
 
-      var request = _DataRequests2.default.get('/api/user/' + userId, true);
+      var req = _DataRequests2.default.get('/api/post/own/' + userId, true);
 
-      $.ajax(request).done(function (userInfo) {
-        return _this2.getProfileInfoSuccess(userInfo);
+      $.ajax(req).done(function (posts) {
+        return _this2.getUserOwnPostsSuccess(posts);
+      }).fail(function () {
+        return _this2.getUserOwnPostsFail();
       });
+
+      return true;
     }
   }, {
     key: 'registerUser',
@@ -4964,29 +6890,14 @@ var UserActions = function () {
       return true;
     }
   }, {
-    key: 'getUserOwnPosts',
-    value: function getUserOwnPosts(userId) {
-      var _this6 = this;
-
-      var req = _DataRequests2.default.get('/api/post/own/' + userId, true);
-
-      $.ajax(req).done(function (posts) {
-        return _this6.getUserOwnPostsSuccess(posts);
-      }).fail(function () {
-        return _this6.getUserOwnPostsFail();
-      });
-
-      return true;
-    }
-  }, {
     key: 'getUserInformation',
     value: function getUserInformation(userId) {
-      var _this7 = this;
+      var _this6 = this;
 
       var request = _DataRequests2.default.get('/api/user/' + userId, true);
 
       $.ajax(request).done(function (userInfo) {
-        return _this7.getProfileInfoSuccess(userInfo);
+        return _this6.getProfileInfoSuccess(userInfo);
       });
 
       return true;
@@ -4998,7 +6909,7 @@ var UserActions = function () {
 
 exports.default = _alt2.default.createActions(UserActions);
 
-},{"../DataRequests":47,"../alt":61,"./HomeActions":52}],58:[function(require,module,exports){
+},{"../DataRequests":70,"../alt":85,"./HomeActions":75}],82:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5047,7 +6958,7 @@ var PostAddActions = function () {
 
 exports.default = _alt2.default.createActions(PostAddActions);
 
-},{"../../DataRequests":47,"../../alt":61}],59:[function(require,module,exports){
+},{"../../DataRequests":70,"../../alt":85}],83:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5157,7 +7068,7 @@ var PostCommentActions = function () {
 
 exports.default = _alt2.default.createActions(PostCommentActions);
 
-},{"../../DataRequests":47,"../../alt":61}],60:[function(require,module,exports){
+},{"../../DataRequests":70,"../../alt":85}],84:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5224,7 +7135,7 @@ var PostEditActions = function () {
 
 exports.default = _alt2.default.createActions(PostEditActions);
 
-},{"../../DataRequests":47,"../../alt":61}],61:[function(require,module,exports){
+},{"../../DataRequests":70,"../../alt":85}],85:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5245,7 +7156,7 @@ exports.default = new _alt2.default({
   batchingFunction: _reactDom2.default.unstable_batchedUpdates
 });
 
-},{"alt":3,"react-dom":"react-dom"}],62:[function(require,module,exports){
+},{"alt":3,"react-dom":"react-dom"}],86:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5413,7 +7324,7 @@ var AdminPanel = function (_Component) {
 
 exports.default = AdminPanel;
 
-},{"../actions/AdminPanelActions":48,"../components/Auth":64,"../stores/AdminPanelStore":99,"./form/Form":73,"./form/Submit":77,"./form/TextGroup":78,"react":"react","react-router-dom":34}],63:[function(require,module,exports){
+},{"../actions/AdminPanelActions":71,"../components/Auth":88,"../stores/AdminPanelStore":129,"./form/Form":97,"./form/Submit":101,"./form/TextGroup":102,"react":"react","react-router-dom":57}],87:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5489,9 +7400,9 @@ var App = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(_Navbar2.default, null),
-        _react2.default.createElement(_routes2.default, null),
-        _react2.default.createElement(_Footer2.default, null)
+        _react2.default.createElement(_Navbar2.default, { history: this.props.history }),
+        _react2.default.createElement(_routes2.default, { history: this.props.history }),
+        _react2.default.createElement(_Footer2.default, { history: this.props.history })
       );
     }
   }]);
@@ -5501,7 +7412,7 @@ var App = function (_React$Component) {
 
 exports.default = App;
 
-},{"../actions/UserActions":57,"../routes":98,"../stores/UserStore":108,"./Footer":66,"./Navbar":68,"react":"react"}],64:[function(require,module,exports){
+},{"../actions/UserActions":81,"../routes":128,"../stores/UserStore":138,"./Footer":90,"./Navbar":92,"react":"react"}],88:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5571,7 +7482,7 @@ var Auth = function () {
 
 exports.default = Auth;
 
-},{}],65:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5692,7 +7603,7 @@ var BlockUser = function (_Component) {
 
 exports.default = BlockUser;
 
-},{"../actions/BlockUserActions":49,"../stores/BlockUserStore":100,"../stores/UserStore":108,"./form/Form":73,"./form/Submit":77,"./form/TextGroup":78,"react":"react","react-router-dom":34}],66:[function(require,module,exports){
+},{"../actions/BlockUserActions":72,"../stores/BlockUserStore":130,"../stores/UserStore":138,"./form/Form":97,"./form/Submit":101,"./form/TextGroup":102,"react":"react","react-router-dom":57}],90:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5835,7 +7746,7 @@ var Footer = function (_Component) {
 
 exports.default = Footer;
 
-},{"../stores/FooterStore":101,"react":"react","react-router-dom":34}],67:[function(require,module,exports){
+},{"../stores/FooterStore":131,"react":"react","react-router-dom":57}],91:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5856,17 +7767,17 @@ var _HomeActions = require('../actions/HomeActions');
 
 var _HomeActions2 = _interopRequireDefault(_HomeActions);
 
-var _PostCard = require('./sub-components/PostCard');
+var _UserPostsPanel = require('../components/sub-components/user-profile/UserPostsPanel');
 
-var _PostCard2 = _interopRequireDefault(_PostCard);
-
-var _Helpers = require('../utilities/Helpers');
-
-var _Helpers2 = _interopRequireDefault(_Helpers);
+var _UserPostsPanel2 = _interopRequireDefault(_UserPostsPanel);
 
 var _Auth = require('./Auth');
 
 var _Auth2 = _interopRequireDefault(_Auth);
+
+var _reactPaginate = require('react-paginate');
+
+var _reactPaginate2 = _interopRequireDefault(_reactPaginate);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5909,25 +7820,16 @@ var Home = function (_React$Component) {
       _HomeStore2.default.unlisten(this.onChange);
     }
   }, {
+    key: 'handlePageChange',
+    value: function handlePageChange(input) {
+      var selected = input.selected;
+      var offset = Math.ceil(selected * 10);
+
+      _HomeActions2.default.handlePageChange(offset);
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
-
-      var posts = this.state.posts.map(function (post, index) {
-        var postId = post._id;
-
-        var likeRequest = '/api/post/like/' + postId;
-        var unlikeRequest = '/api/post/unlike/' + postId;
-
-        return _react2.default.createElement(_PostCard2.default, {
-          key: post._id,
-          post: post,
-          index: index,
-          likePost: _Helpers2.default.likePost.bind(_this2, likeRequest, _HomeActions2.default.getUserPosts),
-          unlikePost: _Helpers2.default.unlikePost.bind(_this2, unlikeRequest, _HomeActions2.default.getUserPosts)
-        });
-      });
-
       return _react2.default.createElement(
         'div',
         { className: 'container' },
@@ -5941,7 +7843,26 @@ var Home = function (_React$Component) {
             ' Simple Social Network'
           )
         ),
-        posts
+        _react2.default.createElement(_UserPostsPanel2.default, {
+          posts: this.state.postsToDisplay,
+          getUserPost: _HomeActions2.default.getUserPosts
+        }),
+        _Auth2.default.isUserAuthenticated() && _react2.default.createElement(_reactPaginate2.default, {
+          previousLabel: 'Previous',
+          nextLabel: 'Next',
+          breakLabel: _react2.default.createElement(
+            'a',
+            { href: '' },
+            '...'
+          ),
+          breakClassName: '',
+          pageCount: this.state.pageCount,
+          marginPagesDisplayed: 2,
+          pageRangeDisplayed: 5,
+          onPageChange: this.handlePageChange,
+          containerClassName: 'pagination',
+          subContainerClassName: 'pages pagination',
+          activeClassName: 'active' })
       );
     }
   }]);
@@ -5951,11 +7872,11 @@ var Home = function (_React$Component) {
 
 exports.default = Home;
 
-},{"../actions/HomeActions":52,"../stores/HomeStore":103,"../utilities/Helpers":112,"./Auth":64,"./sub-components/PostCard":89,"react":"react"}],68:[function(require,module,exports){
+},{"../actions/HomeActions":75,"../components/sub-components/user-profile/UserPostsPanel":126,"../stores/HomeStore":133,"./Auth":88,"react":"react","react-paginate":45}],92:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5995,150 +7916,159 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Navbar = function (_React$Component) {
-    _inherits(Navbar, _React$Component);
+  _inherits(Navbar, _React$Component);
 
-    function Navbar(props) {
-        _classCallCheck(this, Navbar);
+  function Navbar(props) {
+    _classCallCheck(this, Navbar);
 
-        var _this = _possibleConstructorReturn(this, (Navbar.__proto__ || Object.getPrototypeOf(Navbar)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Navbar.__proto__ || Object.getPrototypeOf(Navbar)).call(this, props));
 
-        _this.state = _NavbarStore2.default.getState();
-        _this.onChange = _this.onChange.bind(_this);
-        return _this;
+    _this.state = _NavbarStore2.default.getState();
+
+    _this.onChange = _this.onChange.bind(_this);
+    return _this;
+  }
+
+  _createClass(Navbar, [{
+    key: 'onChange',
+    value: function onChange(state) {
+      this.setState(state);
     }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      _NavbarStore2.default.listen(this.onChange);
+      $(document).ajaxStart(function () {
+        return _NavbarActions2.default.updateAjaxAnimation('fadeIn');
+      });
+      $(document).ajaxComplete(function () {
+        return _NavbarActions2.default.updateAjaxAnimation('fadeOut');
+      });
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      _NavbarStore2.default.unlisten(this.onChange);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var navbarUserMenu = _react2.default.createElement(_NavbarUserMenu2.default, null);
+      return _react2.default.createElement(
+        'nav',
+        { className: 'navbar navbar-default navbar-static-top' },
+        _react2.default.createElement(
+          'div',
+          { className: 'navbar-header' },
+          _react2.default.createElement(
+            'button',
+            {
+              type: 'button',
+              className: 'navbar-toggle collapsed',
+              'data-toggle': 'collapse',
+              'data-target': '#navbar' },
+            _react2.default.createElement(
+              'span',
+              { className: 'sr-only' },
+              'Toggle navigation'
+            ),
+            _react2.default.createElement('span', { className: 'icon-bar' }),
+            _react2.default.createElement('span', { className: 'icon-bar' }),
+            _react2.default.createElement('span', { className: 'icon-bar' })
+          ),
+          _react2.default.createElement(
+            _reactRouterDom.Link,
+            { to: '/', className: 'navbar-brand' },
+            _react2.default.createElement(
+              'span',
+              {
+                ref: 'triangles',
+                className: 'triangles animated ' + this.state.ajaxAnimationClass },
+              _react2.default.createElement('div', { className: 'tri invert' }),
+              _react2.default.createElement('div', { className: 'tri invert' }),
+              _react2.default.createElement('div', { className: 'tri' }),
+              _react2.default.createElement('div', { className: 'tri invert' }),
+              _react2.default.createElement('div', { className: 'tri invert' }),
+              _react2.default.createElement('div', { className: 'tri' }),
+              _react2.default.createElement('div', { className: 'tri invert' }),
+              _react2.default.createElement('div', { className: 'tri' }),
+              _react2.default.createElement('div', { className: 'tri invert' })
+            ),
+            'SSN'
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { id: 'navbar', className: 'navbar-collapse collapse' },
+          _Auth2.default.isUserAuthenticated() ? _react2.default.createElement(
+            'ul',
+            { className: 'nav navbar-nav' },
+            _react2.default.createElement(
+              'li',
+              null,
+              _react2.default.createElement(
+                _reactRouterDom.Link,
+                { to: '/' },
+                'Home'
+              )
+            ),
+            _react2.default.createElement(
+              'li',
+              null,
+              _react2.default.createElement(_SearchBar2.default, { history: this.props.history })
+            ),
+            _react2.default.createElement(
+              'li',
+              null,
+              _react2.default.createElement(
+                _reactRouterDom.Link,
+                { to: '/post/add' },
+                'AddPost'
+              )
+            ),
+            _react2.default.createElement(
+              'li',
+              null,
+              _react2.default.createElement(
+                _reactRouterDom.Link,
+                { to: '/messenger' },
+                'Messenger'
+              )
+            ),
+            _Auth2.default.isUserAdmin() && _react2.default.createElement(
+              'li',
+              null,
+              _react2.default.createElement(
+                _reactRouterDom.Link,
+                { to: '/user/admin-panel' },
+                'Admin Panel'
+              )
+            )
+          ) : _react2.default.createElement(
+            'ul',
+            { className: 'nav navbar-nav' },
+            _react2.default.createElement(
+              'li',
+              null,
+              _react2.default.createElement(
+                _reactRouterDom.Link,
+                { to: '/' },
+                'Home'
+              )
+            )
+          ),
+          navbarUserMenu
+        )
+      );
+    }
+  }]);
 
-    _createClass(Navbar, [{
-        key: 'onChange',
-        value: function onChange(state) {
-            this.setState(state);
-        }
-    }, {
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            _NavbarStore2.default.listen(this.onChange);
-
-            $(document).ajaxStart(function () {
-                return _NavbarActions2.default.updateAjaxAnimation('fadeIn');
-            });
-            $(document).ajaxComplete(function () {
-                return _NavbarActions2.default.updateAjaxAnimation('fadeOut');
-            });
-        }
-    }, {
-        key: 'componentWillUnmount',
-        value: function componentWillUnmount() {
-            _NavbarStore2.default.unlisten(this.onChange);
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var navbarUserMenu = _react2.default.createElement(_NavbarUserMenu2.default, null);
-            return _react2.default.createElement(
-                'nav',
-                { className: 'navbar navbar-default navbar-static-top' },
-                _react2.default.createElement(
-                    'div',
-                    { className: 'navbar-header' },
-                    _react2.default.createElement(
-                        'button',
-                        {
-                            type: 'button',
-                            className: 'navbar-toggle collapsed',
-                            'data-toggle': 'collapse',
-                            'data-target': '#navbar' },
-                        _react2.default.createElement(
-                            'span',
-                            { className: 'sr-only' },
-                            'Toggle navigation'
-                        ),
-                        _react2.default.createElement('span', { className: 'icon-bar' }),
-                        _react2.default.createElement('span', { className: 'icon-bar' }),
-                        _react2.default.createElement('span', { className: 'icon-bar' })
-                    ),
-                    _react2.default.createElement(
-                        _reactRouterDom.Link,
-                        { to: '/', className: 'navbar-brand' },
-                        _react2.default.createElement(
-                            'span',
-                            {
-                                ref: 'triangles',
-                                className: 'triangles animated ' + this.state.ajaxAnimationClass },
-                            _react2.default.createElement('div', { className: 'tri invert' }),
-                            _react2.default.createElement('div', { className: 'tri invert' }),
-                            _react2.default.createElement('div', { className: 'tri' }),
-                            _react2.default.createElement('div', { className: 'tri invert' }),
-                            _react2.default.createElement('div', { className: 'tri invert' }),
-                            _react2.default.createElement('div', { className: 'tri' }),
-                            _react2.default.createElement('div', { className: 'tri invert' }),
-                            _react2.default.createElement('div', { className: 'tri' }),
-                            _react2.default.createElement('div', { className: 'tri invert' })
-                        ),
-                        'SSN'
-                    )
-                ),
-                _react2.default.createElement(
-                    'div',
-                    { id: 'navbar', className: 'navbar-collapse collapse' },
-                    _Auth2.default.isUserAuthenticated() ? _react2.default.createElement(
-                        'ul',
-                        { className: 'nav navbar-nav' },
-                        _react2.default.createElement(
-                            'li',
-                            null,
-                            _react2.default.createElement(
-                                _reactRouterDom.Link,
-                                { to: '/' },
-                                'Home'
-                            )
-                        ),
-                        _react2.default.createElement(
-                            'li',
-                            null,
-                            _react2.default.createElement(_SearchBar2.default, null)
-                        ),
-                        _react2.default.createElement(
-                            'li',
-                            null,
-                            _react2.default.createElement(
-                                _reactRouterDom.Link,
-                                { to: '/post/add' },
-                                'AddPost'
-                            )
-                        ),
-                        _Auth2.default.isUserAdmin() && _react2.default.createElement(
-                            'li',
-                            null,
-                            _react2.default.createElement(
-                                _reactRouterDom.Link,
-                                { to: '/user/admin-panel' },
-                                'Admin Panel'
-                            )
-                        )
-                    ) : _react2.default.createElement(
-                        'ul',
-                        { className: 'nav navbar-nav' },
-                        _react2.default.createElement(
-                            'li',
-                            null,
-                            _react2.default.createElement(
-                                _reactRouterDom.Link,
-                                { to: '/' },
-                                'Home'
-                            )
-                        )
-                    ),
-                    navbarUserMenu
-                )
-            );
-        }
-    }]);
-
-    return Navbar;
+  return Navbar;
 }(_react2.default.Component);
 
 exports.default = Navbar;
 
-},{"../actions/NavbarActions":53,"../components/Auth":64,"../components/search-bar/SearchBar":86,"../stores/NavbarStore":104,"./sub-components/NavbarUserMenu":88,"react":"react","react-router-dom":34}],69:[function(require,module,exports){
+},{"../actions/NavbarActions":77,"../components/Auth":88,"../components/search-bar/SearchBar":114,"../stores/NavbarStore":134,"./sub-components/NavbarUserMenu":117,"react":"react","react-router-dom":57}],93:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6257,7 +8187,7 @@ var ProfilePictureAdd = function (_Component) {
 
 exports.default = ProfilePictureAdd;
 
-},{"../actions/ProfilePictureAddActions":55,"../components/Auth":64,"../stores/ProfilePictureAddStore":106,"./form/ImageForm":74,"./form/Submit":77,"./form/TextGroup":78,"react":"react","react-router-dom":34}],70:[function(require,module,exports){
+},{"../actions/ProfilePictureAddActions":79,"../components/Auth":88,"../stores/ProfilePictureAddStore":136,"./form/ImageForm":98,"./form/Submit":101,"./form/TextGroup":102,"react":"react","react-router-dom":57}],94:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6272,13 +8202,13 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = require('react-router-dom');
 
+var _Auth = require('./Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
+
 var _FormStore = require('../stores/FormStore');
 
 var _FormStore2 = _interopRequireDefault(_FormStore);
-
-var _UserStore = require('../stores/UserStore');
-
-var _UserStore2 = _interopRequireDefault(_UserStore);
 
 var _FormActions = require('../actions/FormActions');
 
@@ -6358,7 +8288,7 @@ var UserLogin = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      if (_UserStore2.default.getState().loggedInUserId !== '') {
+      if (_Auth2.default.isUserAuthenticated()) {
         return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
       }
 
@@ -6394,7 +8324,7 @@ var UserLogin = function (_Component) {
 
 exports.default = UserLogin;
 
-},{"../actions/FormActions":51,"../actions/UserActions":57,"../stores/FormStore":102,"../stores/UserStore":108,"./form/Form":73,"./form/Submit":77,"./form/TextGroup":78,"react":"react","react-router-dom":34}],71:[function(require,module,exports){
+},{"../actions/FormActions":74,"../actions/UserActions":81,"../stores/FormStore":132,"./Auth":88,"./form/Form":97,"./form/Submit":101,"./form/TextGroup":102,"react":"react","react-router-dom":57}],95:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6406,6 +8336,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _reactRouterDom = require('react-router-dom');
+
+var _Auth = require('./Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
 
 var _UserActions = require('../actions/UserActions');
 
@@ -6465,6 +8401,10 @@ var UserProfile = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      if (!_Auth2.default.isUserAuthenticated()) {
+        return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
+      }
+
       var nodes = {};
       nodes.roles = this.state.roles.map(function (role, index) {
         return _react2.default.createElement(
@@ -6482,8 +8422,6 @@ var UserProfile = function (_React$Component) {
         'div',
         null,
         _react2.default.createElement(_UserInfo2.default, {
-          name: this.state.name,
-          roles: this.state.roles,
           profile: this.state.profile }),
         _react2.default.createElement(_UserPosts2.default, {
           posts: this.state.userPosts,
@@ -6498,7 +8436,7 @@ var UserProfile = function (_React$Component) {
 
 exports.default = UserProfile;
 
-},{"../actions/UserActions":57,"../stores/UserStore":108,"./sub-components/user-profile/UserInfo":94,"./sub-components/user-profile/UserPosts":95,"react":"react"}],72:[function(require,module,exports){
+},{"../actions/UserActions":81,"../stores/UserStore":138,"./Auth":88,"./sub-components/user-profile/UserInfo":124,"./sub-components/user-profile/UserPosts":125,"react":"react","react-router-dom":57}],96:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6513,6 +8451,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = require('react-router-dom');
 
+var _Auth = require('./Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
+
 var _FormActions = require('../actions/FormActions');
 
 var _FormActions2 = _interopRequireDefault(_FormActions);
@@ -6524,10 +8466,6 @@ var _UserActions2 = _interopRequireDefault(_UserActions);
 var _FormStore = require('../stores/FormStore');
 
 var _FormStore2 = _interopRequireDefault(_FormStore);
-
-var _UserStore = require('../stores/UserStore');
-
-var _UserStore2 = _interopRequireDefault(_UserStore);
 
 var _Form = require('./form/Form');
 
@@ -6614,7 +8552,7 @@ var UserRegister = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      if (_UserStore2.default.getState().loggedInUserId !== '') {
+      if (_Auth2.default.isUserAuthenticated()) {
         return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
       }
 
@@ -6688,7 +8626,7 @@ var UserRegister = function (_Component) {
 
 exports.default = UserRegister;
 
-},{"../actions/FormActions":51,"../actions/UserActions":57,"../stores/FormStore":102,"../stores/UserStore":108,"./form/Form":73,"./form/RadioElement":75,"./form/RadioGroup":76,"./form/Submit":77,"./form/TextGroup":78,"react":"react","react-router-dom":34}],73:[function(require,module,exports){
+},{"../actions/FormActions":74,"../actions/UserActions":81,"../stores/FormStore":132,"./Auth":88,"./form/Form":97,"./form/RadioElement":99,"./form/RadioGroup":100,"./form/Submit":101,"./form/TextGroup":102,"react":"react","react-router-dom":57}],97:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6768,7 +8706,7 @@ var Form = function (_Component) {
 
 exports.default = Form;
 
-},{"react":"react"}],74:[function(require,module,exports){
+},{"react":"react"}],98:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6848,7 +8786,7 @@ var Form = function (_Component) {
 
 exports.default = Form;
 
-},{"react":"react"}],75:[function(require,module,exports){
+},{"react":"react"}],99:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6905,7 +8843,7 @@ var RadioElement = function (_Component) {
 
 exports.default = RadioElement;
 
-},{"react":"react"}],76:[function(require,module,exports){
+},{"react":"react"}],100:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6956,7 +8894,7 @@ var RadioGroup = function (_Component) {
 
 exports.default = RadioGroup;
 
-},{"react":"react"}],77:[function(require,module,exports){
+},{"react":"react"}],101:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6998,7 +8936,7 @@ var Submit = function (_Component) {
 
 exports.default = Submit;
 
-},{"react":"react"}],78:[function(require,module,exports){
+},{"react":"react"}],102:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7057,7 +8995,418 @@ var TextGroup = function (_Component) {
 
 exports.default = TextGroup;
 
-},{"react":"react"}],79:[function(require,module,exports){
+},{"react":"react"}],103:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Auth = require('../Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Message = function (_React$Component) {
+  _inherits(Message, _React$Component);
+
+  function Message() {
+    _classCallCheck(this, Message);
+
+    return _possibleConstructorReturn(this, (Message.__proto__ || Object.getPrototypeOf(Message)).apply(this, arguments));
+  }
+
+  _createClass(Message, [{
+    key: 'render',
+    value: function render() {
+      // Was the message sent by the current user. If so, add a css class\
+      var currUser = _Auth2.default.getUser();
+      var authorId = this.props.authorId;
+      var fromMe = '';
+      if (currUser._id === authorId) {
+        fromMe = 'from-me';
+      }
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'message ' + fromMe },
+        _react2.default.createElement(
+          'div',
+          { className: 'username' },
+          this.props.username
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'message-body' },
+          this.props.message
+        )
+      );
+    }
+  }]);
+
+  return Message;
+}(_react2.default.Component);
+
+Message.defaultProps = {
+  message: '',
+  username: '',
+  fromMe: false
+};
+
+exports.default = Message;
+
+},{"../Auth":88,"react":"react"}],104:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Messages = require('./Messages');
+
+var _Messages2 = _interopRequireDefault(_Messages);
+
+var _MessageInput = require('../sub-components/Message-input');
+
+var _MessageInput2 = _interopRequireDefault(_MessageInput);
+
+var _MessageThreadStore = require('../../stores/messenger-stores/MessageThreadStore');
+
+var _MessageThreadStore2 = _interopRequireDefault(_MessageThreadStore);
+
+var _MessageActions = require('../../actions/MessageActions');
+
+var _MessageActions2 = _interopRequireDefault(_MessageActions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MessageThread = function (_React$Component) {
+  _inherits(MessageThread, _React$Component);
+
+  function MessageThread(props) {
+    _classCallCheck(this, MessageThread);
+
+    // set the initial state of messages so that it is not undefined on load
+    var _this = _possibleConstructorReturn(this, (MessageThread.__proto__ || Object.getPrototypeOf(MessageThread)).call(this, props));
+
+    _this.state = _MessageThreadStore2.default.getState();
+    _this.onChange = _this.onChange.bind(_this);
+    _this.sendHandler = _this.sendHandler.bind(_this);
+    return _this;
+  }
+
+  _createClass(MessageThread, [{
+    key: 'onChange',
+    value: function onChange(state) {
+      this.setState(state);
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      _MessageThreadStore2.default.listen(this.onChange);
+      if (this.props.username === 'Anonymous') {
+        _MessageActions2.default.getThreadMessages(this.props.match.params.otherUserUsername);
+      } else {
+        _MessageActions2.default.getThreadMessages(this.props.username);
+      }
+    }
+  }, {
+    key: 'addMessage',
+    value: function addMessage(message) {
+      var threadId = this.state.threadId;
+      _MessageActions2.default.sendMessage(message, threadId);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      _MessageThreadStore2.default.unlisten(this.onChange);
+    }
+  }, {
+    key: 'sendHandler',
+    value: function sendHandler(content) {
+      var messageObject = { content: content };
+      this.addMessage(messageObject);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'container' },
+        _react2.default.createElement(
+          'h3',
+          null,
+          'Messenger'
+        ),
+        _react2.default.createElement(
+          'h5',
+          null,
+          'Chat with ',
+          this.props.match.params.otherUserUsername
+        ),
+        _react2.default.createElement(_Messages2.default, { messages: this.state.messages }),
+        _react2.default.createElement(_MessageInput2.default, { onSend: this.sendHandler })
+      );
+    }
+  }]);
+
+  return MessageThread;
+}(_react2.default.Component);
+
+MessageThread.defaultProps = {
+  username: 'Anonymous'
+};
+
+exports.default = MessageThread;
+
+},{"../../actions/MessageActions":76,"../../stores/messenger-stores/MessageThreadStore":139,"../sub-components/Message-input":116,"./Messages":105,"react":"react"}],105:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _MessageSingle = require('./MessageSingle');
+
+var _MessageSingle2 = _interopRequireDefault(_MessageSingle);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Messages = function (_React$Component) {
+  _inherits(Messages, _React$Component);
+
+  function Messages() {
+    _classCallCheck(this, Messages);
+
+    return _possibleConstructorReturn(this, (Messages.__proto__ || Object.getPrototypeOf(Messages)).apply(this, arguments));
+  }
+
+  _createClass(Messages, [{
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      // There is a new message in the state, scroll to bottom of list
+      var objDiv = document.getElementById('messageList');
+      objDiv.scrollTop = objDiv.scrollHeight;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      // Loop through all the messages in the state and create a Message component
+      var messages = this.props.messages.map(function (message) {
+        return _react2.default.createElement(_MessageSingle2.default, {
+          key: message._id,
+          username: message.authorUsername,
+          message: message.content,
+          authorId: message.author
+        });
+      });
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'messages', id: 'messageList' },
+        messages
+      );
+    }
+  }]);
+
+  return Messages;
+}(_react2.default.Component);
+
+Messages.defaultProps = {
+  messages: []
+};
+
+exports.default = Messages;
+
+},{"./MessageSingle":103,"react":"react"}],106:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _MessengerStore = require('../../stores/messenger-stores/MessengerStore');
+
+var _MessengerStore2 = _interopRequireDefault(_MessengerStore);
+
+var _UserActions = require('../../actions/UserActions');
+
+var _UserActions2 = _interopRequireDefault(_UserActions);
+
+var _Messages = require('./Messages');
+
+var _Messages2 = _interopRequireDefault(_Messages);
+
+var _MessageInput = require('../sub-components/Message-input');
+
+var _MessageInput2 = _interopRequireDefault(_MessageInput);
+
+var _MessageThread = require('./MessageThread');
+
+var _MessageThread2 = _interopRequireDefault(_MessageThread);
+
+var _reactRouterDom = require('react-router-dom');
+
+var _Auth = require('../Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Messenger = function (_React$Component) {
+  _inherits(Messenger, _React$Component);
+
+  function Messenger(props) {
+    _classCallCheck(this, Messenger);
+
+    var _this = _possibleConstructorReturn(this, (Messenger.__proto__ || Object.getPrototypeOf(Messenger)).call(this, props));
+
+    _this.state = _MessengerStore2.default.getState();
+
+    _this.onChange = _this.onChange.bind(_this);
+    _this.usernameChangeHandler = _this.usernameChangeHandler.bind(_this);
+    _this.usernameSubmitHandler = _this.usernameSubmitHandler.bind(_this);
+    return _this;
+  }
+
+  _createClass(Messenger, [{
+    key: 'onChange',
+    value: function onChange(state) {
+      this.setState(state);
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      _MessengerStore2.default.listen(this.onChange);
+      if (_Auth2.default.isUserAuthenticated()) {
+        _UserActions2.default.getUserThreads();
+      }
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      _MessengerStore2.default.unlisten(this.onChange);
+    }
+  }, {
+    key: 'usernameChangeHandler',
+    value: function usernameChangeHandler(event) {
+      this.setState({ username: event.target.value });
+    }
+  }, {
+    key: 'usernameSubmitHandler',
+    value: function usernameSubmitHandler(event) {
+      event.preventDefault();
+      this.setState({ submitted: true, username: this.state.username });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (this.state.submitted) {
+        // Form was submitted, now show the main App
+        return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/thread/' + this.state.username })
+        // <MessageThread username={this.state.username} />
+        ;
+      }
+
+      var threadsRender = this.state.userThreads.map(function (thread) {
+        if (thread.users[0] === _Auth2.default.getUser().username) {
+          thread.otherUser = thread.users[1];
+        } else {
+          thread.otherUser = thread.users[0];
+        }
+        return _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            _reactRouterDom.Link,
+            { key: thread._id, to: '/thread/' + thread.otherUser },
+            thread.otherUser
+          )
+        );
+      });
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'container' },
+        _react2.default.createElement(
+          'h3',
+          { className: 'text-center' },
+          'Messenger'
+        ),
+        threadsRender,
+        _react2.default.createElement(
+          'form',
+          { onSubmit: this.usernameSubmitHandler, className: 'username-container' },
+          _react2.default.createElement(
+            'div',
+            null,
+            _react2.default.createElement('input', {
+              type: 'text',
+              onChange: this.usernameChangeHandler,
+              placeholder: 'Enter a username...',
+              required: true })
+          ),
+          _react2.default.createElement('input', { type: 'submit', value: 'Submit' })
+        )
+      );
+    }
+  }]);
+
+  return Messenger;
+}(_react2.default.Component);
+
+exports.default = Messenger;
+
+},{"../../actions/UserActions":81,"../../stores/messenger-stores/MessengerStore":140,"../Auth":88,"../sub-components/Message-input":116,"./MessageThread":104,"./Messages":105,"react":"react","react-router-dom":57}],107:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7178,7 +9527,7 @@ var PostAdd = function (_Component) {
 
 exports.default = PostAdd;
 
-},{"../../actions/post-actions/PostAddActions":58,"../../components/Auth":64,"../../stores/post-stores/PostAddStore":109,"../form/Form":73,"../form/Submit":77,"../form/TextGroup":78,"react":"react","react-router-dom":34}],80:[function(require,module,exports){
+},{"../../actions/post-actions/PostAddActions":82,"../../components/Auth":88,"../../stores/post-stores/PostAddStore":141,"../form/Form":97,"../form/Submit":101,"../form/TextGroup":102,"react":"react","react-router-dom":57}],108:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7307,7 +9656,7 @@ var PostDelete = function (_Component) {
 
 exports.default = PostDelete;
 
-},{"../../actions/PostDeleteActions":54,"../../components/Auth":64,"../../stores/PostDeleteStore":105,"../form/Form":73,"../form/Submit":77,"../form/TextGroup":78,"react":"react","react-router-dom":34}],81:[function(require,module,exports){
+},{"../../actions/PostDeleteActions":78,"../../components/Auth":88,"../../stores/PostDeleteStore":135,"../form/Form":97,"../form/Submit":101,"../form/TextGroup":102,"react":"react","react-router-dom":57}],109:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7431,7 +9780,7 @@ var PostEdit = function (_Component) {
 
 exports.default = PostEdit;
 
-},{"../../actions/post-actions/PostEditActions":60,"../../components/Auth":64,"../../stores/post-stores/PostEditStore":111,"../form/Form":73,"../form/Submit":77,"../form/TextGroup":78,"react":"react","react-router-dom":34}],82:[function(require,module,exports){
+},{"../../actions/post-actions/PostEditActions":84,"../../components/Auth":88,"../../stores/post-stores/PostEditStore":143,"../form/Form":97,"../form/Submit":101,"../form/TextGroup":102,"react":"react","react-router-dom":57}],110:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7517,7 +9866,7 @@ var Comment = function (_Component) {
 
 exports.default = Comment;
 
-},{"../../Auth":64,"react":"react","react-router-dom":34}],83:[function(require,module,exports){
+},{"../../Auth":88,"react":"react","react-router-dom":57}],111:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7646,7 +9995,7 @@ var DeleteComment = function (_Component) {
 
 exports.default = DeleteComment;
 
-},{"../../../actions/post-actions/PostCommentActions":59,"../../../stores/post-stores/PostCommentStore":110,"../../Auth":64,"../../form/Form":73,"../../form/Submit":77,"react":"react","react-router-dom":34}],84:[function(require,module,exports){
+},{"../../../actions/post-actions/PostCommentActions":83,"../../../stores/post-stores/PostCommentStore":142,"../../Auth":88,"../../form/Form":97,"../../form/Submit":101,"react":"react","react-router-dom":57}],112:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7775,7 +10124,7 @@ var EditComment = function (_Component) {
 
 exports.default = EditComment;
 
-},{"../../../actions/post-actions/PostCommentActions":59,"../../../stores/post-stores/PostCommentStore":110,"../../Auth":64,"../../form/Form":73,"../../form/Submit":77,"../../form/TextGroup":78,"react":"react","react-router-dom":34}],85:[function(require,module,exports){
+},{"../../../actions/post-actions/PostCommentActions":83,"../../../stores/post-stores/PostCommentStore":142,"../../Auth":88,"../../form/Form":97,"../../form/Submit":101,"../../form/TextGroup":102,"react":"react","react-router-dom":57}],113:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7905,7 +10254,7 @@ var PostComment = function (_Component) {
 
 exports.default = PostComment;
 
-},{"../../../actions/post-actions/PostCommentActions":59,"../../../stores/post-stores/PostCommentStore":110,"../../Auth":64,"../../sub-components/CommentsForm":87,"../../sub-components/PostDetails":91,"./Comment":82,"react":"react","react-router-dom":34}],86:[function(require,module,exports){
+},{"../../../actions/post-actions/PostCommentActions":83,"../../../stores/post-stores/PostCommentStore":142,"../../Auth":88,"../../sub-components/CommentsForm":115,"../../sub-components/PostDetails":120,"./Comment":110,"react":"react","react-router-dom":57}],114:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7982,8 +10331,7 @@ var SearchBar = function (_Component) {
 
 
             _SearchBarActions2.default.loadSearchBarForm();
-            this.redirectToSearchedUser();
-            this.props.history.push("/searchedUser");
+            this.props.history.push("/nqkude");
         }
     }, {
         key: 'render',
@@ -8014,7 +10362,7 @@ var SearchBar = function (_Component) {
 
 exports.default = SearchBar;
 
-},{"../../actions/SearchBarActions":56,"../../components/Auth":64,"../../stores/SearchBarStore":107,"react":"react","react-router-dom":34}],87:[function(require,module,exports){
+},{"../../actions/SearchBarActions":80,"../../components/Auth":88,"../../stores/SearchBarStore":137,"react":"react","react-router-dom":57}],115:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8123,7 +10471,83 @@ var CommentsForm = function (_Component) {
 
 exports.default = CommentsForm;
 
-},{"../../actions/post-actions/PostCommentActions":59,"../../stores/post-stores/PostCommentStore":110,"react":"react"}],88:[function(require,module,exports){
+},{"../../actions/post-actions/PostCommentActions":83,"../../stores/post-stores/PostCommentStore":142,"react":"react"}],116:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MessageInput = function (_React$Component) {
+  _inherits(MessageInput, _React$Component);
+
+  function MessageInput(props) {
+    _classCallCheck(this, MessageInput);
+
+    var _this = _possibleConstructorReturn(this, (MessageInput.__proto__ || Object.getPrototypeOf(MessageInput)).call(this, props));
+
+    _this.state = { chatInput: ''
+
+      // React ES6 does not bind 'this' to event handlers by default
+    };_this.submitHandler = _this.submitHandler.bind(_this);
+    _this.textChangeHandler = _this.textChangeHandler.bind(_this);
+    return _this;
+  }
+
+  _createClass(MessageInput, [{
+    key: 'submitHandler',
+    value: function submitHandler(event) {
+      // Stop the form from refreshing the page on submit
+      event.preventDefault();
+
+      // Clear the input box
+      this.setState({ chatInput: '' });
+
+      // Call the onSend callback with the chatInput message
+      this.props.onSend(this.state.chatInput);
+    }
+  }, {
+    key: 'textChangeHandler',
+    value: function textChangeHandler(event) {
+      this.setState({ chatInput: event.target.value });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'form',
+        { className: 'chat-input', onSubmit: this.submitHandler },
+        _react2.default.createElement('input', { type: 'text',
+          onChange: this.textChangeHandler,
+          value: this.state.chatInput,
+          placeholder: 'Write a message...',
+          required: true })
+      );
+    }
+  }]);
+
+  return MessageInput;
+}(_react2.default.Component);
+
+MessageInput.defaultProps = {};
+
+exports.default = MessageInput;
+
+},{"react":"react"}],117:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8167,7 +10591,7 @@ var NavbarUserMenu = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (NavbarUserMenu.__proto__ || Object.getPrototypeOf(NavbarUserMenu)).call(this, props));
 
     _this.state = _UserStore2.default.getState();
-
+    _this.handleLogout = _this.handleLogout.bind(_this);
     _this.onChange = _this.onChange.bind(_this);
     return _this;
   }
@@ -8186,6 +10610,12 @@ var NavbarUserMenu = function (_React$Component) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       _UserStore2.default.unlisten(this.onChange);
+    }
+  }, {
+    key: 'handleLogout',
+    value: function handleLogout(e) {
+      _UserActions2.default.logoutUser();
+      this.props.history.push('/user/login');
     }
   }, {
     key: 'render',
@@ -8229,7 +10659,7 @@ var NavbarUserMenu = function (_React$Component) {
             null,
             _react2.default.createElement(
               'a',
-              { href: '#', onClick: _UserActions2.default.logoutUser },
+              { href: '#', onClick: this.handleLogout },
               'Logout'
             )
           )
@@ -8262,9 +10692,9 @@ var NavbarUserMenu = function (_React$Component) {
   return NavbarUserMenu;
 }(_react2.default.Component);
 
-exports.default = NavbarUserMenu;
+exports.default = (0, _reactRouterDom.withRouter)(NavbarUserMenu);
 
-},{"../../actions/UserActions":57,"../../components/Auth":64,"../../stores/UserStore":108,"react":"react","react-router-dom":34}],89:[function(require,module,exports){
+},{"../../actions/UserActions":81,"../../components/Auth":88,"../../stores/UserStore":138,"react":"react","react-router-dom":57}],118:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8356,7 +10786,7 @@ var PostCard = function (_React$Component) {
 
 exports.default = PostCard;
 
-},{"./PostCommentsPanel":90,"./PostInfo":92,"./PostPanelsToggle":93,"react":"react"}],90:[function(require,module,exports){
+},{"./PostCommentsPanel":119,"./PostInfo":121,"./PostPanelsToggle":122,"react":"react"}],119:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8415,7 +10845,7 @@ var PostCommentsPanel = function (_React$Component) {
 
 exports.default = PostCommentsPanel;
 
-},{"../post/comments/Comment":82,"react":"react"}],91:[function(require,module,exports){
+},{"../post/comments/Comment":110,"react":"react"}],120:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8477,7 +10907,7 @@ var PostInfo = function (_React$Component) {
 
 exports.default = PostInfo;
 
-},{"react":"react"}],92:[function(require,module,exports){
+},{"react":"react"}],121:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8550,7 +10980,7 @@ var PostInfo = function (_React$Component) {
 
 exports.default = PostInfo;
 
-},{"react":"react","react-router-dom":34}],93:[function(require,module,exports){
+},{"react":"react","react-router-dom":57}],122:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8687,7 +11117,7 @@ var PostPanelToggles = function (_React$Component) {
 
 exports.default = PostPanelToggles;
 
-},{"../Auth":64,"react":"react","react-router-dom":34}],94:[function(require,module,exports){
+},{"../Auth":88,"react":"react","react-router-dom":57}],123:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8699,6 +11129,157 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _DataRequests = require('../../../DataRequests');
+
+var _DataRequests2 = _interopRequireDefault(_DataRequests);
+
+var _Auth = require('../../Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
+
+var _UserActions = require('../../../actions/UserActions');
+
+var _UserActions2 = _interopRequireDefault(_UserActions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var UserFollow = function (_Component) {
+  _inherits(UserFollow, _Component);
+
+  function UserFollow(props) {
+    _classCallCheck(this, UserFollow);
+
+    var _this = _possibleConstructorReturn(this, (UserFollow.__proto__ || Object.getPrototypeOf(UserFollow)).call(this, props));
+
+    _this.state = {
+      change: false
+    };
+    return _this;
+  }
+
+  _createClass(UserFollow, [{
+    key: 'isAlreadyFollowed',
+    value: function isAlreadyFollowed() {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = _Auth2.default.getUser().follows[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var id = _step.value;
+
+          if (this.props.userId.toString() === id.toString()) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: 'followUser',
+    value: function followUser(e) {
+      var _this2 = this;
+
+      e.preventDefault();
+
+      var request = _DataRequests2.default.post('/api/user/follow/' + this.props.userId, {}, true);
+
+      $.ajax(request).done(function (user) {
+        _UserActions2.default.followUserSuccess(user);
+        _this2.setState(function (prevstate) {
+          return { change: !prevstate.change };
+        });
+      });
+    }
+  }, {
+    key: 'unfollowUser',
+    value: function unfollowUser(e) {
+      var _this3 = this;
+
+      e.preventDefault();
+
+      var request = _DataRequests2.default.post('/api/user/unfollow/' + this.props.userId, {}, true);
+
+      $.ajax(request).done(function (user) {
+        _UserActions2.default.followUserSuccess(user);
+        _this3.setState(function (prevstate) {
+          return { change: !prevstate.change };
+        });
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (_Auth2.default.getUser()._id === this.props.userId) {
+        return _react2.default.createElement('div', null);
+      }
+
+      var followBtn = void 0;
+
+      if (this.isAlreadyFollowed()) {
+        followBtn = _react2.default.createElement(
+          'a',
+          { onClick: this.unfollowUser.bind(this), className: 'btn btn-warning' },
+          'Unfollow User'
+        );
+      } else {
+        followBtn = _react2.default.createElement(
+          'a',
+          { onClick: this.followUser.bind(this), className: 'btn btn-warning' },
+          'Follow User'
+        );
+      }
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        followBtn
+      );
+    }
+  }]);
+
+  return UserFollow;
+}(_react.Component);
+
+exports.default = UserFollow;
+
+},{"../../../DataRequests":70,"../../../actions/UserActions":81,"../../Auth":88,"react":"react"}],124:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _UserFollow = require('./UserFollow');
+
+var _UserFollow2 = _interopRequireDefault(_UserFollow);
 
 var _reactRouterDom = require('react-router-dom');
 
@@ -8791,7 +11372,8 @@ var UserInfo = function (_React$Component) {
               { className: 'label', to: '/user/block' },
               'Block user'
             )
-          )
+          ),
+          _react2.default.createElement(_UserFollow2.default, { userId: this.props.profile._id })
         )
       );
     }
@@ -8802,7 +11384,7 @@ var UserInfo = function (_React$Component) {
 
 exports.default = UserInfo;
 
-},{"react":"react","react-router-dom":34}],95:[function(require,module,exports){
+},{"./UserFollow":123,"react":"react","react-router-dom":57}],125:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8897,7 +11479,7 @@ var UserPosts = function (_React$Component) {
 
 exports.default = UserPosts;
 
-},{"./UserPostsPanel":96,"react":"react"}],96:[function(require,module,exports){
+},{"./UserPostsPanel":126,"react":"react"}],126:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8936,58 +11518,22 @@ var UserPostsPanel = function (_React$Component) {
   }
 
   _createClass(UserPostsPanel, [{
-    key: 'likePost',
-    value: function likePost() {
-      var _this2 = this;
-
-      var postId = this.props.post._id;
-      var request = {
-        url: '/api/post/like/' + postId,
-        method: 'post'
-      };
-
-      $.ajax(request).done(function () {
-        return _this2.props.getUserPosts();
-      });
-    }
-  }, {
-    key: 'unlikePost',
-    value: function unlikePost() {
-      var _this3 = this;
-
-      var postId = this.props.post._id;
-      var request = {
-        url: '/api/post/unlike/' + postId,
-        method: 'post'
-      };
-
-      $.ajax(request).done(function () {
-        return _this3.props.getUserPosts();
-      });
-    }
-  }, {
     key: 'render',
     value: function render() {
-      var _this4 = this;
+      var _this2 = this;
 
       var posts = this.props.posts.map(function (post, index) {
         var postId = post._id;
 
-        var likeRequest = {
-          url: '/api/post/like/' + postId,
-          method: 'post'
-        };
-        var unlikeRequest = {
-          url: '/api/post/unlike/' + postId,
-          method: 'post'
-        };
+        var likeRequest = '/api/post/like/' + postId;
+        var unlikeRequest = '/api/post/unlike/' + postId;
 
         return _react2.default.createElement(_PostCard2.default, {
           key: post._id,
           index: index,
           post: post,
-          likePost: _Helpers2.default.likePost.bind(_this4, likeRequest, _this4.props.getUserPost),
-          unlikePost: _Helpers2.default.unlikePost.bind(_this4, unlikeRequest, _this4.props.getUserPost)
+          likePost: _Helpers2.default.likePost.bind(_this2, likeRequest, _this2.props.getUserPost),
+          unlikePost: _Helpers2.default.unlikePost.bind(_this2, unlikeRequest, _this2.props.getUserPost)
         });
       });
 
@@ -9004,7 +11550,7 @@ var UserPostsPanel = function (_React$Component) {
 
 exports.default = UserPostsPanel;
 
-},{"../../../utilities/Helpers":112,"../PostCard":89,"react":"react"}],97:[function(require,module,exports){
+},{"../../../utilities/Helpers":144,"../PostCard":118,"react":"react"}],127:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -9021,15 +11567,21 @@ var _App = require('./components/App');
 
 var _App2 = _interopRequireDefault(_App);
 
+var _createBrowserHistory = require('history/lib/createBrowserHistory');
+
+var _createBrowserHistory2 = _interopRequireDefault(_createBrowserHistory);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var history = (0, _createBrowserHistory2.default)();
 
 _reactDom2.default.render(_react2.default.createElement(
   _reactRouterDom.BrowserRouter,
   null,
-  _react2.default.createElement(_App2.default, null)
+  _react2.default.createElement(_App2.default, { history: history })
 ), document.getElementById('app'));
 
-},{"./components/App":63,"react":"react","react-dom":"react-dom","react-router-dom":34}],98:[function(require,module,exports){
+},{"./components/App":87,"history/lib/createBrowserHistory":24,"react":"react","react-dom":"react-dom","react-router-dom":57}],128:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9094,9 +11646,17 @@ var _DeleteComment = require('./components/post/comments/DeleteComment');
 
 var _DeleteComment2 = _interopRequireDefault(_DeleteComment);
 
+var _Messenger = require('./components/messanger/Messenger');
+
+var _Messenger2 = _interopRequireDefault(_Messenger);
+
+var _MessageThread = require('./components/messanger/MessageThread');
+
+var _MessageThread2 = _interopRequireDefault(_MessageThread);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Routes = function Routes() {
+var Routes = function Routes(history) {
   return _react2.default.createElement(
     _reactRouterDom.Switch,
     null,
@@ -9113,13 +11673,15 @@ var Routes = function Routes() {
     _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/user/profile-picture/:userId', component: _ProfilePictureAdd2.default }),
     _react2.default.createElement(_reactRouterDom.Route, { path: '/comment/edit/:id', component: _EditComment2.default }),
     _react2.default.createElement(_reactRouterDom.Route, { path: '/comment/delete/:id', component: _DeleteComment2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { path: '/messenger', component: _Messenger2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { path: '/thread/:otherUserUsername', component: _MessageThread2.default }),
     _react2.default.createElement(_reactRouterDom.Route, { component: _Home2.default })
   );
 };
 
 exports.default = Routes;
 
-},{"./components/AdminPanel":62,"./components/BlockUser":65,"./components/Home":67,"./components/ProfilePictureAdd":69,"./components/UserLogin":70,"./components/UserProfile":71,"./components/UserRegister":72,"./components/post/PostAdd":79,"./components/post/PostDelete":80,"./components/post/PostEdit":81,"./components/post/comments/DeleteComment":83,"./components/post/comments/EditComment":84,"./components/post/comments/PostComment":85,"react":"react","react-router-dom":34}],99:[function(require,module,exports){
+},{"./components/AdminPanel":86,"./components/BlockUser":89,"./components/Home":91,"./components/ProfilePictureAdd":93,"./components/UserLogin":94,"./components/UserProfile":95,"./components/UserRegister":96,"./components/messanger/MessageThread":104,"./components/messanger/Messenger":106,"./components/post/PostAdd":107,"./components/post/PostDelete":108,"./components/post/PostEdit":109,"./components/post/comments/DeleteComment":111,"./components/post/comments/EditComment":112,"./components/post/comments/PostComment":113,"react":"react","react-router-dom":57}],129:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9206,7 +11768,7 @@ var AdminPanelStore = function () {
 
 exports.default = _alt2.default.createStore(AdminPanelStore);
 
-},{"../actions/AdminPanelActions":48,"../alt":61}],100:[function(require,module,exports){
+},{"../actions/AdminPanelActions":71,"../alt":85}],130:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9295,7 +11857,7 @@ var BlockUserStore = function () {
 
 exports.default = _alt2.default.createStore(BlockUserStore);
 
-},{"../actions/BlockUserActions":49,"../alt":61}],101:[function(require,module,exports){
+},{"../actions/BlockUserActions":72,"../alt":85}],131:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9322,7 +11884,7 @@ var FooterStore = function FooterStore() {
 
 exports.default = _alt2.default.createStore(FooterStore);
 
-},{"../actions/FooterActions":50,"../alt":61}],102:[function(require,module,exports){
+},{"../actions/FooterActions":73,"../alt":85}],132:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9487,7 +12049,7 @@ var FormStore = function () {
 
 exports.default = _alt2.default.createStore(FormStore);
 
-},{"../actions/FormActions":51,"../actions/UserActions":57,"../alt":61}],103:[function(require,module,exports){
+},{"../actions/FormActions":74,"../actions/UserActions":81,"../alt":85}],133:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9515,17 +12077,28 @@ var HomeStore = function () {
     this.bindActions(_HomeActions2.default);
 
     this.posts = [];
+    this.pageCount = 0;
+    this.offset = 0;
+    this.postsToDisplay = [];
   }
 
   _createClass(HomeStore, [{
     key: 'onGetUserPostsSuccess',
     value: function onGetUserPostsSuccess(data) {
       this.posts = data;
+      this.pageCount = data.length / 10;
+      this.postsToDisplay = this.posts.slice(this.offset, this.offset + 10);
     }
   }, {
     key: 'onRemovePostsSuccess',
     value: function onRemovePostsSuccess() {
       this.posts = [];
+    }
+  }, {
+    key: 'onHandlePageChange',
+    value: function onHandlePageChange(offset) {
+      this.offset = offset;
+      this.postsToDisplay = this.posts.slice(offset, offset + 10);
     }
   }]);
 
@@ -9534,7 +12107,7 @@ var HomeStore = function () {
 
 exports.default = _alt2.default.createStore(HomeStore);
 
-},{"../actions/HomeActions":52,"../alt":61}],104:[function(require,module,exports){
+},{"../actions/HomeActions":75,"../alt":85}],134:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9560,7 +12133,6 @@ var NavbarStore = function () {
     _classCallCheck(this, NavbarStore);
 
     this.bindActions(_NavbarActions2.default);
-
     this.ajaxAnimationClass = '';
   }
 
@@ -9576,7 +12148,7 @@ var NavbarStore = function () {
 
 exports.default = _alt2.default.createStore(NavbarStore);
 
-},{"../actions/NavbarActions":53,"../alt":61}],105:[function(require,module,exports){
+},{"../actions/NavbarActions":77,"../alt":85}],135:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9639,7 +12211,7 @@ var PostDeleteStore = function () {
 
 exports.default = _alt2.default.createStore(PostDeleteStore);
 
-},{"../actions/PostDeleteActions":54,"../alt":61}],106:[function(require,module,exports){
+},{"../actions/PostDeleteActions":78,"../alt":85}],136:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9705,7 +12277,7 @@ var ProfilePictureAddStore = function () {
 
 exports.default = _alt2.default.createStore(ProfilePictureAddStore);
 
-},{"../actions/ProfilePictureAddActions":55,"../alt":61}],107:[function(require,module,exports){
+},{"../actions/ProfilePictureAddActions":79,"../alt":85}],137:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9752,7 +12324,7 @@ var SearchBarStore = function () {
 
 exports.default = _alt2.default.createStore(SearchBarStore);
 
-},{"../actions/SearchBarActions":56,"../alt":61}],108:[function(require,module,exports){
+},{"../actions/SearchBarActions":80,"../alt":85}],138:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9783,11 +12355,12 @@ var UserStore = function () {
 
     this.bindActions(_UserActions2.default);
 
-    this.loggedInUserId = '';
+    this._id = '';
     this.username = '';
     this.roles = [];
     this.userPosts = [];
     this.profile = {
+      _id: '',
       userUsername: '',
       userAge: '',
       userFirstName: '',
@@ -9801,7 +12374,6 @@ var UserStore = function () {
     key: 'onRegisterUserSuccess',
     value: function onRegisterUserSuccess(responseData) {
       var user = responseData.user;
-      this.loggedInUserId = user._id;
       this.username = user.username;
       this.roles = user.roles;
       _Auth2.default.authenticateUser(responseData.token);
@@ -9811,7 +12383,6 @@ var UserStore = function () {
     key: 'onLoginUserSuccess',
     value: function onLoginUserSuccess(responseData) {
       var user = responseData.user;
-      this.loggedInUserId = user._id;
       this.username = user.username;
       this.roles = user.roles;
       _Auth2.default.authenticateUser(responseData.token);
@@ -9825,7 +12396,6 @@ var UserStore = function () {
   }, {
     key: 'onLogoutUserSuccess',
     value: function onLogoutUserSuccess() {
-      this.loggedInUserId = '';
       this.username = '';
       this.roles = [];
       this.userPosts = [];
@@ -9845,12 +12415,18 @@ var UserStore = function () {
   }, {
     key: 'onGetProfileInfoSuccess',
     value: function onGetProfileInfoSuccess(user) {
+      this.profile._id = user._id;
       this.profile.userUsername = user.username;
       this.profile.userAge = user.age;
       this.profile.userFirstName = user.firstName;
       this.profile.userLastName = user.lastName;
       this.profile.userGender = user.gender;
       this.profile.userProfilePicture = user.profilePicture;
+    }
+  }, {
+    key: 'onFollowUserSuccess',
+    value: function onFollowUserSuccess(user) {
+      _Auth2.default.saveUser(user);
     }
   }]);
 
@@ -9859,7 +12435,128 @@ var UserStore = function () {
 
 exports.default = _alt2.default.createStore(UserStore);
 
-},{"../actions/UserActions":57,"../alt":61,"../components/Auth":64}],109:[function(require,module,exports){
+},{"../actions/UserActions":81,"../alt":85,"../components/Auth":88}],139:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _alt = require('../../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+var _Auth = require('../../components/Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
+
+var _MessageActions = require('../../actions/MessageActions');
+
+var _MessageActions2 = _interopRequireDefault(_MessageActions);
+
+var _UserActions = require('../../actions/UserActions');
+
+var _UserActions2 = _interopRequireDefault(_UserActions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var MessageThreadStore = function () {
+  function MessageThreadStore() {
+    _classCallCheck(this, MessageThreadStore);
+
+    this.bindActions(_MessageActions2.default);
+    this.messages = [];
+    this.threadId = '';
+  }
+
+  _createClass(MessageThreadStore, [{
+    key: 'onSendMessageSuccess',
+    value: function onSendMessageSuccess(thread) {
+      this.messages = thread.messages;
+      this.threadId = thread._id;
+    }
+  }, {
+    key: 'onGetThreadMessagesSuccess',
+    value: function onGetThreadMessagesSuccess(thread) {
+      this.messages = thread.messages;
+      this.threadId = thread._id;
+    }
+  }, {
+    key: 'onGetThreadMessagesFail',
+    value: function onGetThreadMessagesFail() {
+      console.log('Failed loading messages');
+    }
+  }]);
+
+  return MessageThreadStore;
+}();
+
+exports.default = _alt2.default.createStore(MessageThreadStore);
+
+},{"../../actions/MessageActions":76,"../../actions/UserActions":81,"../../alt":85,"../../components/Auth":88}],140:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _alt = require('../../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+var _Auth = require('../../components/Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
+
+var _MessageActions = require('../../actions/MessageActions');
+
+var _MessageActions2 = _interopRequireDefault(_MessageActions);
+
+var _UserActions = require('../../actions/UserActions');
+
+var _UserActions2 = _interopRequireDefault(_UserActions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var MessageStore = function () {
+  function MessageStore() {
+    _classCallCheck(this, MessageStore);
+
+    this.bindActions(_MessageActions2.default);
+    this.bindListeners({
+      onGetUserThreadsSuccess: _UserActions2.default.getUserThreadsSuccess,
+      onGetUserThreadsFail: _UserActions2.default.getUserThreadsFail
+    });
+
+    this.userThreads = [];
+  }
+
+  _createClass(MessageStore, [{
+    key: 'onGetUserThreadsSuccess',
+    value: function onGetUserThreadsSuccess(threads) {
+      this.userThreads = threads;
+    }
+  }, {
+    key: 'onGetUserThreadsFail',
+    value: function onGetUserThreadsFail() {
+      console.log('Failed loading user\'s threads');
+    }
+  }]);
+
+  return MessageStore;
+}();
+
+exports.default = _alt2.default.createStore(MessageStore);
+
+},{"../../actions/MessageActions":76,"../../actions/UserActions":81,"../../alt":85,"../../components/Auth":88}],141:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9935,7 +12632,7 @@ var PostAddStore = function () {
 
 exports.default = _alt2.default.createStore(PostAddStore);
 
-},{"../../actions/post-actions/PostAddActions":58,"../../alt":61}],110:[function(require,module,exports){
+},{"../../actions/post-actions/PostAddActions":82,"../../alt":85}],142:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -10077,7 +12774,7 @@ var PostCommentStore = function () {
 
 exports.default = _alt2.default.createStore(PostCommentStore);
 
-},{"../../actions/post-actions/PostCommentActions":59,"../../alt":61}],111:[function(require,module,exports){
+},{"../../actions/post-actions/PostCommentActions":83,"../../alt":85}],143:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -10156,7 +12853,7 @@ var PostEditStore = function () {
 
 exports.default = _alt2.default.createStore(PostEditStore);
 
-},{"../../actions/post-actions/PostEditActions":60,"../../alt":61}],112:[function(require,module,exports){
+},{"../../actions/post-actions/PostEditActions":84,"../../alt":85}],144:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -10226,6 +12923,6 @@ var Helpers = function () {
 
 exports.default = Helpers;
 
-},{"../DataRequests":47}]},{},[97])
+},{"../DataRequests":70}]},{},[127])
 
 //# sourceMappingURL=bundle.js.map
