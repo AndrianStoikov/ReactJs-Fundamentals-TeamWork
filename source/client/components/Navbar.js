@@ -61,6 +61,9 @@ export default class Navbar extends React.Component {
               <li>
                 <Link to='/post/add'>AddPost</Link>
               </li>
+              <li>
+                <Link to='/messenger'>Messenger</Link>
+              </li>
               { Auth.isUserAdmin() &&
               <li>
                 <Link to='/user/admin-panel'>Admin Panel</Link>

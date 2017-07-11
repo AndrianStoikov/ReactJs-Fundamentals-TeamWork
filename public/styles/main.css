@@ -2974,7 +2974,7 @@ select[multiple].input-lg {
   text-align: center;
   vertical-align: middle;
   -ms-touch-action: manipulation;
-      touch-action: manipulation;
+  touch-action: manipulation;
   cursor: pointer;
   background-image: none;
   border: 1px solid transparent;
@@ -6971,7 +6971,7 @@ button.toast-close-button {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-      user-select: none;
+  user-select: none;
 }
 .mfp-loading.mfp-figure {
   display: none;
@@ -7827,37 +7827,37 @@ label {
 }
 .animated {
   -webkit-animation-fill-mode: both;
-          animation-fill-mode: both;
+  animation-fill-mode: both;
   -webkit-animation-duration: 1s;
-          animation-duration: 1s;
+  animation-duration: 1s;
 }
 @-webkit-keyframes fadeInUp {
   0% {
     opacity: 0;
     -webkit-transform: translateY(20px);
-            transform: translateY(20px);
+    transform: translateY(20px);
   }
   100% {
     opacity: 1;
     -webkit-transform: translateY(0);
-            transform: translateY(0);
+    transform: translateY(0);
   }
 }
 @keyframes fadeInUp {
   0% {
     opacity: 0;
     -webkit-transform: translateY(20px);
-            transform: translateY(20px);
+    transform: translateY(20px);
   }
   100% {
     opacity: 1;
     -webkit-transform: translateY(0);
-            transform: translateY(0);
+    transform: translateY(0);
   }
 }
 .fadeInUp {
   -webkit-animation-name: fadeInUp;
-          animation-name: fadeInUp;
+  animation-name: fadeInUp;
 }
 @-webkit-keyframes fadeIn {
   0% {
@@ -7877,7 +7877,7 @@ label {
 }
 .fadeIn {
   -webkit-animation-name: fadeIn;
-          animation-name: fadeIn;
+  animation-name: fadeIn;
 }
 @-webkit-keyframes fadeOut {
   0% {
@@ -7897,103 +7897,103 @@ label {
 }
 .fadeOut {
   -webkit-animation-name: fadeOut;
-          animation-name: fadeOut;
+  animation-name: fadeOut;
 }
 @-webkit-keyframes flipInX {
   0% {
     -webkit-transform: perspective(800px) rotate3d(1, 0, 0, 90deg);
-            transform: perspective(800px) rotate3d(1, 0, 0, 90deg);
+    transform: perspective(800px) rotate3d(1, 0, 0, 90deg);
     transition-timing-function: ease-in;
     opacity: 0;
   }
   40% {
     -webkit-transform: perspective(800px) rotate3d(1, 0, 0, -20deg);
-            transform: perspective(800px) rotate3d(1, 0, 0, -20deg);
+    transform: perspective(800px) rotate3d(1, 0, 0, -20deg);
     transition-timing-function: ease-in;
   }
   60% {
     -webkit-transform: perspective(800px) rotate3d(1, 0, 0, 10deg);
-            transform: perspective(800px) rotate3d(1, 0, 0, 10deg);
+    transform: perspective(800px) rotate3d(1, 0, 0, 10deg);
     opacity: 1;
   }
   80% {
     -webkit-transform: perspective(800px) rotate3d(1, 0, 0, -5deg);
-            transform: perspective(800px) rotate3d(1, 0, 0, -5deg);
+    transform: perspective(800px) rotate3d(1, 0, 0, -5deg);
   }
   100% {
     -webkit-transform: perspective(800px);
-            transform: perspective(800px);
+    transform: perspective(800px);
   }
 }
 @keyframes flipInX {
   0% {
     -webkit-transform: perspective(800px) rotate3d(1, 0, 0, 90deg);
-            transform: perspective(800px) rotate3d(1, 0, 0, 90deg);
+    transform: perspective(800px) rotate3d(1, 0, 0, 90deg);
     transition-timing-function: ease-in;
     opacity: 0;
   }
   40% {
     -webkit-transform: perspective(800px) rotate3d(1, 0, 0, -20deg);
-            transform: perspective(800px) rotate3d(1, 0, 0, -20deg);
+    transform: perspective(800px) rotate3d(1, 0, 0, -20deg);
     transition-timing-function: ease-in;
   }
   60% {
     -webkit-transform: perspective(800px) rotate3d(1, 0, 0, 10deg);
-            transform: perspective(800px) rotate3d(1, 0, 0, 10deg);
+    transform: perspective(800px) rotate3d(1, 0, 0, 10deg);
     opacity: 1;
   }
   80% {
     -webkit-transform: perspective(800px) rotate3d(1, 0, 0, -5deg);
-            transform: perspective(800px) rotate3d(1, 0, 0, -5deg);
+    transform: perspective(800px) rotate3d(1, 0, 0, -5deg);
   }
   100% {
     -webkit-transform: perspective(800px);
-            transform: perspective(800px);
+    transform: perspective(800px);
   }
 }
 .flipInX {
   -webkit-backface-visibility: visible !important;
-          backface-visibility: visible !important;
+  backface-visibility: visible !important;
   -webkit-animation-name: flipInX;
-          animation-name: flipInX;
+  animation-name: flipInX;
 }
 @-webkit-keyframes flipOutX {
   0% {
     -webkit-transform: perspective(400px);
-            transform: perspective(400px);
+    transform: perspective(400px);
   }
   30% {
     -webkit-transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
-            transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+    transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
     opacity: 1;
   }
   100% {
     -webkit-transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
-            transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
+    transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
     opacity: 0;
   }
 }
 @keyframes flipOutX {
   0% {
     -webkit-transform: perspective(400px);
-            transform: perspective(400px);
+    transform: perspective(400px);
   }
   30% {
     -webkit-transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
-            transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+    transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
     opacity: 1;
   }
   100% {
     -webkit-transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
-            transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
+    transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
     opacity: 0;
   }
 }
 .flipOutX {
   -webkit-animation-name: flipOutX;
-          animation-name: flipOutX;
+  animation-name: flipOutX;
   -webkit-backface-visibility: visible !important;
-          backface-visibility: visible !important;
+  backface-visibility: visible !important;
 }
 @-webkit-keyframes pulse {
   0% {
@@ -8021,7 +8021,7 @@ label {
   0%,
   100% {
     -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
   }
   10%,
   30%,
@@ -8029,21 +8029,21 @@ label {
   70%,
   90% {
     -webkit-transform: translate3d(-10px, 0, 0);
-            transform: translate3d(-10px, 0, 0);
+    transform: translate3d(-10px, 0, 0);
   }
   20%,
   40%,
   60%,
   80% {
     -webkit-transform: translate3d(10px, 0, 0);
-            transform: translate3d(10px, 0, 0);
+    transform: translate3d(10px, 0, 0);
   }
 }
 @keyframes shake {
   0%,
   100% {
     -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
   }
   10%,
   30%,
@@ -8051,19 +8051,19 @@ label {
   70%,
   90% {
     -webkit-transform: translate3d(-10px, 0, 0);
-            transform: translate3d(-10px, 0, 0);
+    transform: translate3d(-10px, 0, 0);
   }
   20%,
   40%,
   60%,
   80% {
     -webkit-transform: translate3d(10px, 0, 0);
-            transform: translate3d(10px, 0, 0);
+    transform: translate3d(10px, 0, 0);
   }
 }
 .shake {
   -webkit-animation-name: shake;
-          animation-name: shake;
+  animation-name: shake;
 }
 .triangles {
   position: absolute;
@@ -8072,17 +8072,17 @@ label {
   height: 27px;
   width: 30px;
   -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   opacity: 0;
 }
 .navbar-brand:hover .tri {
   -webkit-animation-play-state: paused;
-          animation-play-state: paused;
+  animation-play-state: paused;
 }
 .tri {
   position: absolute;
   -webkit-animation: pulse 750ms ease-in infinite;
-          animation: pulse 750ms ease-in infinite;
+  animation: pulse 750ms ease-in infinite;
   border-top: 9px solid #363f34;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
@@ -8101,7 +8101,7 @@ label {
   left: 5px;
   top: 9px;
   -webkit-animation-delay: -125ms;
-          animation-delay: -125ms;
+  animation-delay: -125ms;
 }
 .tri:nth-child(3) {
   left: 10px;
@@ -8111,34 +8111,93 @@ label {
   left: 15px;
   top: 9px;
   -webkit-animation-delay: -625ms;
-          animation-delay: -625ms;
+  animation-delay: -625ms;
 }
 .tri:nth-child(5) {
   top: 18px;
   -webkit-animation-delay: -250ms;
-          animation-delay: -250ms;
+  animation-delay: -250ms;
 }
 .tri:nth-child(6) {
   top: 18px;
   left: 5px;
   -webkit-animation-delay: -250ms;
-          animation-delay: -250ms;
+  animation-delay: -250ms;
 }
 .tri:nth-child(7) {
   top: 18px;
   left: 10px;
   -webkit-animation-delay: -375ms;
-          animation-delay: -375ms;
+  animation-delay: -375ms;
 }
 .tri:nth-child(8) {
   top: 18px;
   left: 15px;
   -webkit-animation-delay: -500ms;
-          animation-delay: -500ms;
+  animation-delay: -500ms;
 }
 .tri:nth-child(9) {
   top: 18px;
   left: 20px;
   -webkit-animation-delay: -500ms;
-          animation-delay: -500ms;
+  animation-delay: -500ms;
+}
+
+.user-posts {
+  margin-top: 50pt;
+}
+
+.messages {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.chat-input {
+  position: relative;
+  overflow: hidden;
+  padding: 0 40px;
+  flex-shrink: 0;
+}
+
+.chat-input input[type="text"] {
+  width: 100%;
+  margin-left: -20px;
+  margin-right: -20px;
+}
+
+.message.from-me .username {
+  display: none;
+}
+
+.message.from-me {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+}
+
+.message.from-me .message-body {
+  background-color: #af9570;
+  color: white;
+}
+
+.message {
+  margin-bottom: 20px;
+}
+.message-body {
+  max-width: 80%;
+  display: inline-block;
+  padding: 20px;
+  background-color: #83c6ee;
+  border: 1px;
+  border-radius: 5px;
+  padding-right: 50px;
+}
+
+.username {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #999;
+  margin-bottom: 5px;
 }
