@@ -17,7 +17,7 @@ import DeleteComment from './components/post/comments/DeleteComment'
 import Messenger from './components/messanger/Messenger'
 import MessageThread from './components/messanger/MessageThread'
 
-const Routes = () => (
+const Routes = (history) => (
   <Switch>
     <Route exact path='/' component={Home} />
     <Route path='/user/profile/:userId' component={UserProfile} />

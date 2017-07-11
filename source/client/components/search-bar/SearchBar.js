@@ -35,8 +35,7 @@ export default class SearchBar extends Component {
 
 
         SearchBarActions.loadSearchBarForm()
-        this.redirectToSearchedUser()
-        this.props.history.push("/searchedUser")
+        this.props.history.push("/nqkude")
     }
 
     render() {

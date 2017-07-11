@@ -44,15 +44,6 @@ class UserActions {
     return true
   }
 
-  getUserInformation (userId) {
-    let request = Data.get(`/api/user/${userId}`, true)
-
-    $.ajax(request)
-      .done(userInfo => this.getProfileInfoSuccess(userInfo))
-
-    return true
-  }
-
   registerUser (data) {
     let request = {
       url: '/user/register',
@@ -101,6 +92,14 @@ class UserActions {
         this.logoutUserSuccess()
         HomeActions.removePostsSuccess()
       })
+
+    return true
+  }
+  getUserInformation (userId) {
+    let request = Data.get(`/api/user/${userId}`, true)
+
+    $.ajax(request)
+      .done(userInfo => this.getProfileInfoSuccess(userInfo))
 
     return true
   }

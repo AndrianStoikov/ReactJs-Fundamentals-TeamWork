@@ -6,7 +6,8 @@ class HomeActions {
     this.generateActions(
       'getUserPostsSuccess',
       'getUserPostsFail',
-      'removePostsSuccess'
+      'removePostsSuccess',
+      'handlePageChange'
     )
   }
 
