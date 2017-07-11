@@ -18,19 +18,14 @@ class UserActions {
     )
   }
 
-  getUserOwnPosts (currentUserId) {
-    let request = Data.get(`/api/post/own/${currentUserId}`, true)
+  getUserOwnPosts (userId) {
+    let req = Data.get(`/api/post/own/${userId}`, true)
 
-    $.ajax(request)
+    $.ajax(req)
       .done(posts => this.getUserOwnPostsSuccess(posts))
       .fail(() => this.getUserOwnPostsFail())
-  }
 
-  getUserInformation (userId) {
-    let request = Data.get(`/api/user/${userId}`, true)
-
-    $.ajax(request)
-      .done(userInfo => this.getProfileInfoSuccess(userInfo))
+    return true
   }
 
   registerUser (data) {
@@ -84,17 +79,6 @@ class UserActions {
 
     return true
   }
-
-  getUserOwnPosts (userId) {
-    let req = Data.get(`/api/post/own/${userId}`, true)
-
-    $.ajax(req)
-      .done(posts => this.getUserOwnPostsSuccess(posts))
-      .fail(() => this.getUserOwnPostsFail())
-
-    return true
-  }
-
   getUserInformation (userId) {
     let request = Data.get(`/api/user/${userId}`, true)
 

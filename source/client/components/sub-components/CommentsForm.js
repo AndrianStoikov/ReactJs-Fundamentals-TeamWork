@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 
-import FormStore from '../../stores/FormStore'
-import FormActions from '../../actions/FormActions'
-// import PostActions from '../../actions/PostActions'
+import PostCommentStore from '../../stores/post-stores/PostCommentStore'
+import PostCommentActions from '../../actions/post-actions/PostCommentActions'
 
 export default class CommentsForm extends Component {
   constructor (props) {
     super(props)
 
-    this.state = FormStore.getState()
+    this.state = PostCommentStore.getState()
     this.onChange = this.onChange.bind(this)
   }
 
@@ -17,22 +16,22 @@ export default class CommentsForm extends Component {
   }
 
   componentDidMount () {
-    FormStore.listen(this.onChange)
+    PostCommentStore.listen(this.onChange)
   }
 
   componentWillUnmount () {
-    FormStore.unlisten(this.onChange)
+    PostCommentStore.unlisten(this.onChange)
   }
 
   handleSubmit (e) {
     e.preventDefault()
 
     if (!this.state.comment) {
-      FormActions.commentValidationFail()
+      PostCommentActions.commentValidationFail()
       return
     }
 
-    // PostActions.addComment(this.props.movieId, this.state.comment)
+    PostCommentActions.addComment(this.state.post._id, this.state.comment)
   }
 
   render () {
@@ -44,7 +43,7 @@ export default class CommentsForm extends Component {
             id='content'
             className='form-control'
             value={this.state.comment}
-            onChange={FormActions.handleCommentChange}
+            onChange={PostCommentActions.handleCommentChange}
             rows='5' />
           <span className={`help-block`} >{ this.state.message }</span>
         </div>

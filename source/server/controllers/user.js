@@ -92,7 +92,8 @@ module.exports = {
           age: user.age,
           firstName: user.firstName,
           lastName: user.lastName,
-          gender: user.gender
+          gender: user.gender,
+          profilePicture: user.profilePicture
         }
 
         res.status(200).send(userObj)
@@ -105,7 +106,6 @@ module.exports = {
   },
   get: (req, res) => {
     let userId = req.params.userId
-
     User.findById(userId).then(user => {
       if (!user) { return res.status(404).send({message: 'User no longer exists'}) }
 
@@ -114,7 +114,8 @@ module.exports = {
         age: user.age,
         firstName: user.firstName,
         lastName: user.lastName,
-        gender: user.gender
+        gender: user.gender,
+        profilePicture: user.profilePicture
       }
 
       res.status(200).send(userObj)
@@ -174,5 +175,33 @@ module.exports = {
     } else {
       res.status(401).send()
     }
+  },
+  addProfilePicture: (req, res) => {
+    let profilePic = req.file.path.substring(req.file.path.indexOf('\\'))
+    User.findById(req.user._id).then(user => {
+      if (!user) {
+        res.sendStatus(404)
+        return
+      }
+      if (checkIfUserCanEdit(req.user, user._id)) {
+        user.profilePicture = profilePic
+        user.save()
+          .then(() => {
+            res.status(200).send({message: `New profile picture added`})
+          })
+      } else {
+        res.sendStatus(401)
+      }
+    })
   }
+}
+
+function checkIfUserCanEdit (currUser, authorId) {
+  if (currUser._id.toString() === authorId.toString()) {
+    return true
+  }
+  if (currUser.roles.indexOf('Admin') >= 0) {
+    return true
+  }
+  return false
 }

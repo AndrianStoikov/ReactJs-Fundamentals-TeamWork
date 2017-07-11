@@ -15,7 +15,8 @@ class UserStore {
       userAge: '',
       userFirstName: '',
       userLastName: '',
-      userGender: ''
+      userGender: '',
+      userProfilePicture: ''
     }
   }
 
@@ -63,7 +64,8 @@ class UserStore {
     this.profile.userAge = user.age
     this.profile.userFirstName = user.firstName
     this.profile.userLastName = user.lastName
-    this.profile.gender = user.gender
+    this.profile.userGender = user.gender
+    this.profile.userProfilePicture = user.profilePicture
   }
 }
 
