@@ -1,5 +1,5 @@
-import PostAddActions from '../actions/PostAddActions'
-import alt from '../alt'
+import PostAddActions from '../../actions/post-actions/PostAddActions'
+import alt from '../../alt'
 
 class PostAddStore {
   constructor () {

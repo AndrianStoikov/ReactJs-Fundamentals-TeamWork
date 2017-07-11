@@ -32,7 +32,8 @@ export default class PostCard extends React.Component {
             likePost={this.props.likePost}
             unlikePost={this.props.unlikePost}
             postLikes={this.props.post.likes}
-            movieId={this.props.post._id} />
+            postId={this.props.post._id}
+            post={this.props.post} />
         </div>
         {this.state.showCommentsPanel
           ? <PostCommentsPanel comments={this.props.post.comments} postId={this.props.post._id} /> : null}
