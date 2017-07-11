@@ -15,7 +15,7 @@ import ProfilePictureAdd from './components/ProfilePictureAdd'
 import EditComment from './components/post/comments/EditComment'
 import DeleteComment from './components/post/comments/DeleteComment'
 
-const Routes = () => (
+const Routes = (history) => (
   <Switch>
     <Route exact path='/' component={Home} />
     <Route path='/user/profile/:userId' component={UserProfile} />

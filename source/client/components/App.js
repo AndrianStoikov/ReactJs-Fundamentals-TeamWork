@@ -29,9 +29,9 @@ export default class App extends React.Component {
   render () {
     return (
       <div>
-        <Navbar />
-        <Routes />
-        <Footer />
+        <Navbar history={this.props.history}/>
+        <Routes history={this.props.history} />
+        <Footer history={this.props.history}/>
       </div>
     )
   }
