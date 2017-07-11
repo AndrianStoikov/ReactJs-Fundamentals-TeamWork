@@ -5,41 +5,12 @@ import PostCard from '../PostCard'
 import Helpers from '../../../utilities/Helpers'
 
 export default class UserPostsPanel extends React.Component {
-
-  likePost () {
-    let postId = this.props.post._id
-    let request = {
-      url: `/api/post/like/${postId}`,
-      method: 'post'
-    }
-
-    $.ajax(request)
-      .done(() => this.props.getUserPosts())
-  }
-
-  unlikePost () {
-    let postId = this.props.post._id
-    let request = {
-      url: `/api/post/unlike/${postId}`,
-      method: 'post'
-    }
-
-    $.ajax(request)
-      .done(() => this.props.getUserPosts())
-  }
-
   render () {
     let posts = this.props.posts.map((post, index) => {
       let postId = post._id
 
-      let likeRequest = {
-        url: `/api/post/like/${postId}`,
-        method: 'post'
-      }
-      let unlikeRequest = {
-        url: `/api/post/unlike/${postId}`,
-        method: 'post'
-      }
+      let likeRequest = `/api/post/like/${postId}`
+      let unlikeRequest = `/api/post/unlike/${postId}`
 
       return (
         <PostCard
