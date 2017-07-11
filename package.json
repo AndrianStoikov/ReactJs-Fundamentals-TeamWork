@@ -32,6 +32,7 @@
     "passport-local": "^1.0.0",
     "react": "^0.14.9",
     "react-dom": "^0.14.9",
+    "react-paginate": "^4.4.3",
     "react-router": "^1.0.0",
     "react-router-dom": "^4.1.1",
     "request": "^2.65.0",

@@ -6,14 +6,24 @@ class HomeStore {
     this.bindActions(HomeActions)
 
     this.posts = []
+    this.pageCount = 0
+    this.offset = 0
+    this.postsToDisplay = []
   }
 
   onGetUserPostsSuccess (data) {
     this.posts = data
+    this.pageCount = data.length / 10
+    this.postsToDisplay = this.posts.slice(this.offset, this.offset + 10)
   }
 
   onRemovePostsSuccess () {
     this.posts = []
+  }
+
+  onHandlePageChange (offset) {
+    this.offset = offset
+    this.postsToDisplay = this.posts.slice(offset, offset + 10)
   }
 }
 
