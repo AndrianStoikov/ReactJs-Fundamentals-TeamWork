@@ -40,9 +40,6 @@ export default class PostPanelToggles extends React.Component {
           {this.props.showCommentsPanel ? 'Hide' : 'Comments'}
         </a>
         {likeButton}
-        <Link to={`/movie/${this.props.movieId}/review/add`} className='btn btn-warning' >
-          Write review
-        </Link>
       </div>
     )
   }
