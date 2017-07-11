@@ -14,8 +14,10 @@ import AdminPanel from './components/AdminPanel'
 import ProfilePictureAdd from './components/ProfilePictureAdd'
 import EditComment from './components/post/comments/EditComment'
 import DeleteComment from './components/post/comments/DeleteComment'
+import Messenger from './components/messanger/Messenger'
+import MessageThread from './components/messanger/MessageThread'
 
-const Routes = () => (
+const Routes = (history) => (
   <Switch>
     <Route exact path='/' component={Home} />
     <Route path='/user/profile/:userId' component={UserProfile} />
@@ -30,6 +32,8 @@ const Routes = () => (
     <Route exact path='/user/profile-picture/:userId' component={ProfilePictureAdd} />
     <Route path='/comment/edit/:id' component={EditComment} />
     <Route path='/comment/delete/:id' component={DeleteComment} />
+    <Route path='/messenger' component={Messenger} />
+    <Route path='/thread/:otherUserUsername' component={MessageThread} />
     <Route component={Home} />
   </Switch>
 )

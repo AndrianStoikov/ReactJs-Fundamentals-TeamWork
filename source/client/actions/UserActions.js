@@ -15,8 +15,24 @@ class UserActions {
       'getUserOwnPostsFail',
       'getProfileInfoSuccess',
       'logoutUserSuccess',
-      'followUserSuccess'
+      'followUserSuccess',
+      'getUserThreadsSuccess',
+      'getUserThreadsFail'
     )
+  }
+
+  getUserThreads (userId) {
+    // let request = Data.get(`/api/threads`, true)
+    let request = {
+      url: `/api/threads`,
+      method: 'GET',
+      contentType: 'application/json'
+    }
+    $.ajax(request)
+      .done(threads => this.getUserThreadsSuccess(threads))
+      .fail(() => this.getUserThreadsFail())
+
+    return true
   }
 
   getUserOwnPosts (userId) {

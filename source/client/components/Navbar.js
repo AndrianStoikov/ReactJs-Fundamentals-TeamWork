@@ -56,10 +56,13 @@ export default class Navbar extends React.Component {
                 <Link to='/'>Home</Link>
               </li>
               <li>
-                <SearchBar />
+                <SearchBar history={this.props.history}/>
               </li>
               <li>
                 <Link to='/post/add'>AddPost</Link>
+              </li>
+              <li>
+                <Link to='/messenger'>Messenger</Link>
               </li>
               { Auth.isUserAdmin() &&
               <li>
