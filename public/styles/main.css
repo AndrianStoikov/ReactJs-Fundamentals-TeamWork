@@ -7394,7 +7394,7 @@ footer .thumb-md:hover {
 }
 .movie .votes {
   position: absolute;
-  top: 80px;
+  top: 45px;
   right: 33px;
 }
 .movie p {
@@ -8141,4 +8141,8 @@ label {
   left: 20px;
   -webkit-animation-delay: -500ms;
           animation-delay: -500ms;
+}
+
+.user-posts {
+  margin-top: 50pt;
 }

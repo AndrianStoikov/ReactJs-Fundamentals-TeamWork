@@ -1,4 +1,6 @@
 import React from 'react'
+import { Redirect } from 'react-router-dom'
+import Auth from './Auth'
 
 import UserActions from '../actions/UserActions'
 import UserStore from '../stores/UserStore'
@@ -30,6 +32,10 @@ export default class UserProfile extends React.Component {
   }
 
   render () {
+    if (!Auth.isUserAuthenticated()) {
+      return <Redirect to='/' />
+    }
+
     let nodes = {}
     nodes.roles = this.state.roles.map((role, index) => {
       return (
@@ -42,8 +48,6 @@ export default class UserProfile extends React.Component {
     return (
       <div>
         <UserInfo
-          name={this.state.name}
-          roles={this.state.roles}
           profile={this.state.profile} />
         <UserPosts
           posts={this.state.userPosts}

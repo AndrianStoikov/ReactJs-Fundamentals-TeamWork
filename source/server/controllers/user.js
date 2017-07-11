@@ -88,6 +88,7 @@ module.exports = {
         if (!user) { return res.status(404).send({message: 'User no longer exists'}) }
 
         let userObj = {
+          _id: user._id,
           username: user.username,
           age: user.age,
           firstName: user.firstName,
@@ -193,6 +194,26 @@ module.exports = {
         res.sendStatus(401)
       }
     })
+  },
+  follow: (req, res) => {
+    let userId = req.user._id
+    let userToFollow = req.params.id
+
+    User
+      .findByIdAndUpdate(userId, {$addToSet: {follows: userToFollow}}, {new: true})
+      .then((user) => {
+        res.status(200).send(user)
+      })
+  },
+  unfollow: (req, res) => {
+    let userId = req.user._id
+    let userToFollow = req.params.id
+
+    User
+      .findByIdAndUpdate(userId, {$pull: {follows: userToFollow}}, {new: true})
+      .then((user) => {
+        res.status(200).send(user)
+      })
   }
 }
 
@@ -200,8 +221,6 @@ function checkIfUserCanEdit (currUser, authorId) {
   if (currUser._id.toString() === authorId.toString()) {
     return true
   }
-  if (currUser.roles.indexOf('Admin') >= 0) {
-    return true
-  }
-  return false
+
+  return currUser.roles.indexOf('Admin') >= 0;
 }

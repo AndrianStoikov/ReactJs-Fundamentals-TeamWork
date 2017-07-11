@@ -14,7 +14,8 @@ class UserActions {
       'getUserOwnPostsSuccess',
       'getUserOwnPostsFail',
       'getProfileInfoSuccess',
-      'logoutUserSuccess'
+      'logoutUserSuccess',
+      'followUserSuccess'
     )
   }
 

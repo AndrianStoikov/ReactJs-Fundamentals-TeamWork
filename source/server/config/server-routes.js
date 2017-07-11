@@ -30,6 +30,8 @@ module.exports = (app) => {
   app.post('/api/user/makeAdmin', authCheck, controllers.user.makeAdmin)
   app.get('/user/getAdmins', authCheck, controllers.user.getAdmins)
   app.post('/api/user/profile-picture/:userId', authCheck, upload.single('image'), controllers.user.addProfilePicture)
+  app.post('/api/user/follow/:id', authCheck, controllers.user.follow)
+  app.post('/api/user/unfollow/:id', authCheck, controllers.user.unfollow)
 
   app.get('/api/comment/:id', authCheck, controllers.comment.get)
   app.post('/api/comment/edit/:id', authCheck, controllers.comment.edit)
