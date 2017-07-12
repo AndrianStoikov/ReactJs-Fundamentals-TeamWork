@@ -31,6 +31,13 @@ export default class UserProfile extends React.Component {
     UserStore.unlisten(this.onChange)
   }
 
+  componentDidUpdate (nextProps) {
+    if (nextProps.match.params.userId !== this.props.match.params.userId) {
+      UserActions.getUserOwnPosts(this.props.match.params.userId)
+      UserActions.getUserInformation(this.props.match.params.userId)
+    }
+  }
+
   render () {
     if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
