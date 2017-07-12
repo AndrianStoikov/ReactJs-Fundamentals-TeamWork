@@ -25322,6 +25322,7 @@ var UserActions = function () {
       var _this4 = this;
 
       var request = _DataRequests2.default.get('/api/user/' + firstUserId + '/' + secondUserId, true);
+      console.log(firstUserId);
 
       $.ajax(request).done(function (usersData) {
         _this4.getMultipleUserInfoSuccess(usersData);
@@ -26332,7 +26333,7 @@ var Home = function (_React$Component) {
           posts: this.state.postsToDisplay,
           getUserPost: _HomeActions2.default.getUserPosts
         }),
-        _Auth2.default.isUserAuthenticated() && _react2.default.createElement(_reactPaginate2.default, {
+        this.state.posts.lenght < 0 && _react2.default.createElement(_reactPaginate2.default, {
           previousLabel: 'Previous',
           nextLabel: 'Next',
           breakLabel: _react2.default.createElement(
@@ -28069,7 +28070,7 @@ var Messenger = function (_React$Component) {
           { key: thread._id },
           _react2.default.createElement(
             _reactRouterDom.Link,
-            { to: '/thread/' + thread.otherUser },
+            { className: 'list-group-item', to: '/thread/' + thread.otherUser },
             thread.otherUser
           )
         );
@@ -28083,7 +28084,15 @@ var Messenger = function (_React$Component) {
           { className: 'text-center' },
           'Your chats'
         ),
-        threadsRender,
+        _react2.default.createElement(
+          'div',
+          { className: 'col-sm-6 col-sm-offset-3' },
+          _react2.default.createElement(
+            'div',
+            { className: 'list-group' },
+            threadsRender
+          )
+        ),
         _react2.default.createElement(
           'form',
           { onSubmit: this.usernameSubmitHandler, className: 'messenger username-container' },
@@ -29270,7 +29279,7 @@ var NavbarUserMenu = function (_React$Component) {
               _reactBootstrap.DropdownButton,
               { title: 'Profile', id: 'bg-nested-dropdown' },
               _react2.default.createElement(
-                _reactBootstrap.MenuItem,
+                'li',
                 null,
                 _react2.default.createElement(
                   _reactRouterDom.Link,
@@ -29279,7 +29288,7 @@ var NavbarUserMenu = function (_React$Component) {
                 )
               ),
               _react2.default.createElement(
-                _reactBootstrap.MenuItem,
+                'li',
                 null,
                 _react2.default.createElement(
                   _reactRouterDom.Link,
@@ -29289,7 +29298,7 @@ var NavbarUserMenu = function (_React$Component) {
               ),
               _react2.default.createElement('div', { className: 'divider' }),
               _react2.default.createElement(
-                _reactBootstrap.MenuItem,
+                'li',
                 null,
                 _react2.default.createElement(
                   _reactRouterDom.Link,
