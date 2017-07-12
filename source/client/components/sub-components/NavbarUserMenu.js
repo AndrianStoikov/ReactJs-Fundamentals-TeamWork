@@ -1,16 +1,16 @@
 import React from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Auth from '../../components/Auth'
 
 import UserActions from '../../actions/UserActions'
 import UserStore from '../../stores/UserStore'
 
-class NavbarUserMenu extends React.Component {
+export default class NavbarUserMenu extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = UserStore.getState()
-    this.handleLogout = this.handleLogout.bind(this)
+
     this.onChange = this.onChange.bind(this)
   }
 
@@ -65,5 +65,3 @@ class NavbarUserMenu extends React.Component {
     )
   }
 }
-
-export default withRouter(NavbarUserMenu)

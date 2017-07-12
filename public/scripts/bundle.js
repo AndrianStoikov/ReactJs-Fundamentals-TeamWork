@@ -6802,12 +6802,8 @@ var UserActions = function () {
     value: function getUserThreads(userId) {
       var _this = this;
 
-      // let request = Data.get(`/api/threads`, true)
-      var request = {
-        url: '/api/threads',
-        method: 'GET',
-        contentType: 'application/json'
-      };
+      var request = _DataRequests2.default.get('/api/threads', true);
+
       $.ajax(request).done(function (threads) {
         return _this.getUserThreadsSuccess(threads);
       }).fail(function () {
@@ -6832,9 +6828,22 @@ var UserActions = function () {
       return true;
     }
   }, {
+    key: 'getUserInformation',
+    value: function getUserInformation(userId) {
+      var _this3 = this;
+
+      var request = _DataRequests2.default.get('/api/user/' + userId, true);
+
+      $.ajax(request).done(function (userInfo) {
+        return _this3.getProfileInfoSuccess(userInfo);
+      });
+
+      return true;
+    }
+  }, {
     key: 'registerUser',
     value: function registerUser(data) {
-      var _this3 = this;
+      var _this4 = this;
 
       var request = {
         url: '/user/register',
@@ -6844,10 +6853,10 @@ var UserActions = function () {
       };
 
       $.ajax(request).done(function (data) {
-        _this3.registerUserSuccess(data);
+        _this4.registerUserSuccess(data);
       }).fail(function (err) {
         console.log('Error', err);
-        _this3.registerUserFail(err.responseJSON.message);
+        _this4.registerUserFail(err.responseJSON.message);
       });
 
       return true;
@@ -6855,7 +6864,7 @@ var UserActions = function () {
   }, {
     key: 'loginUser',
     value: function loginUser(data) {
-      var _this4 = this;
+      var _this5 = this;
 
       var request = {
         url: '/user/login',
@@ -6865,9 +6874,9 @@ var UserActions = function () {
       };
 
       $.ajax(request).done(function (data) {
-        _this4.loginUserSuccess(data);
+        _this5.loginUserSuccess(data);
       }).fail(function (err) {
-        return _this4.loginUserFail(err.responseJSON);
+        return _this5.loginUserFail(err.responseJSON);
       });
 
       return true;
@@ -6875,7 +6884,7 @@ var UserActions = function () {
   }, {
     key: 'logoutUser',
     value: function logoutUser(history) {
-      var _this5 = this;
+      var _this6 = this;
 
       var request = {
         url: '/user/logout',
@@ -6883,22 +6892,9 @@ var UserActions = function () {
       };
 
       $.ajax(request).done(function () {
-        _this5.logoutUserSuccess();
+        _this6.logoutUserSuccess();
         _HomeActions2.default.removePostsSuccess();
         history.push('/user/login');
-      });
-
-      return true;
-    }
-  }, {
-    key: 'getUserInformation',
-    value: function getUserInformation(userId) {
-      var _this6 = this;
-
-      var request = _DataRequests2.default.get('/api/user/' + userId, true);
-
-      $.ajax(request).done(function (userInfo) {
-        return _this6.getProfileInfoSuccess(userInfo);
       });
 
       return true;
@@ -10592,7 +10588,7 @@ var NavbarUserMenu = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (NavbarUserMenu.__proto__ || Object.getPrototypeOf(NavbarUserMenu)).call(this, props));
 
     _this.state = _UserStore2.default.getState();
-    _this.handleLogout = _this.handleLogout.bind(_this);
+
     _this.onChange = _this.onChange.bind(_this);
     return _this;
   }
@@ -10693,7 +10689,7 @@ var NavbarUserMenu = function (_React$Component) {
   return NavbarUserMenu;
 }(_react2.default.Component);
 
-exports.default = (0, _reactRouterDom.withRouter)(NavbarUserMenu);
+exports.default = NavbarUserMenu;
 
 },{"../../actions/UserActions":81,"../../components/Auth":88,"../../stores/UserStore":138,"react":"react","react-router-dom":57}],118:[function(require,module,exports){
 'use strict';
