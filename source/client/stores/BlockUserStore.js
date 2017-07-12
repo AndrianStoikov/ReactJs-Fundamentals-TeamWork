@@ -13,7 +13,7 @@ class BlockUserStore {
 
   onBlockYourProfileError () {
     this.contentValidationState = 'has-error'
-    this.message = "You cannot block your profile"
+    this.message = 'You cannot block your profile'
     this.formSubmitState = ''
   }
 
@@ -28,13 +28,13 @@ class BlockUserStore {
     this.content = e.target.value
   }
 
-  onUserNotExist(){
+  onUserNotExist () {
     this.contentValidationState = 'has-error'
-    this.message = "This user doesn't exist"
+    this.message = 'This user doesn\'t exist'
     this.formSubmitState = ''
   }
 
-  onBlockUserWhoIsBlockedError(){
+  onBlockUserWhoIsBlockedError () {
     this.contentValidationState = 'has-error'
     this.message = 'This user is blocked'
     this.formSubmitState = ''
@@ -46,7 +46,7 @@ class BlockUserStore {
     this.formSubmitState = ''
   }
 
-  onLoadBlockUserForm(){
+  onLoadBlockUserForm () {
     this.content = ''
     this.contentValidationState = ''
     this.message = ''
