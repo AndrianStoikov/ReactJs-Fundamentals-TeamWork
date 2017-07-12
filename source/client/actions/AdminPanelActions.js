@@ -1,5 +1,6 @@
 import alt from '../alt'
 import Data from '../DataRequests'
+import toastr from 'toastr'
 
 class AdminPanelActions {
   constructor () {
@@ -14,13 +15,16 @@ class AdminPanelActions {
     )
   }
 
-  addPost (data) {
+  addAdmin (data) {
     let request = Data.post('/api/user/makeAdmin', data, true)
     $.ajax(request)
       .done(() => {
         this.makeAdminSuccess()
       })
-      .fail((err) => this.makeAdminFail(err))
+      .fail((err) => {
+        this.makeAdminFail(err)
+        toastr.error(JSON.parse(err.responseText).message)
+      })
 
     return true
   }
