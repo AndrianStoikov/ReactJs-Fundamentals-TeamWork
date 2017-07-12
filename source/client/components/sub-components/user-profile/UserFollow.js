@@ -52,6 +52,10 @@ export default class UserFollow extends Component {
       return <div />
     }
 
+    if (this.props.userId === '') {
+      return <div />
+    }
+
     let followBtn
 
     if (this.isAlreadyFollowed()) {
