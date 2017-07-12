@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
 import FormActions from '../../actions/FormActions'
-// import MovieActions from '../../actions/PostActions'
 import FormStore from '../../stores/FormStore'
 
 export default class PostVotePanel extends Component {
@@ -30,8 +29,6 @@ export default class PostVotePanel extends Component {
       FormActions.scoreValidationFail()
       return
     }
-
-    // MovieActions.addVote(this.props.movieId, this.state.score)
   }
 
   render () {

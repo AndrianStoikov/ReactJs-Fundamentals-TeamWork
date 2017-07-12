@@ -26,9 +26,9 @@ module.exports = (app) => {
   app.post('/api/post/delete/:postId', authCheck, controllers.post.deletePost)
   app.post('/api/post/comments/:postId', authCheck, controllers.post.commentsPost)
 
-  app.get('/api/threads', controllers.thread.getUserThreads)
-  app.get('/api/thread/:username', controllers.thread.getThreadMessages)
-  app.post('/api/message/add/:threadId', controllers.message.addPost)
+  app.get('/api/threads', authCheck, controllers.thread.getUserThreads)
+  app.get('/api/thread/:username', authCheck, controllers.thread.getThreadMessages)
+  app.post('/api/message/add/:threadId', authCheck, controllers.message.addPost)
 
   app.get('/api/user/getByUsername/:username', controllers.user.findUserByUsername.get)
   app.post('/api/user/block/', authCheck, controllers.user.blockUser)
