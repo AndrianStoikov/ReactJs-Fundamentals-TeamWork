@@ -14,7 +14,7 @@ class MessageActions {
     let req = Data.get(`/api/thread/${otherUserUsername}`, true)
     $.ajax(req)
       .done((thread) => this.getThreadMessagesSuccess(thread))
-      .fail(() => this.getThreadMessagesFail())
+      .fail((err) => this.getThreadMessagesFail())
 
     return true
   }
