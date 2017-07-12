@@ -10591,7 +10591,7 @@ var NavbarUserMenu = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (NavbarUserMenu.__proto__ || Object.getPrototypeOf(NavbarUserMenu)).call(this, props));
 
     _this.state = _UserStore2.default.getState();
-    _this.handleLogout = _this.handleLogout.bind(_this);
+
     _this.onChange = _this.onChange.bind(_this);
     return _this;
   }
@@ -10610,12 +10610,6 @@ var NavbarUserMenu = function (_React$Component) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       _UserStore2.default.unlisten(this.onChange);
-    }
-  }, {
-    key: 'handleLogout',
-    value: function handleLogout(e) {
-      _UserActions2.default.logoutUser();
-      this.props.history.push('/user/login');
     }
   }, {
     key: 'render',
@@ -10659,7 +10653,7 @@ var NavbarUserMenu = function (_React$Component) {
             null,
             _react2.default.createElement(
               'a',
-              { href: '#', onClick: this.handleLogout },
+              { href: '#', onClick: _UserActions2.default.logoutUser },
               'Logout'
             )
           )
@@ -10692,7 +10686,7 @@ var NavbarUserMenu = function (_React$Component) {
   return NavbarUserMenu;
 }(_react2.default.Component);
 
-exports.default = (0, _reactRouterDom.withRouter)(NavbarUserMenu);
+exports.default = NavbarUserMenu;
 
 },{"../../actions/UserActions":81,"../../components/Auth":88,"../../stores/UserStore":138,"react":"react","react-router-dom":57}],118:[function(require,module,exports){
 'use strict';
@@ -11058,7 +11052,7 @@ var PostPanelToggles = function (_React$Component) {
         likeButton = _react2.default.createElement(
           'a',
           {
-            className: 'btn btn-primary',
+            className: 'btn btn-default',
             onClick: this.props.unlikePost },
           'Unlike'
         );
@@ -11092,7 +11086,7 @@ var PostPanelToggles = function (_React$Component) {
       }
       return _react2.default.createElement(
         'div',
-        { className: 'pull-right btn-group' },
+        { className: 'pull-right btn-group post-control-panel' },
         _react2.default.createElement(
           _reactRouterDom.Link,
           { to: '/post/comment/' + this.props.postId, className: 'btn btn-primary' },
