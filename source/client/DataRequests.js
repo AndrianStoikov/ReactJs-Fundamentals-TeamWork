@@ -18,7 +18,7 @@ class DataRequests {
   }
 
   static get (url, authenticated) {
-    let headers = {contentType: 'application/json'}
+    let headers = {'Content-Type': 'application/json'}
 
     if (authenticated) {
       headers.Authorization = `bearer ${Auth.getToken()}`
