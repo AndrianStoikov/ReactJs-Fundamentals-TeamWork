@@ -29,9 +29,11 @@ export default class UserProfile extends React.Component {
 
   componentWillUnmount () {
     UserStore.unlisten(this.onChange)
+    UserActions.clearProfileFields()
   }
 
   render () {
+
     if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
     }

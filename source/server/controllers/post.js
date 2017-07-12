@@ -45,6 +45,7 @@ module.exports = {
           Post
             .find({$or: [{author: user._id}, {author: user.follows}]})
             .populate('comments', 'content author', null, {sort: {dateCreated: 1}})
+            .populate('author', 'username')
             .sort('-dateCreated')
             .then((posts) => {
               res.status(200).send(posts)
