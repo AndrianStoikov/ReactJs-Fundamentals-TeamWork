@@ -19,6 +19,9 @@ class HomeStore {
 
   onRemovePostsSuccess () {
     this.posts = []
+    this.pageCount = 0
+    this.offset = 0
+    this.postsToDisplay = []
   }
 
   onHandlePageChange (offset) {

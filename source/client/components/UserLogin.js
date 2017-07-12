@@ -27,6 +27,7 @@ export default class UserLogin extends Component {
 
   componentWillUnmount () {
     FormStore.unlisten(this.onChange)
+    FormActions.clearFields()
   }
 
   handleSubmit (e) {
