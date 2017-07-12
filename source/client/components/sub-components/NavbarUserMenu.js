@@ -39,10 +39,10 @@ export default class NavbarUserMenu extends React.Component {
             </li>
             <li>
               <DropdownButton title='Profile' id='bg-nested-dropdown'>
-                <MenuItem><Link to={`/user/profile/${Auth.getUser()._id}`} >My Profile</Link></MenuItem>
-                <MenuItem><Link to={`/user/profile-picture/${Auth.getUser()._id}`} >Add Profile Picture</Link></MenuItem>
+                <li><Link to={`/user/profile/${Auth.getUser()._id}`} >My Profile</Link></li>
+                <li><Link to={`/user/profile-picture/${Auth.getUser()._id}`} >Add Profile Picture</Link></li>
                 <div className='divider' />
-                <MenuItem><Link to={'/user/block'} >Block user</Link></MenuItem>
+                <li><Link to={'/user/block'} >Block user</Link></li>
               </DropdownButton>
             </li>
             <li>

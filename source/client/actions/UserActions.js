@@ -53,6 +53,7 @@ class UserActions {
 
   getMultipleUserInformation (firstUserId, secondUserId) {
     let request = Data.get(`/api/user/${firstUserId}/${secondUserId}`, true)
+    console.log(firstUserId)
 
     $.ajax(request)
       .done(usersData => {
