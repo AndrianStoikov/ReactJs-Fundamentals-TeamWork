@@ -11,6 +11,7 @@ module.exports = (app) => {
   app.post('/user/register', controllers.user.register.post)
   app.post('/user/login', controllers.user.login.post)
   app.post('/user/logout', controllers.user.logout)
+  app.get(`/api/users/findByName/:username`, authCheck, controllers.user.getByName)
   app.get('/api/user/:userId', controllers.user.profile.get)
   app.get('/api/user/:firstUserId/:secondUserId', controllers.user.profile.getMultiple)
 

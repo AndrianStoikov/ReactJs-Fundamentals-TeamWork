@@ -35957,7 +35957,7 @@ exports.default = _alt2.default.createActions(SearchBarActions);
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35975,26 +35975,26 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var SearchedUserActions = function () {
-    function SearchedUserActions() {
-        _classCallCheck(this, SearchedUserActions);
+  function SearchedUserActions() {
+    _classCallCheck(this, SearchedUserActions);
 
-        this.generateActions();
+    this.generateActions('getUsersSuccess', 'getUserFail');
+  }
+
+  _createClass(SearchedUserActions, [{
+    key: 'getUsers',
+    value: function getUsers(username) {
+      var _this = this;
+
+      var request = _DataRequests2.default.get('/api/users/findByName/' + username, true);
+
+      $.ajax(request).done(function (users) {
+        _this.getUsersSuccess(users);
+      });
     }
+  }]);
 
-    _createClass(SearchedUserActions, [{
-        key: 'getUserPosts',
-        value: function getUserPosts() {
-            //let request = Data.get('/api/posts/all', true)
-            //
-            //$.ajax(request)
-            //    .done(data => this.getUserPostsSuccess(data))
-            //    .fail(err => this.getUserPostsFail(err))
-
-            return true;
-        }
-    }]);
-
-    return SearchedUserActions;
+  return SearchedUserActions;
 }();
 
 exports.default = _alt2.default.createActions(SearchedUserActions);
@@ -37460,7 +37460,7 @@ exports.default = ProfilePictureAdd;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -37469,6 +37469,8 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = require('react-router-dom');
+
 var _SearchedUserStore = require('../stores/SearchedUserStore');
 
 var _SearchedUserStore2 = _interopRequireDefault(_SearchedUserStore);
@@ -37476,10 +37478,6 @@ var _SearchedUserStore2 = _interopRequireDefault(_SearchedUserStore);
 var _SearchedUserActions = require('../actions/SearchedUserActions');
 
 var _SearchedUserActions2 = _interopRequireDefault(_SearchedUserActions);
-
-var _UserPostsPanel = require('../components/sub-components/user-profile/UserPostsPanel');
-
-var _UserPostsPanel2 = _interopRequireDefault(_UserPostsPanel);
 
 var _Auth = require('./Auth');
 
@@ -37494,59 +37492,74 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var SearchedUser = function (_React$Component) {
-    _inherits(SearchedUser, _React$Component);
+  _inherits(SearchedUser, _React$Component);
 
-    function SearchedUser(props) {
-        _classCallCheck(this, SearchedUser);
+  function SearchedUser(props) {
+    _classCallCheck(this, SearchedUser);
 
-        var _this = _possibleConstructorReturn(this, (SearchedUser.__proto__ || Object.getPrototypeOf(SearchedUser)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (SearchedUser.__proto__ || Object.getPrototypeOf(SearchedUser)).call(this, props));
 
-        _this.state = _SearchedUserStore2.default.getState();
+    _this.state = _SearchedUserStore2.default.getState();
 
-        _this.onChange = _this.onChange.bind(_this);
-        return _this;
+    _this.onChange = _this.onChange.bind(_this);
+    return _this;
+  }
+
+  _createClass(SearchedUser, [{
+    key: 'onChange',
+    value: function onChange(state) {
+      this.setState(state);
     }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      _SearchedUserStore2.default.listen(this.onChange);
+      _SearchedUserActions2.default.getUsers(this.props.match.params.username);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      _SearchedUserStore2.default.unlisten(this.onChange);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (!_Auth2.default.isUserAuthenticated()) {
+        return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/user/login' });
+      }
 
-    _createClass(SearchedUser, [{
-        key: 'onChange',
-        value: function onChange(state) {
-            this.setState(state);
-        }
-    }, {
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            _SearchedUserStore2.default.listen(this.onChange);
-        }
-    }, {
-        key: 'componentWillUnmount',
-        value: function componentWillUnmount() {
-            _SearchedUserStore2.default.unlisten(this.onChange);
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            return _react2.default.createElement(
-                'div',
-                { className: 'container' },
-                _react2.default.createElement(
-                    'h3',
-                    { className: 'text-center' },
-                    _react2.default.createElement(
-                        'strong',
-                        null,
-                        ' Tka shte turis usercheta'
-                    )
-                )
-            );
-        }
-    }]);
+      var users = this.state.users.map(function (user) {
+        return _react2.default.createElement(
+          'div',
+          { key: user._id },
+          _react2.default.createElement(
+            _reactRouterDom.Link,
+            { to: '/user/profile/' + user._id, className: 'btn btn-warning' },
+            'Goto profile'
+          ),
+          'Username: ',
+          user.username
+        );
+      });
 
-    return SearchedUser;
+      return _react2.default.createElement(
+        'div',
+        { className: 'container' },
+        _react2.default.createElement(
+          'h3',
+          { className: 'text-center' },
+          users
+        )
+      );
+    }
+  }]);
+
+  return SearchedUser;
 }(_react2.default.Component);
 
 exports.default = SearchedUser;
 
-},{"../actions/SearchedUserActions":334,"../components/sub-components/user-profile/UserPostsPanel":382,"../stores/SearchedUserStore":394,"./Auth":342,"react":"react"}],349:[function(require,module,exports){
+},{"../actions/SearchedUserActions":334,"../stores/SearchedUserStore":394,"./Auth":342,"react":"react","react-router-dom":306}],349:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37749,9 +37762,9 @@ var UserProfile = function (_React$Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      _UserStore2.default.listen(this.onChange);
       _UserActions2.default.getUserOwnPosts(this.props.match.params.userId);
       _UserActions2.default.getUserInformation(this.props.match.params.userId);
+      _UserStore2.default.listen(this.onChange);
     }
   }, {
     key: 'componentWillUnmount',
@@ -41276,7 +41289,7 @@ var Routes = function Routes(history) {
     _react2.default.createElement(_reactRouterDom.Route, { path: '/comment/delete/:id', component: _DeleteComment2.default }),
     _react2.default.createElement(_reactRouterDom.Route, { path: '/messenger', component: _Messenger2.default }),
     _react2.default.createElement(_reactRouterDom.Route, { path: '/thread/:otherUserUsername', component: _MessageThread2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { pat: '/searchUser/:username', component: _SearchedUser2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { path: '/searchUser/:username', component: _SearchedUser2.default }),
     _react2.default.createElement(_reactRouterDom.Route, { component: _Home2.default })
   );
 };
@@ -41983,8 +41996,10 @@ exports.default = _alt2.default.createStore(SearchBarStore);
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _alt = require('../alt');
 
@@ -41998,11 +42013,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var SearchedUserStore = function SearchedUserStore() {
+var SearchedUserStore = function () {
+  function SearchedUserStore() {
     _classCallCheck(this, SearchedUserStore);
 
     this.bindActions(_SearchedUserActions2.default);
-};
+    this.users = [];
+  }
+
+  _createClass(SearchedUserStore, [{
+    key: 'onGetUsersSuccess',
+    value: function onGetUsersSuccess(users) {
+      this.users = users;
+    }
+  }]);
+
+  return SearchedUserStore;
+}();
 
 exports.default = _alt2.default.createStore(SearchedUserStore);
 
