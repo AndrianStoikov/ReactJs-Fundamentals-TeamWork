@@ -31,6 +31,7 @@ export default class UserRegister extends Component {
 
   componentWillUnmount () {
     FormStore.unlisten(this.onChange)
+    FormActions.clearFields()
   }
 
   handleSubmit (e) {

@@ -1,12 +1,12 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import Auth from '../../components/Auth'
 
 import UserActions from '../../actions/UserActions'
 import UserStore from '../../stores/UserStore'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
 
-export default class NavbarUserMenu extends React.Component {
+class NavbarUserMenu extends React.Component {
   constructor (props) {
     super(props)
 
@@ -51,7 +51,7 @@ export default class NavbarUserMenu extends React.Component {
               </DropdownButton>
             </li>
             <li>
-              <a href='#' onClick={this.handleLogout} >Logout</a>
+              <a href='#' onClick={this.handleLogout.bind(this)} >Logout</a>
             </li>
           </ul>
         ) : (
@@ -68,3 +68,5 @@ export default class NavbarUserMenu extends React.Component {
     )
   }
 }
+
+export default withRouter(NavbarUserMenu)

@@ -32,6 +32,12 @@ class FormStore {
 
     this.formSubmitState = 'has-success'
     this.username = ''
+    this.password = ''
+    this.confirmedPassword = ''
+    this.firstName = ''
+    this.lastName = ''
+    this.age = ''
+    this.gender = ''
     this.usernameValidationState = ''
     this.passwordValidationState = ''
     this.message = 'User register success'
@@ -92,6 +98,13 @@ class FormStore {
   }
 
   onLoginUserSuccess () {
+    this.username = ''
+    this.password = ''
+    this.confirmedPassword = ''
+    this.firstName = ''
+    this.lastName = ''
+    this.age = ''
+    this.gender = ''
     this.formSubmitState = 'has-success'
     this.usernameValidationState = ''
     this.passwordValidationState = ''
@@ -113,6 +126,27 @@ class FormStore {
   }
 
   onLogoutUserSuccess () {
+    this.username = ''
+    this.password = ''
+    this.confirmedPassword = ''
+    this.firstName = ''
+    this.lastName = ''
+    this.age = ''
+    this.gender = ''
+    this.formSubmitState = ''
+    this.usernameValidationState = ''
+    this.passwordValidationState = ''
+    this.message = ''
+  }
+
+  onClearFields () {
+    this.username = ''
+    this.password = ''
+    this.confirmedPassword = ''
+    this.firstName = ''
+    this.lastName = ''
+    this.age = ''
+    this.gender = ''
     this.formSubmitState = ''
     this.usernameValidationState = ''
     this.passwordValidationState = ''
