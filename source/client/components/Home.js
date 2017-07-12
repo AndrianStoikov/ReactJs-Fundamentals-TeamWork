@@ -47,7 +47,7 @@ export default class Home extends React.Component {
           posts={this.state.postsToDisplay}
           getUserPost={HomeActions.getUserPosts}
         />
-        { Auth.isUserAuthenticated() &&
+        { this.state.posts.lenght < 0 &&
         <ReactPaginate
           previousLabel={'Previous'}
           nextLabel={'Next'}

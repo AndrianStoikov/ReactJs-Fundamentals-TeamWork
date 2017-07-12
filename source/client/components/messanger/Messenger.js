@@ -57,7 +57,7 @@ class Messenger extends React.Component {
       }
       return (
         <div key={thread._id}>
-          <Link to={`/thread/${thread.otherUser}`}>{thread.otherUser}</Link>
+          <Link className='list-group-item' to={`/thread/${thread.otherUser}`}>{thread.otherUser}</Link>
         </div>
       )
     })
@@ -66,7 +66,11 @@ class Messenger extends React.Component {
       <div className='container' >
         <h3 className='text-center' >Your chats
         </h3>
-        {threadsRender}
+        <div className='col-sm-6 col-sm-offset-3'>
+          <div className='list-group'>
+            {threadsRender}
+          </div>
+        </div>
         <form onSubmit={this.usernameSubmitHandler} className='messenger username-container'>
           <h1>Messenger</h1>
           <div>

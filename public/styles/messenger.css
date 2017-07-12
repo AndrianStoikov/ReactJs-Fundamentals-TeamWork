@@ -176,3 +176,20 @@
   border-radius: 45px;
   margin-left: 10px;
 }
+
+.post-control-panel {
+  margin-top: 15px;
+}
+
+profile-container {
+  background-color: #3e3f3a;
+}
+
+.dropdown-toggle {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.post-input-field {
+  min-height: 100px;
+}
