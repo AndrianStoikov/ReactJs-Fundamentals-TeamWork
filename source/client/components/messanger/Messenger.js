@@ -2,7 +2,7 @@ import React from 'react'
 import MessageStore from '../../stores/messenger-stores/MessengerStore'
 import UserActions from '../../actions/UserActions'
 import Messages from './Messages'
-import MessageInput from '../sub-components/Message-input'
+import MessageInput from './Message-input'
 import MessageThread from './MessageThread'
 import { Link, Redirect } from 'react-router-dom'
 import Auth from '../Auth'
@@ -46,7 +46,6 @@ class Messenger extends React.Component {
       // Form was submitted, now show the main App
       return (
         <Redirect to={`/thread/${this.state.username}`} />
-        // <MessageThread username={this.state.username} />
       )
     }
 
@@ -57,32 +56,28 @@ class Messenger extends React.Component {
         thread.otherUser = thread.users[0]
       }
       return (
-        <div>
-          <Link className='list-group-item' key={thread._id} to={`/thread/${thread.otherUser}`}>{thread.otherUser}</Link>
+        <div key={thread._id}>
+          <Link to={`/thread/${thread.otherUser}`}>{thread.otherUser}</Link>
         </div>
       )
     })
 
     return (
       <div className='container' >
-        <h3 className='text-center' >Messenger
+        <h3 className='text-center' >Your chats
         </h3>
-        <div className='col-sm-8'>
-          <div className='list-group'>
-            {threadsRender}
+        {threadsRender}
+        <form onSubmit={this.usernameSubmitHandler} className='messenger username-container'>
+          <h1>Messenger</h1>
+          <div>
+            <input
+              type='text'
+              onChange={this.usernameChangeHandler}
+              placeholder='Enter a username...'
+              required />
           </div>
-          <form onSubmit={this.usernameSubmitHandler} className='username-container'>
-            <div className='form-group'>
-              <input
-                type='text'
-                onChange={this.usernameChangeHandler}
-                placeholder='Enter a username...'
-                required
-                className='form-control' />
-            </div>
-            <input type='submit' value='Submit' className='btn btn-default' />
-          </form>
-        </div>
+          <input type='submit' value='Chat now' />
+        </form>
       </div>
     )
   }

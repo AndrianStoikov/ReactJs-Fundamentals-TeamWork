@@ -16,7 +16,6 @@ module.exports = {
           .findByIdAndUpdate(threadId, { $push: { 'messages': message._id } }, {new: true})
           .populate('messages')
           .then((thread) => {
-            console.log(thread.messages)
             res.status(200).send(thread)
           })
       })

@@ -56,6 +56,7 @@ module.exports = {
               Thread
                 .create({
                   users: [currUser, otherUser],
+                  userIds: [req.user._id, userFound._id],
                   messages: []
                 })
                 .then((thread) => {

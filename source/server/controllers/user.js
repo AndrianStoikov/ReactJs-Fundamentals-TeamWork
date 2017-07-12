@@ -99,6 +99,46 @@ module.exports = {
 
         res.status(200).send(userObj)
       })
+    },
+    getMultiple: (req, res) => {
+      let firstUserId = req.params.firstUserId
+      let secondUserId = req.params.secondUserId
+
+      User.findById(firstUserId)
+        .then(firstUser => {
+          if (!firstUser) {
+            return res.status(404).send({message: 'User no longer exists'})
+          }
+          let firstUserObj = {
+            _id: firstUser._id,
+            username: firstUser.username,
+            age: firstUser.age,
+            firstName: firstUser.firstName,
+            lastName: firstUser.lastName,
+            gender: firstUser.gender,
+            profilePicture: firstUser.profilePicture
+          }
+          User.findById(secondUserId)
+            .then(secondUser => {
+              if (!secondUser) {
+                return res.status(404).send({message: 'User no longer exists'})
+              }
+              let secondUserObj = {
+                _id: secondUser._id,
+                username: secondUser.username,
+                age: secondUser.age,
+                firstName: secondUser.firstName,
+                lastName: secondUser.lastName,
+                gender: secondUser.gender,
+                profilePicture: secondUser.profilePicture
+              }
+              let users = {
+                firstUser: firstUserObj,
+                secondUser: secondUserObj
+              }
+              res.status(200).send(users)
+            })
+        })
     }
   },
   logout: (req, res) => {
