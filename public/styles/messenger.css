@@ -134,9 +134,10 @@
 
 .message {
   margin-bottom: 20px;
+  position: relative;
 }
 .message-body {
-  max-width: 80%;
+  max-width: 50%;
   display: inline-block;
   padding: 20px;
   background-color: #83c6ee;
@@ -144,10 +145,34 @@
   border-radius: 5px;
   padding-right: 50px;
 }
+.message-body p {
+  word-wrap: break-word;
+}
 
 .messenger-username {
   font-weight: bold;
   font-size: 1.2rem;
   color: #999;
   margin-bottom: 5px;
+  margin-left: 45px;
+}
+
+.messenger-pic {
+  display: inline-block;
+  border: 1px;
+  bottom: 2px;
+}
+
+.messenger-pic img{
+  width: 32px;
+  height: 32px;
+  border-radius: 45px;
+  margin-right: 10px;
+}
+
+.from-me .messenger-pic img{
+  width: 32px;
+  height: 32px;
+  border-radius: 45px;
+  margin-left: 10px;
 }
