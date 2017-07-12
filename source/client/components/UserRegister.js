@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import {Redirect} from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
+import Auth from './Auth'
 
 import FormActions from '../actions/FormActions'
 import UserActions from '../actions/UserActions'
 
 import FormStore from '../stores/FormStore'
-import UserStore from '../stores/UserStore'
 
 import Form from './form/Form'
 import TextGroup from './form/TextGroup'
@@ -58,7 +58,7 @@ export default class UserRegister extends Component {
   }
 
   render () {
-    if (UserStore.getState().loggedInUserId !== '') {
+    if (Auth.isUserAuthenticated()) {
       return <Redirect to='/' />
     }
 

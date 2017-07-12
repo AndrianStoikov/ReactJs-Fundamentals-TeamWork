@@ -1,4 +1,5 @@
 const Post = require('../models/Post')
+const User = require('../models/User')
 const Comment = require('../models/Comment')
 
 module.exports = {
@@ -8,7 +9,7 @@ module.exports = {
       .findById(postId)
       .populate('comments', 'content', null, {sort: {dateCreated: 1}})
       .then((post) => {
-        if(post === null) {
+        if (post === null) {
           res.status(400).send({message: 'Post not found.'})
         }
         res.status(200).send(post)
@@ -37,12 +38,17 @@ module.exports = {
       }
 
       let userId = req.user._id
-      Post
-        .find({author: userId})
-        .populate('comments', 'content', null, {sort: {dateCreated: 1}})
-        .sort('-dateCreated')
-        .then((posts) => {
-          res.status(200).send(posts)
+
+      User
+        .findById(userId)
+        .then((user) => {
+          Post
+            .find({$or: [{author: user._id}, {author: user.follows}]})
+            .populate('comments', 'content', null, {sort: {dateCreated: 1}})
+            .sort('-dateCreated')
+            .then((posts) => {
+              res.status(200).send(posts)
+            })
         })
     }
   },
