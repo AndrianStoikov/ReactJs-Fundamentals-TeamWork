@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Auth from '../../components/Auth'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import PostDeleteStore from '../../stores/PostDeleteStore'
 import PostDeleteActions from '../../actions/PostDeleteActions'
 import Form from '../form/Form'
@@ -59,6 +59,8 @@ export default class PostDelete extends Component {
         <Submit
           type='btn-danger'
           value='Delete Post' />
+
+        <Link className='btn btn-default' to='/'>Cancel</Link>
 
       </Form>
     )
