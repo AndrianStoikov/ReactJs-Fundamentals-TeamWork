@@ -36524,8 +36524,12 @@ var AdminPanel = function (_Component) {
       var admins = this.state.admins.map(function (admin, index) {
         return _react2.default.createElement(
           'li',
-          { key: admin._id, className: 'list-group-item' },
-          admin.username
+          { key: admin._id },
+          _react2.default.createElement(
+            _reactRouterDom.Link,
+            { className: 'list-group-item', to: '/user/profile/' + admin._id },
+            admin.username
+          )
         );
       });
 
@@ -36571,7 +36575,7 @@ var AdminPanel = function (_Component) {
                   { className: 'panel-body' },
                   _react2.default.createElement(
                     'ul',
-                    { className: 'list-group' },
+                    { className: 'list-group list-unstyled' },
                     admins
                   )
                 )
@@ -37538,7 +37542,8 @@ var SearchedUser = function (_React$Component) {
             'Goto profile'
           ),
           'Username: ',
-          user.username
+          user.username,
+          _react2.default.createElement('div', { id: 'clear' })
         );
       });
 
@@ -37771,6 +37776,14 @@ var UserProfile = function (_React$Component) {
     value: function componentWillUnmount() {
       _UserStore2.default.unlisten(this.onChange);
       _UserActions2.default.clearProfileFields();
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(nextProps) {
+      if (nextProps.match.params.userId !== this.props.match.params.userId) {
+        _UserActions2.default.getUserOwnPosts(this.props.match.params.userId);
+        _UserActions2.default.getUserInformation(this.props.match.params.userId);
+      }
     }
   }, {
     key: 'render',
@@ -39147,7 +39160,12 @@ var PostAdd = function (_Component) {
           additionalClass: 'post-input-field' }),
         _react2.default.createElement(_Submit2.default, {
           type: 'btn-primary',
-          value: 'Post' })
+          value: 'Post' }),
+        _react2.default.createElement(
+          _reactRouterDom.Link,
+          { className: 'btn btn-default', to: '/' },
+          'Cancel'
+        )
       );
     }
   }]);
@@ -40691,7 +40709,7 @@ var PostPanelToggles = function (_React$Component) {
 
       var editMovie = void 0;
       var deleteMovie = void 0;
-      if (this.props.post.author === _Auth2.default.getUser()._id || _Auth2.default.isUserAdmin()) {
+      if (this.props.post.author._id === _Auth2.default.getUser()._id || _Auth2.default.isUserAdmin()) {
         editMovie = _react2.default.createElement(
           _reactRouterDom.Link,
           {
@@ -40867,7 +40885,7 @@ var UserFollow = function (_Component) {
       } else {
         followBtn = _react2.default.createElement(
           'a',
-          { onClick: this.followUser.bind(this), className: 'btn btn-warning' },
+          { onClick: this.followUser.bind(this), className: 'btn btn-success' },
           'Follow User'
         );
       }

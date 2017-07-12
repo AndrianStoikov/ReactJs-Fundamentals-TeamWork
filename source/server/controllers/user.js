@@ -258,7 +258,7 @@ module.exports = {
   getByName: (req, res) => {
     let username = req.params.username
     User
-      .find({username: username})
+      .find({username: {$regex: '^' + username}})
       .then((users) => {
         for (let user of users) {
           delete user.password
