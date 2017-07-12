@@ -1,4 +1,5 @@
 import React from 'react'
+import { Redirect } from 'react-router-dom'
 import Messages from './Messages'
 import MessageInput from './Message-input'
 import MessageThreadStore from '../../stores/messenger-stores/MessageThreadStore'
@@ -17,7 +18,7 @@ class MessageThread extends React.Component {
     this.setState(state)
   }
 
-  componentDidMount () {
+  componentWillMount () {
     MessageThreadStore.listen(this.onChange)
     if (this.props.username === 'Anonymous') {
       MessageActions.getThreadMessages(this.props.match.params.otherUserUsername)
@@ -30,7 +31,6 @@ class MessageThread extends React.Component {
     const threadId = this.state.threadId
     MessageActions.sendMessage(message, threadId)
   }
-
 
   componentWillUnmount () {
     MessageThreadStore.unlisten(this.onChange)
