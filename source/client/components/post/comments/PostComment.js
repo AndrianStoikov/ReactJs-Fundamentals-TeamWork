@@ -51,9 +51,11 @@ export default class PostComment extends Component {
       <div>
         <PostDetails post={this.state.post} />
         <div className='list-group' >
-          <h3 className='col-sm-3' >Comments:</h3>
+          <div className='col-xs-12'>
+            <h3 className='col-sm-3' >Comments:</h3>
+          </div>
           { comments }
-          <div className='col-sm-6 col-xs-offset-6 list-group-item animated fadeIn' >
+          <div className='col-sm-8 list-group-item animated fadeIn' >
             <div className='media' >
               <CommentForm postId={this.state.post} />
             </div>

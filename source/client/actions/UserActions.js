@@ -1,5 +1,6 @@
 import alt from '../alt'
 import Data from '../DataRequests'
+import toastr from 'toastr'
 
 import HomeActions from './HomeActions'
 
@@ -75,8 +76,12 @@ class UserActions {
         this.registerUserSuccess(data)
       })
       .fail(err => {
-        console.log('Error', err)
-        this.registerUserFail(err.responseJSON.message)
+        if (err.responseJSON.message.message) {
+          toastr.error(err.responseJSON.message.message)
+        } else {
+          toastr.error(err.responseJSON.message.errmsg)
+        }
+        this.registerUserFail(err.responseJSON.message.message)
       })
 
     return true
@@ -94,7 +99,10 @@ class UserActions {
       .done(data => {
         this.loginUserSuccess(data)
       })
-      .fail(err => this.loginUserFail(err.responseJSON))
+      .fail(err => {
+        toastr.error(JSON.parse(err.responseText).message)
+        this.loginUserFail(err.responseJSON)
+      })
 
     return true
   }
@@ -107,6 +115,7 @@ class UserActions {
 
     $.ajax(request)
       .done(() => {
+        toastr.success('Logged Out')
         this.logoutUserSuccess()
         HomeActions.removePostsSuccess()
         history.push('/user/login')
