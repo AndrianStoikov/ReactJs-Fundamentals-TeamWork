@@ -254,6 +254,18 @@ module.exports = {
       .then((user) => {
         res.status(200).send(user)
       })
+  },
+  getByName: (req, res) => {
+    let username = req.params.username
+    User
+      .find({username: username})
+      .then((users) => {
+        for (let user of users) {
+          delete user.password
+          delete user.salt
+        }
+        res.status(200).send(users)
+      })
   }
 }
 
@@ -262,5 +274,5 @@ function checkIfUserCanEdit (currUser, authorId) {
     return true
   }
 
-  return currUser.roles.indexOf('Admin') >= 0;
+  return currUser.roles.indexOf('Admin') >= 0
 }

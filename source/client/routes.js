@@ -35,7 +35,7 @@ const Routes = (history) => (
     <Route path='/comment/delete/:id' component={DeleteComment} />
     <Route path='/messenger' component={Messenger} />
     <Route path='/thread/:otherUserUsername' component={MessageThread} />
-      <Route pat='/searchUser/:username' component={SearchedUser}/>
+    <Route path='/searchUser/:username' component={SearchedUser} />
     <Route component={Home} />
   </Switch>
 )

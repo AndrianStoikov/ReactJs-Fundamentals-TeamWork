@@ -2,19 +2,21 @@ import alt from '../alt'
 import Data from '../DataRequests'
 
 class SearchedUserActions {
-    constructor () {
-        this.generateActions()
-    }
+  constructor () {
+    this.generateActions(
+      'getUsersSuccess',
+      'getUserFail'
+    )
+  }
 
-    getUserPosts () {
-        //let request = Data.get('/api/posts/all', true)
-        //
-        //$.ajax(request)
-        //    .done(data => this.getUserPostsSuccess(data))
-        //    .fail(err => this.getUserPostsFail(err))
+  getUsers(username) {
+    let request = Data.get(`/api/users/findByName/${username}`, true)
 
-        return true
-    }
+    $.ajax(request)
+      .done((users) => {
+        this.getUsersSuccess(users)
+      })
+  }
 }
 
 export default alt.createActions(SearchedUserActions)
