@@ -37,7 +37,7 @@ export default class AdminPanel extends Component {
       return
     }
 
-    AdminPanelActions.addPost({ 'userForAdmin': userForAdmin })
+    AdminPanelActions.addAdmin({ 'userForAdmin': userForAdmin })
   }
 
   render () {

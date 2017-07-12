@@ -51,7 +51,7 @@ export default class NavbarUserMenu extends React.Component {
               </DropdownButton>
             </li>
             <li>
-              <a onClick={this.handleLogout} >Logout</a>
+              <a href='#' onClick={this.handleLogout} >Logout</a>
             </li>
           </ul>
         ) : (
