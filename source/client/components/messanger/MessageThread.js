@@ -3,7 +3,7 @@ import Messages from './Messages'
 import MessageInput from './Message-input'
 import MessageThreadStore from '../../stores/messenger-stores/MessageThreadStore'
 import MessageActions from '../../actions/MessageActions'
-
+import Auth from '../Auth'
 class MessageThread extends React.Component {
   constructor (props) {
     super(props)
@@ -42,6 +42,9 @@ class MessageThread extends React.Component {
   }
 
   render () {
+    if (!Auth.isUserAuthenticated()) {
+      return <Redirect to='/user/login' />
+    }
     return (
       <div className="messenger-container">
         <h3>Chat with <b>{this.props.match.params.otherUserUsername}</b></h3>
