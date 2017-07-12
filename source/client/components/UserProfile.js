@@ -22,9 +22,9 @@ export default class UserProfile extends React.Component {
   }
 
   componentDidMount () {
-    UserStore.listen(this.onChange)
     UserActions.getUserOwnPosts(this.props.match.params.userId)
     UserActions.getUserInformation(this.props.match.params.userId)
+    UserStore.listen(this.onChange)
   }
 
   componentWillUnmount () {
