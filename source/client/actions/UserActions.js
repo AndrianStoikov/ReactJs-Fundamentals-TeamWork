@@ -53,7 +53,6 @@ class UserActions {
 
   getMultipleUserInformation (firstUserId, secondUserId) {
     let request = Data.get(`/api/user/${firstUserId}/${secondUserId}`, true)
-    console.log(firstUserId)
 
     $.ajax(request)
       .done(usersData => {
@@ -100,7 +99,7 @@ class UserActions {
     return true
   }
 
-  logoutUser () {
+  logoutUser (history) {
     let request = {
       url: '/user/logout',
       method: 'post'
@@ -110,6 +109,7 @@ class UserActions {
       .done(() => {
         this.logoutUserSuccess()
         HomeActions.removePostsSuccess()
+        history.push('/user/login')
       })
 
     return true
