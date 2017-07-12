@@ -10,7 +10,7 @@ class MessageInput extends React.Component {
     this.textChangeHandler = this.textChangeHandler.bind(this)
   }
 
-  submitHandler(event) {
+  submitHandler (event) {
     // Stop the form from refreshing the page on submit
     event.preventDefault()
 
@@ -27,14 +27,14 @@ class MessageInput extends React.Component {
 
   render () {
     return (
-      <form className="chat-input" onSubmit={this.submitHandler}>
+      <form className='messenger-chat-input' onSubmit={this.submitHandler}>
         <input type="text"
                onChange={this.textChangeHandler}
                value={this.state.chatInput}
                placeholder="Write a message..."
                required />
       </form>
-    );
+    )
   }
 }
 
