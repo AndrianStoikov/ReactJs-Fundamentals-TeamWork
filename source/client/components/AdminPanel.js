@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import Auth from '../components/Auth'
 import AdminPanelStore from '../stores/AdminPanelStore'
 import AdminPanelActions from '../actions/AdminPanelActions'
@@ -51,8 +51,8 @@ export default class AdminPanel extends Component {
 
     let admins = this.state.admins.map((admin, index) => {
       return (
-        <li key={admin._id} className='list-group-item'>
-          {admin.username}
+        <li key={admin._id}>
+          <Link className='list-group-item' to={`/user/profile/${admin._id}`}>{admin.username}</Link>
         </li>
       )
     })
@@ -83,7 +83,7 @@ export default class AdminPanel extends Component {
               <div className='panel panel-default' >
                 <div className='panel-heading' >Current admins</div>
                 <div className='panel-body' >
-                  <ul className='list-group'>
+                  <ul className='list-group list-unstyled'>
                     {admins}
                   </ul>
                 </div>
