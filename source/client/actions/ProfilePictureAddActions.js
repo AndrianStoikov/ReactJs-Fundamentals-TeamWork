@@ -8,7 +8,8 @@ class ProfilePictureAddActions {
       'handleContentChange',
       'contentValidationFail',
       'addProfilePictureSuccess',
-      'addProfilePictureFail'
+      'addProfilePictureFail',
+      'loadProfilePictureForm'
     )
   }
 

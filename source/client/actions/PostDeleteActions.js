@@ -1,5 +1,6 @@
 import alt from '../alt'
 import Data from '../DataRequests'
+import toastr from 'toastr'
 
 class PostDeleteActions {
   constructor () {
@@ -7,7 +8,8 @@ class PostDeleteActions {
       'deletePostSuccess',
       'deletePostFail',
       'getDeletePostInfoFail',
-      'getDeletePostInfoSuccess'
+      'getDeletePostInfoSuccess',
+      'resetPostDeleteForm'
     )
   }
 
@@ -31,6 +33,7 @@ class PostDeleteActions {
 
     $.ajax(request)
       .done((data) => {
+        toastr.info('Post deleted')
         this.deletePostSuccess(data)
       })
       .fail((err) => {

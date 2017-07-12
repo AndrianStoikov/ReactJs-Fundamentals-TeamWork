@@ -10,16 +10,23 @@ class ProfilePictureAddStore {
     this.contentValidationState = ''
     this.message = ''
     this.formSubmitState = ''
+    this.redirect = false
   }
 
   onAddProfilePictureSuccess (data) {
     this.message = 'Profile picture added'
     this.image = ''
+    this.redirect = true
   }
 
   onAddProfilePictureFail (err) {
     this.message = 'Failed to add profile picture'
     console.log('Failed to add profile picture', err)
+  }
+
+  onLoadProfilePictureForm () {
+    this.redirect = false
+    this.message = ''
   }
 
   onHandleContentChange (e) {

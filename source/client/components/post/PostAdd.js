@@ -20,11 +20,11 @@ export default class PostAdd extends Component {
 
   componentDidMount () {
     PostAddStore.listen(this.onChange)
-    PostAddActions.loadPostAddForm()
   }
 
   componentWillUnmount () {
     PostAddStore.unlisten(this.onChange)
+    PostAddActions.resetPostAddForm()
   }
 
   handleSubmit (e) {
@@ -42,6 +42,10 @@ export default class PostAdd extends Component {
   render () {
     if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
+    }
+
+    if (this.state.redirect === true) {
+      return <Redirect to='/' />
     }
 
     return (
