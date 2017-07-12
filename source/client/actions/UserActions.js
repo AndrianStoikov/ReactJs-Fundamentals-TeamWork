@@ -21,12 +21,8 @@ class UserActions {
   }
 
   getUserThreads (userId) {
-    // let request = Data.get(`/api/threads`, true)
-    let request = {
-      url: `/api/threads`,
-      method: 'GET',
-      contentType: 'application/json'
-    }
+    let request = Data.get(`/api/threads`, true)
+
     $.ajax(request)
       .done(threads => this.getUserThreadsSuccess(threads))
       .fail(() => this.getUserThreadsFail())
@@ -40,6 +36,15 @@ class UserActions {
     $.ajax(req)
       .done(posts => this.getUserOwnPostsSuccess(posts))
       .fail(() => this.getUserOwnPostsFail())
+
+    return true
+  }
+
+  getUserInformation (userId) {
+    let request = Data.get(`/api/user/${userId}`, true)
+
+    $.ajax(request)
+      .done(userInfo => this.getProfileInfoSuccess(userInfo))
 
     return true
   }
@@ -92,14 +97,6 @@ class UserActions {
         this.logoutUserSuccess()
         HomeActions.removePostsSuccess()
       })
-
-    return true
-  }
-  getUserInformation (userId) {
-    let request = Data.get(`/api/user/${userId}`, true)
-
-    $.ajax(request)
-      .done(userInfo => this.getProfileInfoSuccess(userInfo))
 
     return true
   }
