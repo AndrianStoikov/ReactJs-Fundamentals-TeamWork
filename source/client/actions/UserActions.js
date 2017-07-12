@@ -19,7 +19,8 @@ class UserActions {
       'logoutUserSuccess',
       'followUserSuccess',
       'getUserThreadsSuccess',
-      'getUserThreadsFail'
+      'getUserThreadsFail',
+      'clearProfileFields'
     )
   }
 

@@ -29,6 +29,7 @@ export default class UserProfile extends React.Component {
 
   componentWillUnmount () {
     UserStore.unlisten(this.onChange)
+    UserActions.clearProfileFields()
   }
 
   componentDidUpdate (nextProps) {
@@ -39,6 +40,7 @@ export default class UserProfile extends React.Component {
   }
 
   render () {
+
     if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
     }
