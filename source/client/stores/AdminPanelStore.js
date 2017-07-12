@@ -18,11 +18,9 @@ class AdminPanelStore {
 
   onGetAdminsSuccess (data) {
     this.admins = data
-    console.log(data)
   }
 
   onMakeAdminSuccess (post) {
-    console.log('Added post')
     this.userForAdmin = ''
     this.contentValidationState = ''
     this.message = 'Admin added'

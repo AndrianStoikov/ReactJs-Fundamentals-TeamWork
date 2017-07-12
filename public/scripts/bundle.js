@@ -25322,7 +25322,6 @@ var UserActions = function () {
       var _this4 = this;
 
       var request = _DataRequests2.default.get('/api/user/' + firstUserId + '/' + secondUserId, true);
-      console.log(firstUserId);
 
       $.ajax(request).done(function (usersData) {
         _this4.getMultipleUserInfoSuccess(usersData);
@@ -26509,7 +26508,7 @@ var Navbar = function (_React$Component) {
               _react2.default.createElement(
                 _reactRouterDom.Link,
                 { to: '/post/add' },
-                'AddPost'
+                'Add Post'
               )
             ),
             _react2.default.createElement(
@@ -28403,9 +28402,9 @@ var _Form = require('../form/Form');
 
 var _Form2 = _interopRequireDefault(_Form);
 
-var _TextGroup = require('../form/TextGroup');
+var _TextArea = require('../form/TextArea');
 
-var _TextGroup2 = _interopRequireDefault(_TextGroup);
+var _TextArea2 = _interopRequireDefault(_TextArea);
 
 var _Submit = require('../form/Submit');
 
@@ -28478,12 +28477,13 @@ var PostEdit = function (_Component) {
           handleSubmit: this.handleSubmit.bind(this),
           submitState: this.state.formSubmitState,
           message: this.state.message },
-        _react2.default.createElement(_TextGroup2.default, {
+        _react2.default.createElement(_TextArea2.default, {
           type: 'text',
           value: this.state.content,
           label: 'Your Post',
           handleChange: _PostEditActions2.default.handleContentChange,
-          validationState: this.state.contentValidationState }),
+          validationState: this.state.contentValidationState,
+          additionalClass: 'post-input-field' }),
         _react2.default.createElement(_Submit2.default, {
           type: 'btn-primary',
           value: 'Edit Post' })
@@ -28496,7 +28496,7 @@ var PostEdit = function (_Component) {
 
 exports.default = PostEdit;
 
-},{"../../actions/post-actions/PostEditActions":335,"../../components/Auth":339,"../../stores/post-stores/PostEditStore":396,"../form/Form":348,"../form/Submit":352,"../form/TextGroup":354,"react":"react","react-router-dom":305}],363:[function(require,module,exports){
+},{"../../actions/post-actions/PostEditActions":335,"../../components/Auth":339,"../../stores/post-stores/PostEditStore":396,"../form/Form":348,"../form/Submit":352,"../form/TextArea":353,"react":"react","react-router-dom":305}],363:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30367,12 +30367,10 @@ var AdminPanelStore = function () {
     key: 'onGetAdminsSuccess',
     value: function onGetAdminsSuccess(data) {
       this.admins = data;
-      console.log(data);
     }
   }, {
     key: 'onMakeAdminSuccess',
     value: function onMakeAdminSuccess(post) {
-      console.log('Added post');
       this.userForAdmin = '';
       this.contentValidationState = '';
       this.message = 'Admin added';
