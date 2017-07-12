@@ -1,4 +1,5 @@
 const Comment = require('../models/Comment')
+const User = require('../models/User')
 
 module.exports = {
   getPostComments: {
@@ -39,22 +40,46 @@ module.exports = {
       })
   },
   edit: (req, res) => {
-    let content = req.body
+    let commentEditor = req.user._id
+    let content = req.body.content
     let commentId = req.params.id
 
-    Comment
-      .findByIdAndUpdate(commentId, {content: content.content})
-      .then((comment) => {
-        res.status(200).send(comment)
+    User
+      .findById(commentEditor)
+      .then((user) => {
+        Comment
+          .findById(commentId)
+          .then((comment) => {
+            if (user.roles.indexOf('Admin') > -1) {
+              comment.content = content
+              comment.save().then(() => res.status(200).send(comment))
+            } else if (user._id.toString() === comment.author.toString()) {
+              comment.content = content
+              comment.save().then(() => res.status(200).send(comment))
+            } else {
+              res.status(401).send({message: 'Cannot edit comment'})
+            }
+          })
       })
   },
   delete: (req, res) => {
+    let commentEditor = req.user._id
     let commentId = req.params.id
 
-    Comment
-      .findByIdAndRemove(commentId)
-      .then(() => {
-        res.status(200).end()
+    User
+      .findById(commentEditor)
+      .then((user) => {
+        Comment
+          .findById(commentId)
+          .then((comment) => {
+            if (user.roles.indexOf('Admin') > -1) {
+              comment.remove().then(() => res.status(200).send(comment))
+            } else if (user._id.toString() === comment.author.toString()) {
+              comment.remove().then(() => res.status(200).send(comment))
+            } else {
+              res.status(401).send({message: 'Cannot delete comment'})
+            }
+          })
       })
   }
 }

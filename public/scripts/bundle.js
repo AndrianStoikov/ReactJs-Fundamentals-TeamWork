@@ -35623,7 +35623,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var FormActions = function FormActions() {
   _classCallCheck(this, FormActions);
 
-  this.generateActions('handleUsernameChange', 'handlePasswordChange', 'handleConfirmedPasswordChange', 'handleFirstNameChange', 'handleLastNameChange', 'handleAgeChange', 'handleGenderChange', 'usernameValidationFail', 'passwordValidationFail', 'unauthorizedAccessAttempt');
+  this.generateActions('handleUsernameChange', 'handlePasswordChange', 'handleConfirmedPasswordChange', 'handleFirstNameChange', 'handleLastNameChange', 'handleAgeChange', 'handleGenderChange', 'usernameValidationFail', 'passwordValidationFail', 'unauthorizedAccessAttempt', 'clearFields');
 };
 
 exports.default = _alt2.default.createActions(FormActions);
@@ -36129,7 +36129,7 @@ var PostAddActions = function () {
       $.ajax(request).done(function () {
         _this.addPostSuccess();
       }).fail(function (err) {
-        return _this.addPostFail(err);
+        _this.addPostFail(err);
       });
 
       return true;
@@ -37452,6 +37452,7 @@ var UserLogin = function (_Component) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       _FormStore2.default.unlisten(this.onChange);
+      _FormActions2.default.clearFields();
     }
   }, {
     key: 'handleSubmit',
@@ -37710,6 +37711,7 @@ var UserRegister = function (_Component) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       _FormStore2.default.unlisten(this.onChange);
+      _FormActions2.default.clearFields();
     }
   }, {
     key: 'handleSubmit',
@@ -39250,7 +39252,22 @@ var Comment = function (_Component) {
       var editButton = void 0;
       var deleteButton = void 0;
 
-      if (_Auth2.default.getUser()._id) {
+      if (_Auth2.default.isUserAuthenticated() && _Auth2.default.getUser()._id.toString() === this.props.comment.author.toString()) {
+        editButton = _react2.default.createElement(
+          _reactRouterDom.Link,
+          {
+            to: '/comment/edit/' + this.props.comment._id,
+            className: 'btn btn-warning' },
+          'Edit Comment'
+        );
+        deleteButton = _react2.default.createElement(
+          _reactRouterDom.Link,
+          {
+            to: '/comment/delete/' + this.props.comment._id,
+            className: 'btn btn-danger' },
+          'Delete Comment'
+        );
+      } else if (_Auth2.default.isUserAdmin()) {
         editButton = _react2.default.createElement(
           _reactRouterDom.Link,
           {
@@ -41301,6 +41318,12 @@ var FormStore = function () {
 
       this.formSubmitState = 'has-success';
       this.username = '';
+      this.password = '';
+      this.confirmedPassword = '';
+      this.firstName = '';
+      this.lastName = '';
+      this.age = '';
+      this.gender = '';
       this.usernameValidationState = '';
       this.passwordValidationState = '';
       this.message = 'User register success';
@@ -41372,6 +41395,13 @@ var FormStore = function () {
   }, {
     key: 'onLoginUserSuccess',
     value: function onLoginUserSuccess() {
+      this.username = '';
+      this.password = '';
+      this.confirmedPassword = '';
+      this.firstName = '';
+      this.lastName = '';
+      this.age = '';
+      this.gender = '';
       this.formSubmitState = 'has-success';
       this.usernameValidationState = '';
       this.passwordValidationState = '';
@@ -41396,6 +41426,28 @@ var FormStore = function () {
   }, {
     key: 'onLogoutUserSuccess',
     value: function onLogoutUserSuccess() {
+      this.username = '';
+      this.password = '';
+      this.confirmedPassword = '';
+      this.firstName = '';
+      this.lastName = '';
+      this.age = '';
+      this.gender = '';
+      this.formSubmitState = '';
+      this.usernameValidationState = '';
+      this.passwordValidationState = '';
+      this.message = '';
+    }
+  }, {
+    key: 'onClearFields',
+    value: function onClearFields() {
+      this.username = '';
+      this.password = '';
+      this.confirmedPassword = '';
+      this.firstName = '';
+      this.lastName = '';
+      this.age = '';
+      this.gender = '';
       this.formSubmitState = '';
       this.usernameValidationState = '';
       this.passwordValidationState = '';

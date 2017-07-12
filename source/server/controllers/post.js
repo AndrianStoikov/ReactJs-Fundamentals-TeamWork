@@ -7,7 +7,7 @@ module.exports = {
     let postId = req.params.postId
     Post
       .findById(postId)
-      .populate('comments', 'content', null, {sort: {dateCreated: 1}})
+      .populate('comments', 'content author', null, {sort: {dateCreated: 1}})
       .then((post) => {
         if (post === null) {
           res.status(400).send({message: 'Post not found.'})
@@ -44,7 +44,7 @@ module.exports = {
         .then((user) => {
           Post
             .find({$or: [{author: user._id}, {author: user.follows}]})
-            .populate('comments', 'content', null, {sort: {dateCreated: 1}})
+            .populate('comments', 'content author', null, {sort: {dateCreated: 1}})
             .sort('-dateCreated')
             .then((posts) => {
               res.status(200).send(posts)
@@ -57,7 +57,7 @@ module.exports = {
       let userId = req.params.userId
       Post
         .find({author: userId})
-        .populate('comments', 'content', null, {sort: {dateCreated: 1}})
+        .populate('comments', 'content author', null, {sort: {dateCreated: 1}})
         .sort('-dateCreated')
         .then((posts) => {
           res.status(200).send(posts)

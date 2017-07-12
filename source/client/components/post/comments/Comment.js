@@ -7,7 +7,18 @@ export default class Comment extends Component {
     let editButton
     let deleteButton
 
-    if (Auth.getUser()._id) {
+    if (Auth.isUserAuthenticated() && Auth.getUser()._id.toString() === this.props.comment.author.toString()) {
+      editButton = <Link
+        to={`/comment/edit/${this.props.comment._id}`}
+        className='btn btn-warning'>
+        Edit Comment
+      </Link>
+      deleteButton = <Link
+        to={`/comment/delete/${this.props.comment._id}`}
+        className='btn btn-danger'>
+        Delete Comment
+      </Link>
+    } else if (Auth.isUserAdmin()) {
       editButton = <Link
         to={`/comment/edit/${this.props.comment._id}`}
         className='btn btn-warning'>
