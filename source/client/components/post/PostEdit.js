@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Auth from '../../components/Auth'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import PostEditStore from '../../stores/post-stores/PostEditStore'
 import PostEditActions from '../../actions/post-actions/PostEditActions'
 import Form from '../form/Form'
@@ -65,6 +65,8 @@ export default class PostEdit extends Component {
         <Submit
           type='btn-primary'
           value='Edit Post' />
+
+        <Link className='btn btn-default' to='/'>Cancel</Link>
 
       </Form>
     )
