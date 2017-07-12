@@ -6,6 +6,7 @@ import BlockUserAction from '../actions/BlockUserActions'
 import Form from './form/Form'
 import TextGroup from './form/TextGroup'
 import Submit from './form/Submit'
+import Auth from './Auth'
 
 export default class BlockUser extends Component {
   constructor (props) {
@@ -40,7 +41,7 @@ export default class BlockUser extends Component {
   }
 
   render () {
-    if (UserStore.getState().loggedInUserId === '') {
+    if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
     }
 
