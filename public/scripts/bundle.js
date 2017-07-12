@@ -37541,16 +37541,13 @@ var SearchedUser = function (_React$Component) {
 
       var users = this.state.users.map(function (user) {
         return _react2.default.createElement(
-          'div',
+          'li',
           { key: user._id },
           _react2.default.createElement(
             _reactRouterDom.Link,
-            { to: '/user/profile/' + user._id, className: 'btn btn-warning' },
-            'Goto profile'
-          ),
-          'Username: ',
-          user.username,
-          _react2.default.createElement('div', { id: 'clear' })
+            { className: 'list-group-item', to: '/user/profile/' + user._id },
+            user.username
+          )
         );
       });
 
@@ -37559,8 +37556,21 @@ var SearchedUser = function (_React$Component) {
         { className: 'container' },
         _react2.default.createElement(
           'h3',
-          { className: 'text-center' },
-          users
+          { className: 'text-center ' },
+          'Results:'
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'panel-body' },
+          _react2.default.createElement(
+            'div',
+            { className: 'col-sm-6 col-sm-offset-3 ' },
+            _react2.default.createElement(
+              'ul',
+              { className: 'list-group list-unstyled' },
+              users
+            )
+          )
         )
       );
     }
