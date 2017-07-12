@@ -34,6 +34,9 @@ const Routes = (history) => (
     <Route path='/comment/delete/:id' component={DeleteComment} />
     <Route path='/messenger' component={Messenger} />
     <Route path='/thread/:otherUserUsername' component={MessageThread} />
+      <Route pat='/searchUser/:username' render={() => {
+      return(<h1>Tuka shte namira usercheto</h1>)
+      }}/>
     <Route component={Home} />
   </Switch>
 )
