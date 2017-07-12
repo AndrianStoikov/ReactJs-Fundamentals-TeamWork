@@ -57,7 +57,7 @@ export default class UserFollow extends Component {
     if (this.isAlreadyFollowed()) {
       followBtn = <a onClick={this.unfollowUser.bind(this)} className='btn btn-warning' >Unfollow User</a>
     } else {
-      followBtn = <a onClick={this.followUser.bind(this)} className='btn btn-warning' >Follow User</a>
+      followBtn = <a onClick={this.followUser.bind(this)} className='btn btn-success' >Follow User</a>
     }
 
     return (
