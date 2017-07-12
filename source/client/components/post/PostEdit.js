@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom'
 import PostEditStore from '../../stores/post-stores/PostEditStore'
 import PostEditActions from '../../actions/post-actions/PostEditActions'
 import Form from '../form/Form'
-import TextGroup from '../form/TextGroup'
+import TextArea from '../form/TextArea'
 import Submit from '../form/Submit'
 
 export default class PostEdit extends Component {
@@ -54,12 +54,13 @@ export default class PostEdit extends Component {
         submitState={this.state.formSubmitState}
         message={this.state.message} >
 
-        <TextGroup
+        <TextArea
           type='text'
           value={this.state.content}
           label='Your Post'
           handleChange={PostEditActions.handleContentChange}
-          validationState={this.state.contentValidationState} />
+          validationState={this.state.contentValidationState}
+          additionalClass='post-input-field' />
 
         <Submit
           type='btn-primary'
