@@ -41452,6 +41452,9 @@ var HomeStore = function () {
     key: 'onRemovePostsSuccess',
     value: function onRemovePostsSuccess() {
       this.posts = [];
+      this.pageCount = 0;
+      this.offset = 0;
+      this.postsToDisplay = [];
     }
   }, {
     key: 'onHandlePageChange',
