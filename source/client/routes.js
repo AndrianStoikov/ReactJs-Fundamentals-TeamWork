@@ -16,6 +16,7 @@ import EditComment from './components/post/comments/EditComment'
 import DeleteComment from './components/post/comments/DeleteComment'
 import Messenger from './components/messanger/Messenger'
 import MessageThread from './components/messanger/MessageThread'
+import SearchedUser from './components/SearchedUser'
 
 const Routes = (history) => (
   <Switch>
@@ -34,6 +35,7 @@ const Routes = (history) => (
     <Route path='/comment/delete/:id' component={DeleteComment} />
     <Route path='/messenger' component={Messenger} />
     <Route path='/thread/:otherUserUsername' component={MessageThread} />
+      <Route pat='/searchUser/:username' component={SearchedUser}/>
     <Route component={Home} />
   </Switch>
 )

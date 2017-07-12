@@ -26,7 +26,7 @@ class MessageThreadStore {
   }
 
   onGetThreadMessagesFail () {
-    console.log('Failed loading messages')
+    console.log('Could not load thread messages. User does not exists or you are trying to open a thread with yourself')
   }
 }
 

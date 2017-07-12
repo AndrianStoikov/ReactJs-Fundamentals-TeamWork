@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, withRouter } from 'react-router-dom'
 import Auth from '../../components/Auth'
 import SearchBarActions from "../../actions/SearchBarActions"
 import SearchBarStore from "../../stores/SearchBarStore"
 
-export default class SearchBar extends Component {
+class SearchBar extends Component {
     constructor(props) {
         super(props)
         this.state = SearchBarStore.getState()
@@ -35,7 +35,7 @@ export default class SearchBar extends Component {
 
 
         SearchBarActions.loadSearchBarForm()
-        this.props.history.push("/nqkude")
+        this.props.history.push("/searchUser/" + content)
     }
 
     render() {
@@ -55,3 +55,5 @@ export default class SearchBar extends Component {
         )
     }
 }
+
+export default withRouter(SearchBar)
