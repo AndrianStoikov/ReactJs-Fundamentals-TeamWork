@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import Auth from '../../components/Auth'
 import PostAddStore from '../../stores/post-stores/PostAddStore'
 import PostAddActions from '../../actions/post-actions/PostAddActions'
@@ -66,6 +66,8 @@ export default class PostAdd extends Component {
         <Submit
           type='btn-primary'
           value='Post' />
+
+        <Link className='btn btn-default' to='/'>Cancel</Link>
 
       </Form>
     )
