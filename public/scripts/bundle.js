@@ -37526,6 +37526,13 @@ var SearchedUser = function (_React$Component) {
       _SearchedUserStore2.default.unlisten(this.onChange);
     }
   }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(nextProps) {
+      if (nextProps.match.params.username !== this.props.match.params.username) {
+        _SearchedUserActions2.default.getUsers(this.props.match.params.username);
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
       if (!_Auth2.default.isUserAuthenticated()) {
@@ -37788,7 +37795,6 @@ var UserProfile = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-
       if (!_Auth2.default.isUserAuthenticated()) {
         return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/user/login' });
       }
@@ -38975,6 +38981,9 @@ var Messenger = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      if (!_Auth2.default.isUserAuthenticated()) {
+        return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/user/login' });
+      }
       if (this.state.submitted) {
         // Form was submitted, now show the main App
         if (this.state.validThread) {
