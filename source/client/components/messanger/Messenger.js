@@ -58,7 +58,7 @@ class Messenger extends React.Component {
       }
       return (
         <div>
-          <Link key={thread._id} to={`/thread/${thread.otherUser}`}>{thread.otherUser}</Link>
+          <Link className='list-group-item' key={thread._id} to={`/thread/${thread.otherUser}`}>{thread.otherUser}</Link>
         </div>
       )
     })
@@ -67,17 +67,22 @@ class Messenger extends React.Component {
       <div className='container' >
         <h3 className='text-center' >Messenger
         </h3>
-        {threadsRender}
-        <form onSubmit={this.usernameSubmitHandler} className='username-container'>
-          <div>
-            <input
-              type="text"
-              onChange={this.usernameChangeHandler}
-              placeholder="Enter a username..."
-              required />
+        <div className='col-sm-8'>
+          <div className='list-group'>
+            {threadsRender}
           </div>
-          <input type="submit" value="Submit" />
-        </form>
+          <form onSubmit={this.usernameSubmitHandler} className='username-container'>
+            <div className='form-group'>
+              <input
+                type='text'
+                onChange={this.usernameChangeHandler}
+                placeholder='Enter a username...'
+                required
+                className='form-control' />
+            </div>
+            <input type='submit' value='Submit' className='btn btn-default' />
+          </form>
+        </div>
       </div>
     )
   }

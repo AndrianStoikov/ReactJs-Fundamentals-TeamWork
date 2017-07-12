@@ -4,6 +4,7 @@ import Auth from '../../components/Auth'
 
 import UserActions from '../../actions/UserActions'
 import UserStore from '../../stores/UserStore'
+import { DropdownButton, MenuItem } from 'react-bootstrap'
 
 export default class NavbarUserMenu extends React.Component {
   constructor (props) {
@@ -37,10 +38,12 @@ export default class NavbarUserMenu extends React.Component {
               </div>
             </li>
             <li>
-              <Link to={`/user/profile-picture/${Auth.getUser()._id}`} >Add Profile Picture</Link>
-            </li>
-            <li>
-              <Link to={`/user/profile/${Auth.getUser()._id}`} >Profile</Link>
+              <DropdownButton title='Profile' id='bg-nested-dropdown'>
+                <MenuItem><Link to={`/user/profile/${Auth.getUser()._id}`} >My Profile</Link></MenuItem>
+                <MenuItem><Link to={`/user/profile-picture/${Auth.getUser()._id}`} >Add Profile Picture</Link></MenuItem>
+                <div className='divider' />
+                <MenuItem><Link to={'/user/block'} >Block user</Link></MenuItem>
+              </DropdownButton>
             </li>
             <li>
               <a href='#' onClick={UserActions.logoutUser} >Logout</a>
