@@ -27,6 +27,11 @@ export default class NavbarUserMenu extends React.Component {
     UserStore.unlisten(this.onChange)
   }
 
+  handleLogout (e) {
+    e.preventDefault()
+    UserActions.logoutUser(this.props.history)
+  }
+
   render () {
     return (
       <div>
@@ -46,7 +51,7 @@ export default class NavbarUserMenu extends React.Component {
               </DropdownButton>
             </li>
             <li>
-              <a href='#' onClick={UserActions.logoutUser} >Logout</a>
+              <a onClick={this.handleLogout} >Logout</a>
             </li>
           </ul>
         ) : (
