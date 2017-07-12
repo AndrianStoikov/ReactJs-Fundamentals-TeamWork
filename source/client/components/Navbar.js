@@ -59,7 +59,7 @@ export default class Navbar extends React.Component {
                 <SearchBar history={this.props.history}/>
               </li>
               <li>
-                <Link to='/post/add'>AddPost</Link>
+                <Link to='/post/add'>Add Post</Link>
               </li>
               <li>
                 <Link to='/messenger'>Messenger</Link>

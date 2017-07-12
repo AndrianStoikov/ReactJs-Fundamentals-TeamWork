@@ -21,7 +21,7 @@ export default class PostPanelToggles extends React.Component {
     let likeButton
     if (this.isLiked()) {
       likeButton = <a
-        className='btn btn-primary'
+        className='btn btn-default'
         onClick={this.props.unlikePost} >
         Unlike
       </a>
@@ -50,7 +50,7 @@ export default class PostPanelToggles extends React.Component {
         </Link>
     }
     return (
-      <div className='pull-right btn-group' >
+      <div className='pull-right btn-group post-control-panel' >
         <Link to={`/post/comment/${this.props.postId}`} className='btn btn-primary'>Comment post</Link>
         {editMovie}
         {deleteMovie}

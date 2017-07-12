@@ -2,7 +2,7 @@ import React from 'react'
 import MessageStore from '../../stores/messenger-stores/MessengerStore'
 import UserActions from '../../actions/UserActions'
 import Messages from './Messages'
-import MessageInput from '../sub-components/Message-input'
+import MessageInput from './Message-input'
 import MessageThread from './MessageThread'
 import { Link, Redirect } from 'react-router-dom'
 import Auth from '../Auth'
@@ -42,11 +42,13 @@ class Messenger extends React.Component {
   }
 
   render () {
+    if (!Auth.isUserAuthenticated()) {
+      return <Redirect to='/user/login' />
+    }
     if (this.state.submitted) {
       // Form was submitted, now show the main App
       return (
         <Redirect to={`/thread/${this.state.username}`} />
-        // <MessageThread username={this.state.username} />
       )
     }
 
@@ -57,26 +59,31 @@ class Messenger extends React.Component {
         thread.otherUser = thread.users[0]
       }
       return (
-        <div>
-          <Link key={thread._id} to={`/thread/${thread.otherUser}`}>{thread.otherUser}</Link>
+        <div key={thread._id}>
+          <Link className='list-group-item' to={`/thread/${thread.otherUser}`}>{thread.otherUser}</Link>
         </div>
       )
     })
 
     return (
       <div className='container' >
-        <h3 className='text-center' >Messenger
+        <h3 className='text-center' >Your chats
         </h3>
-        {threadsRender}
-        <form onSubmit={this.usernameSubmitHandler} className='username-container'>
+        <div className='col-sm-6 col-sm-offset-3'>
+          <div className='list-group'>
+            {threadsRender}
+          </div>
+        </div>
+        <form onSubmit={this.usernameSubmitHandler} className='messenger username-container'>
+          <h1>Messenger</h1>
           <div>
             <input
-              type="text"
+              type='text'
               onChange={this.usernameChangeHandler}
-              placeholder="Enter a username..."
+              placeholder='Enter a username...'
               required />
           </div>
-          <input type="submit" value="Submit" />
+          <input type='submit' value='Chat now' />
         </form>
       </div>
     )

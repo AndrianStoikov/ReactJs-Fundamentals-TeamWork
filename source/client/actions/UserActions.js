@@ -14,19 +14,17 @@ class UserActions {
       'getUserOwnPostsSuccess',
       'getUserOwnPostsFail',
       'getProfileInfoSuccess',
+      'getMultipleUserInfoSuccess',
       'logoutUserSuccess',
+      'followUserSuccess',
       'getUserThreadsSuccess',
       'getUserThreadsFail'
     )
   }
 
   getUserThreads (userId) {
-    // let request = Data.get(`/api/threads`, true)
-    let request = {
-      url: `/api/threads`,
-      method: 'GET',
-      contentType: 'application/json'
-    }
+    let request = Data.get(`/api/threads`, true)
+
     $.ajax(request)
       .done(threads => this.getUserThreadsSuccess(threads))
       .fail(() => this.getUserThreadsFail())
@@ -40,6 +38,26 @@ class UserActions {
     $.ajax(req)
       .done(posts => this.getUserOwnPostsSuccess(posts))
       .fail(() => this.getUserOwnPostsFail())
+
+    return true
+  }
+
+  getUserInformation (userId) {
+    let request = Data.get(`/api/user/${userId}`, true)
+
+    $.ajax(request)
+      .done(userInfo => this.getProfileInfoSuccess(userInfo))
+
+    return true
+  }
+
+  getMultipleUserInformation (firstUserId, secondUserId) {
+    let request = Data.get(`/api/user/${firstUserId}/${secondUserId}`, true)
+
+    $.ajax(request)
+      .done(usersData => {
+        this.getMultipleUserInfoSuccess(usersData)
+      })
 
     return true
   }
@@ -81,7 +99,7 @@ class UserActions {
     return true
   }
 
-  logoutUser () {
+  logoutUser (history) {
     let request = {
       url: '/user/logout',
       method: 'post'
@@ -91,15 +109,8 @@ class UserActions {
       .done(() => {
         this.logoutUserSuccess()
         HomeActions.removePostsSuccess()
+        history.push('/user/login')
       })
-
-    return true
-  }
-  getUserInformation (userId) {
-    let request = Data.get(`/api/user/${userId}`, true)
-
-    $.ajax(request)
-      .done(userInfo => this.getProfileInfoSuccess(userInfo))
 
     return true
   }

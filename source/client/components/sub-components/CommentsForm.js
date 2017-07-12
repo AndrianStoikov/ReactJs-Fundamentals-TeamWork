@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import { Link } from 'react-router-dom'
 import PostCommentStore from '../../stores/post-stores/PostCommentStore'
 import PostCommentActions from '../../actions/post-actions/PostCommentActions'
 
@@ -49,6 +49,7 @@ export default class CommentsForm extends Component {
         </div>
         <div className='form-group' >
           <input type='submit' className='btn btn-primary' value='Comment' />
+          <Link className='btn btn-default' to='/'>Cancel</Link>
         </div>
       </form>
     )

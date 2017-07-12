@@ -88,6 +88,7 @@ module.exports = {
         if (!user) { return res.status(404).send({message: 'User no longer exists'}) }
 
         let userObj = {
+          _id: user._id,
           username: user.username,
           age: user.age,
           firstName: user.firstName,
@@ -98,6 +99,46 @@ module.exports = {
 
         res.status(200).send(userObj)
       })
+    },
+    getMultiple: (req, res) => {
+      let firstUserId = req.params.firstUserId
+      let secondUserId = req.params.secondUserId
+
+      User.findById(firstUserId)
+        .then(firstUser => {
+          if (!firstUser) {
+            return res.status(404).send({message: 'User no longer exists'})
+          }
+          let firstUserObj = {
+            _id: firstUser._id,
+            username: firstUser.username,
+            age: firstUser.age,
+            firstName: firstUser.firstName,
+            lastName: firstUser.lastName,
+            gender: firstUser.gender,
+            profilePicture: firstUser.profilePicture
+          }
+          User.findById(secondUserId)
+            .then(secondUser => {
+              if (!secondUser) {
+                return res.status(404).send({message: 'User no longer exists'})
+              }
+              let secondUserObj = {
+                _id: secondUser._id,
+                username: secondUser.username,
+                age: secondUser.age,
+                firstName: secondUser.firstName,
+                lastName: secondUser.lastName,
+                gender: secondUser.gender,
+                profilePicture: secondUser.profilePicture
+              }
+              let users = {
+                firstUser: firstUserObj,
+                secondUser: secondUserObj
+              }
+              res.status(200).send(users)
+            })
+        })
     }
   },
   logout: (req, res) => {
@@ -193,6 +234,26 @@ module.exports = {
         res.sendStatus(401)
       }
     })
+  },
+  follow: (req, res) => {
+    let userId = req.user._id
+    let userToFollow = req.params.id
+
+    User
+      .findByIdAndUpdate(userId, {$addToSet: {follows: userToFollow}}, {new: true})
+      .then((user) => {
+        res.status(200).send(user)
+      })
+  },
+  unfollow: (req, res) => {
+    let userId = req.user._id
+    let userToFollow = req.params.id
+
+    User
+      .findByIdAndUpdate(userId, {$pull: {follows: userToFollow}}, {new: true})
+      .then((user) => {
+        res.status(200).send(user)
+      })
   }
 }
 
@@ -200,8 +261,6 @@ function checkIfUserCanEdit (currUser, authorId) {
   if (currUser._id.toString() === authorId.toString()) {
     return true
   }
-  if (currUser.roles.indexOf('Admin') >= 0) {
-    return true
-  }
-  return false
+
+  return currUser.roles.indexOf('Admin') >= 0;
 }

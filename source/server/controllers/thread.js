@@ -34,7 +34,6 @@ module.exports = {
     let currUser = req.user.username
     let otherUser = req.params.username
     if (currUser === otherUser) {
-      res.locals.globalError = 'Can\'t send a message to yourself!'
       res.status(400).send('Can not send message to yourself')
       return
     }
@@ -56,6 +55,7 @@ module.exports = {
               Thread
                 .create({
                   users: [currUser, otherUser],
+                  userIds: [req.user._id, userFound._id],
                   messages: []
                 })
                 .then((thread) => {

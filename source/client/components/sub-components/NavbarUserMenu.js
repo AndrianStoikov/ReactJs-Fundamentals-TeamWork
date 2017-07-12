@@ -4,6 +4,7 @@ import Auth from '../../components/Auth'
 
 import UserActions from '../../actions/UserActions'
 import UserStore from '../../stores/UserStore'
+import { DropdownButton, MenuItem } from 'react-bootstrap'
 
 export default class NavbarUserMenu extends React.Component {
   constructor (props) {
@@ -26,6 +27,11 @@ export default class NavbarUserMenu extends React.Component {
     UserStore.unlisten(this.onChange)
   }
 
+  handleLogout (e) {
+    e.preventDefault()
+    UserActions.logoutUser(this.props.history)
+  }
+
   render () {
     return (
       <div>
@@ -37,13 +43,15 @@ export default class NavbarUserMenu extends React.Component {
               </div>
             </li>
             <li>
-              <Link to={`/user/profile-picture/${Auth.getUser()._id}`} >Add Profile Picture</Link>
+              <DropdownButton title='Profile' id='bg-nested-dropdown'>
+                <li><Link to={`/user/profile/${Auth.getUser()._id}`} >My Profile</Link></li>
+                <li><Link to={`/user/profile-picture/${Auth.getUser()._id}`} >Add Profile Picture</Link></li>
+                <div className='divider' />
+                <li><Link to={'/user/block'} >Block user</Link></li>
+              </DropdownButton>
             </li>
             <li>
-              <Link to={`/user/profile/${Auth.getUser()._id}`} >Profile</Link>
-            </li>
-            <li>
-              <a href='#' onClick={UserActions.logoutUser} >Logout</a>
+              <a href='#' onClick={this.handleLogout} >Logout</a>
             </li>
           </ul>
         ) : (

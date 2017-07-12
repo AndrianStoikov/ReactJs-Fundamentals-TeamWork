@@ -1,5 +1,6 @@
 import alt from '../../alt'
 import Data from '../../DataRequests'
+import toastr from 'toastr'
 
 class PostEditActions {
   constructor () {
@@ -9,7 +10,8 @@ class PostEditActions {
       'editPostSuccess',
       'editPostFail',
       'getEditPostInfoFail',
-      'getEditPostInfoSuccess'
+      'getEditPostInfoSuccess',
+      'resetPostEditForm'
     )
   }
 
@@ -33,6 +35,7 @@ class PostEditActions {
 
     $.ajax(request)
       .done((data) => {
+        toastr.success('Post edited')
         this.editPostSuccess(data)
       })
       .fail((err) => {

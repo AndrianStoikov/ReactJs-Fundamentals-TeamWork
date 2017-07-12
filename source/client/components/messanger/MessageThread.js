@@ -1,9 +1,9 @@
 import React from 'react'
 import Messages from './Messages'
-import MessageInput from '../sub-components/Message-input'
+import MessageInput from './Message-input'
 import MessageThreadStore from '../../stores/messenger-stores/MessageThreadStore'
 import MessageActions from '../../actions/MessageActions'
-
+import Auth from '../Auth'
 class MessageThread extends React.Component {
   constructor (props) {
     super(props)
@@ -42,11 +42,16 @@ class MessageThread extends React.Component {
   }
 
   render () {
+    if (!Auth.isUserAuthenticated()) {
+      return <Redirect to='/user/login' />
+    }
     return (
-      <div className="container">
-        <h3>Messenger</h3>
-        <h5>Chat with {this.props.match.params.otherUserUsername}</h5>
-        <Messages messages={this.state.messages} />
+      <div className="messenger-container">
+        <h3>Chat with <b>{this.props.match.params.otherUserUsername}</b></h3>
+        <Messages
+          firstUserId={this.state.firstUserId}
+          secondUserId={this.state.secondUserId}
+          messages={this.state.messages} />
         <MessageInput onSend={this.sendHandler} />
       </div>
     )

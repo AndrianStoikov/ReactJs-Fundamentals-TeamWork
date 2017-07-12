@@ -1,6 +1,5 @@
 import React from 'react'
-
-import {Link} from 'react-router-dom'
+import FollowUser from './UserFollow'
 
 export default class UserInfo extends React.Component {
 
@@ -16,7 +15,7 @@ export default class UserInfo extends React.Component {
           <h2><strong>Gender: { this.props.profile.userGender }</strong></h2>
           <h2><strong>Username: { this.props.profile.userUsername }</strong></h2>
           <h2><strong>Age: { this.props.profile.userAge }</strong></h2>
-          <h4 className='lead'><Link className='label' to='/user/block'>Block user</Link></h4>
+          <FollowUser userId={this.props.profile._id} />
         </div>
       </div>
     )

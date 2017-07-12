@@ -1,5 +1,6 @@
 import alt from '../../alt'
 import Data from '../../DataRequests'
+import toastr from 'toastr'
 
 class PostAddActions {
   constructor () {
@@ -8,7 +9,7 @@ class PostAddActions {
       'contentValidationFail',
       'addPostSuccess',
       'addPostFail',
-      'loadPostAddForm'
+      'resetPostAddForm'
     )
   }
 
@@ -16,6 +17,7 @@ class PostAddActions {
     let request = Data.post('/api/post/add', data, true)
     $.ajax(request)
       .done(() => {
+        toastr.success('Post added')
         this.addPostSuccess()
       })
       .fail((err) => this.addPostFail(err))

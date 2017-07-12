@@ -8,15 +8,21 @@ class MessageThreadStore {
     this.bindActions(MessageActions)
     this.messages = []
     this.threadId = ''
+    this.firstUserId = ''
+    this.secondUserId = ''
   }
 
   onSendMessageSuccess (thread) {
     this.messages = thread.messages
     this.threadId = thread._id
+    this.firstUserId = thread.userIds[0]
+    this.secondUserId = thread.userIds[1]
   }
   onGetThreadMessagesSuccess (thread) {
     this.messages = thread.messages
     this.threadId = thread._id
+    this.firstUserId = thread.userIds[0]
+    this.secondUserId = thread.userIds[1]
   }
 
   onGetThreadMessagesFail () {
