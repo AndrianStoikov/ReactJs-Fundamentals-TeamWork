@@ -27,8 +27,8 @@ class NavbarUserMenu extends React.Component {
   }
 
   handleLogout (e) {
-    UserActions.logoutUser()
-    this.props.history.push('/user/login')
+    e.preventDefault()
+    UserActions.logoutUser(this.props.history)
   }
 
   render () {
@@ -48,7 +48,7 @@ class NavbarUserMenu extends React.Component {
               <Link to={`/user/profile/${Auth.getUser()._id}`} >Profile</Link>
             </li>
             <li>
-              <a href='#' onClick={this.handleLogout} >Logout</a>
+              <a onClick={this.handleLogout} >Logout</a>
             </li>
           </ul>
         ) : (

@@ -82,7 +82,7 @@ class UserActions {
     return true
   }
 
-  logoutUser () {
+  logoutUser (history) {
     let request = {
       url: '/user/logout',
       method: 'post'
@@ -92,6 +92,7 @@ class UserActions {
       .done(() => {
         this.logoutUserSuccess()
         HomeActions.removePostsSuccess()
+        history.push('/user/login')
       })
 
     return true

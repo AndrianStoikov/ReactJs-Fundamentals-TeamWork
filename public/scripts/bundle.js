@@ -6874,7 +6874,7 @@ var UserActions = function () {
     }
   }, {
     key: 'logoutUser',
-    value: function logoutUser() {
+    value: function logoutUser(history) {
       var _this5 = this;
 
       var request = {
@@ -6885,6 +6885,7 @@ var UserActions = function () {
       $.ajax(request).done(function () {
         _this5.logoutUserSuccess();
         _HomeActions2.default.removePostsSuccess();
+        history.push('/user/login');
       });
 
       return true;
@@ -10614,8 +10615,8 @@ var NavbarUserMenu = function (_React$Component) {
   }, {
     key: 'handleLogout',
     value: function handleLogout(e) {
-      _UserActions2.default.logoutUser();
-      this.props.history.push('/user/login');
+      e.preventDefault();
+      _UserActions2.default.logoutUser(this.props.history);
     }
   }, {
     key: 'render',
@@ -10659,7 +10660,7 @@ var NavbarUserMenu = function (_React$Component) {
             null,
             _react2.default.createElement(
               'a',
-              { href: '#', onClick: this.handleLogout },
+              { onClick: this.handleLogout },
               'Logout'
             )
           )
