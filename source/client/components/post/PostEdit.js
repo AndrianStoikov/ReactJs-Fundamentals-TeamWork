@@ -28,6 +28,7 @@ export default class PostEdit extends Component {
 
   componentWillUnmount () {
     PostEditStore.unlisten(this.onChange)
+    PostEditActions.resetPostEditForm()
   }
 
   handleSubmit (e) {
@@ -45,6 +46,10 @@ export default class PostEdit extends Component {
   render () {
     if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
+    }
+
+    if (this.state.redirect === true) {
+      return <Redirect to='/' />
     }
 
     return (

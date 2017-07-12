@@ -8,6 +8,7 @@ class PostDeleteStore {
     this.author = ''
     this.content = ''
     this.message = ''
+    this.redirect = false
   }
 
   onGetDeletePostInfoSuccess (data) {
@@ -24,10 +25,17 @@ class PostDeleteStore {
     console.log('Post deleted')
     this.message = 'Post deleted'
     this.content = ''
+    this.redirect = true
   }
 
   onDeletePostFail (err) {
     console.log('Failed to edit post', err)
+  }
+
+  onResetPostDeleteForm () {
+    this.content = ''
+    this.message = ''
+    this.redirect = false
   }
 }
 

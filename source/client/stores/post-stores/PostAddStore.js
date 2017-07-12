@@ -10,6 +10,7 @@ class PostAddStore {
     this.contentValidationState = ''
     this.message = ''
     this.formSubmitState = ''
+    this.redirect = false
   }
 
   onAddPostSuccess (post) {
@@ -18,6 +19,7 @@ class PostAddStore {
     this.contentValidationState = ''
     this.message = 'Post added'
     this.formSubmitState = ''
+    this.redirect = true
   }
 
   onAddPostFail (err) {
@@ -35,11 +37,12 @@ class PostAddStore {
     this.formSubmitState = ''
   }
 
-  onLoadPostAddForm () {
+  onResetPostAddForm () {
     this.content = ''
     this.contentValidationState = ''
     this.message = ''
     this.formSubmitState = ''
+    this.redirect = false
   }
 }
 

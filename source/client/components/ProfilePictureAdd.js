@@ -4,7 +4,6 @@ import { Redirect } from 'react-router-dom'
 import ProfilePictureAddStore from '../stores/ProfilePictureAddStore'
 import ProfilePictureAddActions from '../actions/ProfilePictureAddActions'
 import ImageForm from './form/ImageForm'
-import TextGroup from './form/TextGroup'
 import Submit from './form/Submit'
 
 export default class ProfilePictureAdd extends Component {
@@ -24,6 +23,7 @@ export default class ProfilePictureAdd extends Component {
 
   componentWillUnmount () {
     ProfilePictureAddStore.unlisten(this.onChange)
+    ProfilePictureAddActions.loadProfilePictureForm()
   }
 
   handleSubmit (e) {
@@ -40,6 +40,10 @@ export default class ProfilePictureAdd extends Component {
   render () {
     if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
+    }
+
+    if (this.state.redirect === true) {
+      return <Redirect to={`/user/profile/${Auth.getUser()._id}`} />
     }
 
     return (

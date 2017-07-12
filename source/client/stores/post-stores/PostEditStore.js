@@ -10,6 +10,7 @@ class PostEditStore {
     this.contentValidationState = ''
     this.message = ''
     this.formSubmitState = ''
+    this.redirect = false
   }
 
   onGetEditPostInfoSuccess (data) {
@@ -27,6 +28,7 @@ class PostEditStore {
     this.contentValidationState = ''
     this.message = 'Post edited'
     this.formSubmitState = ''
+    this.redirect = true
   }
 
   onEditPostFail (err) {
@@ -42,6 +44,14 @@ class PostEditStore {
     this.contentValidationState = 'has-error'
     this.message = 'Enter post content'
     this.formSubmitState = ''
+  }
+
+  onResetPostEditForm () {
+    this.content = ''
+    this.contentValidationState = ''
+    this.message = ''
+    this.formSubmitState = ''
+    this.redirect = false
   }
 }
 

@@ -4,7 +4,6 @@ import { Redirect, Link } from 'react-router-dom'
 import PostDeleteStore from '../../stores/PostDeleteStore'
 import PostDeleteActions from '../../actions/PostDeleteActions'
 import Form from '../form/Form'
-import TextGroup from '../form/TextGroup'
 import Submit from '../form/Submit'
 
 export default class PostDelete extends Component {
@@ -28,6 +27,7 @@ export default class PostDelete extends Component {
 
   componentWillUnmount () {
     PostDeleteStore.unlisten(this.onChange)
+    PostDeleteActions.resetPostDeleteForm()
   }
 
   handleSubmit (e) {
@@ -39,6 +39,10 @@ export default class PostDelete extends Component {
   render () {
     if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
+    }
+
+    if (this.state.redirect === true) {
+      return <Redirect to='/' />
     }
 
     return (
