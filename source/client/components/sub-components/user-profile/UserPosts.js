@@ -28,9 +28,11 @@ export default class UserPosts extends React.Component {
           </ul>
         </div>
         <div className='pull-right btn-group' >
-          <a className='btn btn-primary' onClick={this.togglePosts.bind(this)} >
-            {this.state.showPostsPanel ? 'Hide' : 'Show User Posts' }
-          </a>
+          { this.props.posts.length > 0 &&
+            <a className='btn btn-primary' onClick={this.togglePosts.bind(this)} >
+              {this.state.showPostsPanel ? 'Hide' : 'Show User Posts' }
+            </a>
+          }
         </div>
         <div className='user-posts' >
           {this.state.showPostsPanel
