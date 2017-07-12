@@ -70,6 +70,18 @@ class UserStore {
   onFollowUserSuccess (user) {
     Auth.saveUser(user)
   }
+
+  onClearProfileFields () {
+    this.profile = {
+      _id: '',
+      userUsername: '',
+      userAge: '',
+      userFirstName: '',
+      userLastName: '',
+      userGender: '',
+      userProfilePicture: ''
+    }
+  }
 }
 
 export default alt.createStore(UserStore)

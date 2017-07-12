@@ -36032,7 +36032,7 @@ var UserActions = function () {
   function UserActions() {
     _classCallCheck(this, UserActions);
 
-    this.generateActions('registerUserSuccess', 'registerUserFail', 'loginUserSuccess', 'loginUserFail', 'logoutUserSuccess', 'getUserOwnPostsSuccess', 'getUserOwnPostsFail', 'getProfileInfoSuccess', 'getMultipleUserInfoSuccess', 'logoutUserSuccess', 'followUserSuccess', 'getUserThreadsSuccess', 'getUserThreadsFail');
+    this.generateActions('registerUserSuccess', 'registerUserFail', 'loginUserSuccess', 'loginUserFail', 'logoutUserSuccess', 'getUserOwnPostsSuccess', 'getUserOwnPostsFail', 'getProfileInfoSuccess', 'getMultipleUserInfoSuccess', 'logoutUserSuccess', 'followUserSuccess', 'getUserThreadsSuccess', 'getUserThreadsFail', 'clearProfileFields');
   }
 
   _createClass(UserActions, [{
@@ -37757,10 +37757,12 @@ var UserProfile = function (_React$Component) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       _UserStore2.default.unlisten(this.onChange);
+      _UserActions2.default.clearProfileFields();
     }
   }, {
     key: 'render',
     value: function render() {
+
       if (!_Auth2.default.isUserAuthenticated()) {
         return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/user/login' });
       }
@@ -40552,8 +40554,8 @@ var PostInfo = function (_React$Component) {
           { className: 'media-heading' },
           _react2.default.createElement(
             _reactRouterDom.Link,
-            { to: '/movie/' + this.props.post._id + '/' + this.props.post.name },
-            this.props.post.name
+            { to: '/user/profile/' + this.props.post.author._id },
+            this.props.post.author.username
           )
         ),
         _react2.default.createElement('br', null),
@@ -40834,6 +40836,10 @@ var UserFollow = function (_Component) {
     key: 'render',
     value: function render() {
       if (_Auth2.default.getUser()._id === this.props.userId) {
+        return _react2.default.createElement('div', null);
+      }
+
+      if (this.props.userId === '') {
         return _react2.default.createElement('div', null);
       }
 
@@ -42103,6 +42109,19 @@ var UserStore = function () {
     key: 'onFollowUserSuccess',
     value: function onFollowUserSuccess(user) {
       _Auth2.default.saveUser(user);
+    }
+  }, {
+    key: 'onClearProfileFields',
+    value: function onClearProfileFields() {
+      this.profile = {
+        _id: '',
+        userUsername: '',
+        userAge: '',
+        userFirstName: '',
+        userLastName: '',
+        userGender: '',
+        userProfilePicture: ''
+      };
     }
   }]);
 
