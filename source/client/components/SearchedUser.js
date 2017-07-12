@@ -42,6 +42,7 @@ export default class SearchedUser extends React.Component {
         <div key={user._id} >
           <Link to={`/user/profile/${user._id}`} className='btn btn-warning' >Goto profile</Link>
           Username: {user.username}
+          <div id='clear' />
         </div>
       )
     })
