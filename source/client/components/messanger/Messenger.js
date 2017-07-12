@@ -45,6 +45,9 @@ class Messenger extends React.Component {
   }
 
   render () {
+    if (!Auth.isUserAuthenticated()) {
+      return <Redirect to='/user/login' />
+    }
     if (this.state.submitted) {
       // Form was submitted, now show the main App
       if (this.state.validThread) {

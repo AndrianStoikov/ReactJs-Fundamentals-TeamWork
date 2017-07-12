@@ -40,7 +40,6 @@ export default class UserProfile extends React.Component {
   }
 
   render () {
-
     if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
     }
