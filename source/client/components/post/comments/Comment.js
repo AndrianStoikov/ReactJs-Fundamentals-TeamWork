@@ -32,7 +32,7 @@ export default class Comment extends Component {
     }
 
     return (
-      <div key={this.props.comment._id} className='comment col-sm-9 list-group-item animated fadeIn' >
+      <div key={this.props.comment._id} className='comment col-sm-8 list-group-item animated fadeIn' >
         <div className='media' >
           <div className='media-body' >
             <p>{this.props.comment.content}</p>

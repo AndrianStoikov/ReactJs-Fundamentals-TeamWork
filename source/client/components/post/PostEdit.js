@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Auth from '../../components/Auth'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import PostEditStore from '../../stores/post-stores/PostEditStore'
 import PostEditActions from '../../actions/post-actions/PostEditActions'
 import Form from '../form/Form'
@@ -28,6 +28,7 @@ export default class PostEdit extends Component {
 
   componentWillUnmount () {
     PostEditStore.unlisten(this.onChange)
+    PostEditActions.resetPostEditForm()
   }
 
   handleSubmit (e) {
@@ -45,6 +46,10 @@ export default class PostEdit extends Component {
   render () {
     if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
+    }
+
+    if (this.state.redirect === true) {
+      return <Redirect to='/' />
     }
 
     return (
@@ -65,6 +70,8 @@ export default class PostEdit extends Component {
         <Submit
           type='btn-primary'
           value='Edit Post' />
+
+        <Link className='btn btn-default' to='/'>Cancel</Link>
 
       </Form>
     )

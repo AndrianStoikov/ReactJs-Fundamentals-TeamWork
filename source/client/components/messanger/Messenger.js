@@ -4,8 +4,10 @@ import UserActions from '../../actions/UserActions'
 import Messages from './Messages'
 import MessageInput from './Message-input'
 import MessageThread from './MessageThread'
+import MessageActions from '../../actions/MessageActions'
 import { Link, Redirect } from 'react-router-dom'
 import Auth from '../Auth'
+import toastr from 'toastr'
 
 class Messenger extends React.Component {
   constructor (props) {
@@ -38,18 +40,18 @@ class Messenger extends React.Component {
 
   usernameSubmitHandler (event) {
     event.preventDefault()
+    MessageActions.getThreadMessages(this.state.username)
     this.setState({ submitted: true, username: this.state.username })
   }
 
   render () {
-    if (!Auth.isUserAuthenticated()) {
-      return <Redirect to='/user/login' />
-    }
     if (this.state.submitted) {
       // Form was submitted, now show the main App
-      return (
-        <Redirect to={`/thread/${this.state.username}`} />
-      )
+      if (this.state.validThread) {
+        return (
+          <Redirect to={`/thread/${this.state.username}`} />
+        )
+      }
     }
 
     let threadsRender = this.state.userThreads.map(thread => {

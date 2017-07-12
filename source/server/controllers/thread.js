@@ -34,15 +34,13 @@ module.exports = {
     let currUser = req.user.username
     let otherUser = req.params.username
     if (currUser === otherUser) {
-      res.status(400).send('Can not send message to yourself')
-      return
+      return res.status(404).send({message: 'Can not send message to yourself'})
     }
     User
       .findOne({username: otherUser})
       .then((userFound) => {
         if (!userFound) {
-          res.status(400).send('Such user does not exist!')
-          return
+          return res.status(404).send({message: 'No such user exists'})
         }
         if (userFound.blockedUsersId.indexOf(req.user._id) >= 0) {
           res.locals.blocked = true

@@ -10,16 +10,25 @@ class MessageStore {
       onGetUserThreadsSuccess: UserActions.getUserThreadsSuccess,
       onGetUserThreadsFail: UserActions.getUserThreadsFail
     })
-
+    this.validThread = false
     this.userThreads = []
   }
 
   onGetUserThreadsSuccess (threads) {
     this.userThreads = threads
+    this.validThread = false
   }
 
   onGetUserThreadsFail () {
     console.log('Failed loading user\'s threads')
+  }
+
+  onGetThreadMessagesFail () {
+    this.validThread = false
+  }
+
+  onGetThreadMessagesSuccess (thread) {
+    this.validThread = true
   }
 }
 
