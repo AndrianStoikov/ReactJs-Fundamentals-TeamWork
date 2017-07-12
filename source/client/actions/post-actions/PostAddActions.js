@@ -20,7 +20,9 @@ class PostAddActions {
         toastr.success('Post added')
         this.addPostSuccess()
       })
-      .fail((err) => this.addPostFail(err))
+      .fail((err) => {
+        this.addPostFail(err)
+      })
 
     return true
   }
