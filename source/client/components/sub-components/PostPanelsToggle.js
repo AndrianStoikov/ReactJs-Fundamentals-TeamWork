@@ -35,7 +35,7 @@ export default class PostPanelToggles extends React.Component {
 
     let editMovie
     let deleteMovie
-    if (this.props.post.author === Auth.getUser()._id || Auth.isUserAdmin()) {
+    if (this.props.post.author._id === Auth.getUser()._id || Auth.isUserAdmin()) {
       editMovie =
         <Link
           to={`/post/edit/${this.props.post._id}`}
