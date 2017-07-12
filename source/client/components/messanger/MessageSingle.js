@@ -9,18 +9,35 @@ class Message extends React.Component {
     let fromMe = ''
     if (currUser._id === authorId) {
       fromMe = 'from-me'
-    }
+      return (
+        <div className={`message ${fromMe}`}>
+          <div className='messenger-username'>
+            { this.props.username }
+          </div>
 
-    return (
-      <div className={`message ${fromMe}`}>
-        <div className='username'>
-          { this.props.username }
+          <div className='message-body'>
+            <p>{ this.props.message }</p>
+          </div>
+          <div className='messenger-pic'>
+            <img src={this.props.userPic} />
+          </div>
         </div>
-        <div className='message-body'>
-          { this.props.message }
+      )
+    } else {
+      return (
+        <div className={`message`}>
+          <div className='messenger-username'>
+            { this.props.username }
+          </div>
+          <div className='messenger-pic'>
+            <img src={this.props.userPic} />
+          </div>
+          <div className='message-body'>
+            <p>{ this.props.message }</p>
+          </div>
         </div>
-      </div>
-    )
+      )
+    }
   }
 }
 

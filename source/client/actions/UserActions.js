@@ -14,6 +14,7 @@ class UserActions {
       'getUserOwnPostsSuccess',
       'getUserOwnPostsFail',
       'getProfileInfoSuccess',
+      'getMultipleUserInfoSuccess',
       'logoutUserSuccess',
       'followUserSuccess',
       'getUserThreadsSuccess',
@@ -46,6 +47,18 @@ class UserActions {
 
     $.ajax(request)
       .done(userInfo => this.getProfileInfoSuccess(userInfo))
+
+    return true
+  }
+
+  getMultipleUserInformation (firstUserId, secondUserId) {
+    let request = Data.get(`/api/user/${firstUserId}/${secondUserId}`, true)
+    console.log(firstUserId)
+
+    $.ajax(request)
+      .done(usersData => {
+        this.getMultipleUserInfoSuccess(usersData)
+      })
 
     return true
   }
