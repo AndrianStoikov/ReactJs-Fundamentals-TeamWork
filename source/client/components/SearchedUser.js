@@ -26,6 +26,12 @@ export default class SearchedUser extends React.Component {
     SearchedUserStore.unlisten(this.onChange)
   }
 
+  componentDidUpdate (nextProps) {
+    if (nextProps.match.params.username !== this.props.match.params.username) {
+      SearchedUserActions.getUsers(this.props.match.params.username)
+    }
+  }
+
   render () {
     if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
