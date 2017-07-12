@@ -1,5 +1,6 @@
 import alt from '../alt'
 import Auth from '../components/Auth'
+import toastr from 'toastr'
 
 class ProfilePictureAddActions {
   constructor () {
@@ -28,6 +29,7 @@ class ProfilePictureAddActions {
     }
     $.ajax(request)
       .done((data) => {
+        toastr.success('Enjoy your new profile picture')
         this.addProfilePictureSuccess(data)
       })
       .fail((err) => {
