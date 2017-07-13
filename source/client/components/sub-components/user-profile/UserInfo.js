@@ -4,10 +4,11 @@ import FollowUser from './UserFollow'
 export default class UserInfo extends React.Component {
 
   render () {
+    let profileImg = (this.props.profile.userProfilePicture ? this.props.profile.userProfilePicture : 'http://s3.amazonaws.com/37assets/svn/765-default-avatar.png')
     return (
       <div className='container profile-container'>
         <div className='profile-img'>
-          <img src={this.props.profile.userProfilePicture} />
+          <img src={profileImg} />
         </div>
         <div className='profile-info clearfix'>
           <h2><strong>First Name: { this.props.profile.userFirstName }</strong></h2>
