@@ -8,14 +8,14 @@ The public part of our project is visible without authentication. This is the ap
 
 The private part of the project is visible after authentication. It provides the user with personal area, accessible after successful login. This area holds: 
 
-the user's profile management functionality 
-Change profile picture 
-Block user (prevents the blocked user from posting on your wall and sending personal messages to the ‘blocker’) 
-the user's personal page (‘Wall’, containing posts of the current user) 
-the user's contacts/friends/followed users
-the user’s News Feed, containing posts from current user and posts from followed (friends) users
-Links to pages that allow the user to Add New Posts or Comments, Edit or Delete his own Posts and Comments
-Messenger page, allowing the user to send and receive private messages to and from other users.
+the user's profile management functionality   
+Change profile picture   
+Block user (prevents the blocked user from posting on your wall and sending personal messages to the ‘blocker’)  
+the user's personal page (‘Wall’, containing posts of the current user)  
+the user's contacts/friends/followed users  
+the user’s News Feed, containing posts from current user and posts from followed (friends) users  
+Links to pages that allow the user to Add New Posts or Comments, Edit or Delete his own Posts and Comments  
+Messenger page, allowing the user to send and receive private messages to and from other users.  
 
 ## Administrative part
 
