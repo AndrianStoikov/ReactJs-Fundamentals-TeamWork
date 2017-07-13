@@ -23,7 +23,7 @@ The project provides system administrator role. System administrators have acces
 add other administrators  
 edit/delete user’s posts  
 edit/delete user’s comments  
-
+---
 ##Dynamic web pages (requires at least 15):
 
 Welcome page  
