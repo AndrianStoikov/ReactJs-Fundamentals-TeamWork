@@ -178,6 +178,8 @@ module.exports = {
   blockUser: (req, res) => {
     let currentUserId = req.body.currentUserId
     let userForBlockId = req.body.userForBlockId
+    console.log(req.body.currentUserId)
+    console.log(req.body.userForBlockId)
 
     User.findById(currentUserId).then(user => {
       if (!user.blockedUsersId.map((id) => id.toString()).includes(userForBlockId)) {

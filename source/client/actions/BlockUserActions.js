@@ -1,4 +1,5 @@
 import alt from '../alt'
+import Auth from '../components/Auth'
 
 class BlockUserActions {
     constructor() {
@@ -16,7 +17,7 @@ class BlockUserActions {
 
     getUserForBlock(data) {
         let request = {
-            url: '/api/user/getByUsername/' + data.usernameForBlock,
+            url: '/user/getByUsername/' + data.usernameForBlock,
             method: 'get',
             data: JSON.stringify(data),
             contentType: 'application/json'
@@ -35,14 +36,19 @@ class BlockUserActions {
                     currentUserId: cureentUserId
                 }
 
+                console.log(dataForRequest)
+
                 let request = {
                     url: '/api/user/block/',
                     method: 'post',
                     data: JSON.stringify(dataForRequest),
-                    contentType: 'application/json'
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': `bearer ${Auth.getToken()}`
+                    }
                 }
 
-                if (userForBlockId !== cureentUserId) {
+                if (dataForRequest.userForBlockId !== cureentUserId) {
                     $.ajax(request)
                         .done(() => this.blockUserSuccess())
                         .fail(err => {
