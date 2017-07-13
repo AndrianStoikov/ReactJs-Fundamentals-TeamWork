@@ -6,7 +6,7 @@ export default class PostInfo extends React.Component {
     return (
       <div className='media-body' >
         <h4 className='media-heading' >
-          <Link to={`/user/profile/${this.props.post.author._id}`} >
+          <i>Posted by: </i><Link to={`/user/profile/${this.props.post.author._id}`} >
             {this.props.post.author.username}
           </Link>
         </h4>
