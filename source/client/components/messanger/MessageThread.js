@@ -3,8 +3,8 @@ import { Redirect } from 'react-router-dom'
 import Messages from './Messages'
 import MessageInput from './Message-input'
 import MessageThreadStore from '../../stores/messenger-stores/MessageThreadStore'
-import MessageActions from '../../actions/MessageActions'
-import Auth from '../Auth'
+import MessageActions from '../../actions/messenger-actions/MessageActions'
+import Auth from '../../utilities/Auth'
 class MessageThread extends React.Component {
   constructor (props) {
     super(props)

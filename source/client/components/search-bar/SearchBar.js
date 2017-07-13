@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Redirect, withRouter } from 'react-router-dom'
-import Auth from '../../components/Auth'
-import SearchBarActions from "../../actions/SearchBarActions"
-import SearchBarStore from "../../stores/SearchBarStore"
+import Auth from '../../utilities/Auth'
+import SearchBarActions from "../../actions/searchbar-actions/SearchBarActions"
+import SearchBarStore from "../../stores/searchbar-stores/SearchBarStore"
 
 class SearchBar extends Component {
     constructor(props) {

@@ -1,7 +1,7 @@
 import alt from '../../alt'
-import Auth from '../../components/Auth'
-import MessageActions from '../../actions/MessageActions'
-import UserActions from '../../actions/UserActions'
+import Auth from '../../utilities/Auth'
+import MessageActions from '../../actions/messenger-actions/MessageActions'
+import UserActions from '../../actions/user-actions/UserActions'
 
 class MessagesStore {
   constructor () {
