@@ -31,7 +31,7 @@ module.exports = (app) => {
   app.get('/api/thread/:username', authCheck, controllers.thread.getThreadMessages)
   app.post('/api/message/add/:threadId', authCheck, controllers.message.addPost)
 
-  app.get('/api/user/getByUsername/:username', controllers.user.findUserByUsername.get)
+  app.get('/user/getByUsername/:username', controllers.user.findUserByUsername.get)
   app.post('/api/user/block/', authCheck, controllers.user.blockUser)
   app.post('/api/user/makeAdmin', authCheck, controllers.user.makeAdmin)
   app.get('/user/getAdmins', authCheck, controllers.user.getAdmins)
