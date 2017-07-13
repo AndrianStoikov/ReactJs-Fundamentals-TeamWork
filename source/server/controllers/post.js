@@ -8,6 +8,7 @@ module.exports = {
     Post
       .findById(postId)
       .populate('comments', 'content author', null, {sort: {dateCreated: 1}})
+      .populate('author', 'username')
       .then((post) => {
         if (post === null) {
           res.status(400).send({message: 'Post not found.'})
@@ -59,6 +60,7 @@ module.exports = {
       Post
         .find({author: userId})
         .populate('comments', 'content author', null, {sort: {dateCreated: 1}})
+        .populate('author', 'username')
         .sort('-dateCreated')
         .then((posts) => {
           res.status(200).send(posts)

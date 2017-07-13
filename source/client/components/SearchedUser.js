@@ -26,6 +26,12 @@ export default class SearchedUser extends React.Component {
     SearchedUserStore.unlisten(this.onChange)
   }
 
+  componentDidUpdate (nextProps) {
+    if (nextProps.match.params.username !== this.props.match.params.username) {
+      SearchedUserActions.getUsers(this.props.match.params.username)
+    }
+  }
+
   render () {
     if (!Auth.isUserAuthenticated()) {
       return <Redirect to='/user/login' />
@@ -33,18 +39,22 @@ export default class SearchedUser extends React.Component {
 
     let users = this.state.users.map((user) => {
       return (
-        <div key={user._id} >
-          <Link to={`/user/profile/${user._id}`} className='btn btn-warning' >Goto profile</Link>
-          Username: {user.username}
-        </div>
+        <li key={user._id} >
+          <Link className='list-group-item' to={`/user/profile/${user._id}`} >{user.username}</Link>
+        </li>
       )
     })
 
     return (
       <div className='container' >
-        <h3 className='text-center' >
-          {users}
-        </h3>
+        <h3 className='text-center ' >Results:</h3>
+        <div className='panel-body' >
+          <div className='col-sm-6 col-sm-offset-3 ' >
+            <ul className='list-group list-unstyled'>
+              {users}
+            </ul>
+          </div>
+        </div>
       </div>
     )
   }
