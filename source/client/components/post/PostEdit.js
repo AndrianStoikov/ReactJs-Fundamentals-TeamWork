@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Auth from '../../components/Auth'
+import Auth from '../../utilities/Auth'
 import { Redirect, Link } from 'react-router-dom'
 import PostEditStore from '../../stores/post-stores/PostEditStore'
 import PostEditActions from '../../actions/post-actions/PostEditActions'

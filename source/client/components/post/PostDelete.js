@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import Auth from '../../components/Auth'
+import Auth from '../../utilities/Auth'
 import { Redirect, Link } from 'react-router-dom'
-import PostDeleteStore from '../../stores/PostDeleteStore'
-import PostDeleteActions from '../../actions/PostDeleteActions'
+import PostDeleteStore from '../../stores/post-stores/PostDeleteStore'
+import PostDeleteActions from '../../actions/post-actions/PostDeleteActions'
 import Form from '../form/Form'
 import Submit from '../form/Submit'
 

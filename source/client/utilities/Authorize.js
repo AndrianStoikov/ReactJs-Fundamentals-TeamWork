@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
-import UserStore from '../stores/UserStore'
-import FormActions from '../actions/FormActions'
+import UserStore from '../stores/user-stores/UserStore'
+import FormActions from '../actions/common-actions/FormActions'
 
 export default function authorize (ChildComponent) {
   return class Authorization extends Component {

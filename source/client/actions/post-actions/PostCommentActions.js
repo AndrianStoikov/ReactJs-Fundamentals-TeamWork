@@ -1,5 +1,5 @@
 import alt from '../../alt'
-import Data from '../../DataRequests'
+import Data from '../../utilities/DataRequests'
 
 class PostCommentActions {
   constructor () {
