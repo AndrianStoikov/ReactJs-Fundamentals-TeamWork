@@ -24,8 +24,7 @@ add other administrators
 edit/delete user’s posts
 edit/delete user’s comments
 
-
-Dynamic web pages (requires at least 15)
+Dynamic web pages (requires at least 15):
 
 Welcome page
 Login page
@@ -50,11 +49,10 @@ Messages page - displays the messages in an opened thread
 
 
 
-DB Tables (requires at least 4)
+DB Tables (requires at least 4):
 
 Users
 Posts
 Comments
 Threads
 Messages
-
