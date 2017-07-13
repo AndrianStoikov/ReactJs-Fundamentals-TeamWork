@@ -50,7 +50,7 @@ export default class PostComment extends Component {
     return (
       <div>
         <PostDetails post={this.state.post} />
-        <div className='list-group' >
+        <div className='list-group col-xs-12' >
           <div className='col-xs-12'>
             <h3 className='col-sm-3' >Comments:</h3>
           </div>
@@ -61,6 +61,7 @@ export default class PostComment extends Component {
             </div>
           </div>
         </div>
+        <div className='clearfix' />
       </div>
     )
   }
