@@ -1,10 +1,10 @@
-#Documentation
+# Documentation
 
-##Public part
+## Public part
 
 The public part of our project is visible without authentication. This is the application start page, prompting the user to Register or Login to access the ‘Social network’. Contains Login and Register buttons, app Logo, Welcome text etc.
 
-##Private part
+## Private part
 
 The private part of the project is visible after authentication. It provides the user with personal area, accessible after successful login. This area holds: 
 
@@ -17,7 +17,7 @@ the user’s News Feed, containing posts from current user and posts from follow
 Links to pages that allow the user to Add New Posts or Comments, Edit or Delete his own Posts and Comments
 Messenger page, allowing the user to send and receive private messages to and from other users.
 
-##Administrative part
+## Administrative part
 
 The project provides system administrator role. System administrators have access to the system and permissions to administer all major information objects in the system:  
 add other administrators  
@@ -26,7 +26,7 @@ edit/delete user’s comments
 
 ---
 
-##Dynamic web pages (requires at least 15):
+## Dynamic web pages (requires at least 15):
 
 Welcome page  
 Login page  
@@ -49,7 +49,7 @@ Admin panel page - contains functionality to add other admins. If user is Admin,
 Messenger page - displays current active chats and search box that allows to start chat with users  
 Messages page - displays the messages in an opened thread  
 
-##DB Tables (requires at least 4):
+## DB Tables (requires at least 4):
 
 Users  
 Posts  
