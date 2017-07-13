@@ -37,7 +37,7 @@ export default class BlockUser extends Component {
       return
     }
 
-    BlockUserAction.getUserForBlock({'currentUserID': UserStore.getState().loggedInUserId, 'usernameForBlock': content})
+    BlockUserAction.getUserForBlock({'currentUserID': Auth.getUser()._id, 'usernameForBlock': content})
   }
 
   render () {
