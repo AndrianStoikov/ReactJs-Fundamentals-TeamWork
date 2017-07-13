@@ -1,9 +1,7 @@
 import React from 'react'
 import HomeStore from '../stores/HomeStore'
 import HomeActions from '../actions/HomeActions'
-
 import UserPostsPanel from '../components/sub-components/user-profile/UserPostsPanel'
-
 import Auth from './Auth'
 import ReactPaginate from 'react-paginate'
 
@@ -47,7 +45,7 @@ export default class Home extends React.Component {
           posts={this.state.postsToDisplay}
           getUserPost={HomeActions.getUserPosts}
         />
-        { this.state.posts.lenght < 0 &&
+        { this.state.posts.length > 0 &&
         <ReactPaginate
           previousLabel={'Previous'}
           nextLabel={'Next'}
