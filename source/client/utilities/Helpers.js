@@ -1,4 +1,4 @@
-import Data from '../DataRequests'
+import Data from './DataRequests'
 
 export default class Helpers {
   static appendToArray (value, array) {
