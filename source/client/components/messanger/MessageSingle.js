@@ -1,5 +1,5 @@
 import React from 'react'
-import Auth from '../Auth'
+import Auth from '../../utilities/Auth'
 
 class Message extends React.Component {
   render () {

@@ -1,5 +1,5 @@
 import React from 'react'
-import UserActions from '../../actions/UserActions'
+import UserActions from '../../actions/user-actions/UserActions'
 import MessagesStore from '../../stores/messenger-stores/MessagesStore'
 import Message from '../../components/messanger/MessageSingle'
 

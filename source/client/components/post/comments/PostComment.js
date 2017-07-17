@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
-import Auth from '../../Auth'
+import Auth from '../../../utilities/Auth'
 
-import CommentForm from '../../sub-components/CommentsForm'
-import PostDetails from '../../sub-components/PostDetails'
+import CommentForm from './CommentsForm'
+import PostDetails from '../PostDetails'
 import Comment from './Comment'
 
 import PostCommentStore from '../../../stores/post-stores/PostCommentStore'

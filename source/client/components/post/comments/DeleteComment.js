@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Auth from '../../Auth'
+import Auth from '../../../utilities/Auth'
 import { Redirect } from 'react-router-dom'
 import Form from '../../form/Form'
 import Submit from '../../form/Submit'

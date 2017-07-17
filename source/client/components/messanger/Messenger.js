@@ -1,12 +1,12 @@
 import React from 'react'
 import MessageStore from '../../stores/messenger-stores/MessengerStore'
-import UserActions from '../../actions/UserActions'
+import UserActions from '../../actions/user-actions/UserActions'
 import Messages from './Messages'
 import MessageInput from './Message-input'
 import MessageThread from './MessageThread'
-import MessageActions from '../../actions/MessageActions'
+import MessageActions from '../../actions/messenger-actions/MessageActions'
 import { Link, Redirect } from 'react-router-dom'
-import Auth from '../Auth'
+import Auth from '../../utilities/Auth'
 import toastr from 'toastr'
 
 class Messenger extends React.Component {

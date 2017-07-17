@@ -1,9 +1,9 @@
 import React from 'react'
 import Routes from '../routes'
-import Navbar from './Navbar'
-import Footer from './Footer'
-import UserStore from '../stores/UserStore'
-import UserActions from '../actions/UserActions'
+import Navbar from './common/Navbar'
+import Footer from './common/Footer'
+import UserStore from '../stores/user-stores/UserStore'
+import UserActions from '../actions/user-actions/UserActions'
 
 export default class App extends React.Component {
   constructor (props) {
